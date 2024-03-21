@@ -1,5 +1,6 @@
 package com.fdmgroup.java.timothy_chai_project_ecommerce;
 
+import java.util.HashMap;
 import java.util.Map;
 
 class Cart {
@@ -8,7 +9,9 @@ class Cart {
 	private Map<Product, Integer> items;
 	private float totalPrice;
 	
-	public Cart() {}
+	public Cart() {
+		items = new HashMap<>();
+	}
 	
 	public int getCartID() {
 		return cartID;
@@ -54,12 +57,17 @@ class Cart {
         	return;
         }     
 		
-		// if quantity >= cart quantity
-		items.remove(product, quantity);
-        totalPrice -= product.getPrice();
+        if ( quantity >= items.get(product) ) {
+        	// if quantity >= cart quantity
+    		items.remove(product, quantity);
+            totalPrice -= product.getPrice();
+        } else {
+        	// if quantity < cart quantity
+            items.put(product, items.get(product) - quantity);
+        }
+		
         
-        // if quantity < cart quantity
-        items.put(product, items.get(product) - quantity);
+        
     }
 	
 	public void checkout() {
