@@ -34,16 +34,16 @@ public class Customer {
 	private String cardNumber;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_CART_ID")
+	@JoinColumn(name = "FK_CART_ID")
 	private Cart cart;
 	
 	// Default no-args constructor should instantiate cart object
 	public Customer() {
-		cart = new Cart();
+		
 	}
 	
 	public Customer(String username, String password, String email, String address, String fullName, String cardNumber) {
-		this();
+		this.cart = new Cart();
 		setUsername(username);
 		setPassword(password);
 		setEmail(email);
@@ -81,6 +81,11 @@ public class Customer {
 		return cardNumber;
 	}
 
+	public Cart getCart() {
+		return cart;
+	}
+
+	
 	public void setUserID(int customerID) {
 		this.customerID = customerID;
 	}
@@ -109,6 +114,14 @@ public class Customer {
 		this.cardNumber = cardNumber;
 	}
 
+	public void setCustomerID(int customerID) {
+		this.customerID = customerID;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+	
 	public void updateDetails(Customer customer) {
 		setUsername(customer.getUsername());
 		setPassword(customer.getPassword());
@@ -119,6 +132,7 @@ public class Customer {
 		
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Customer [customerID=" + customerID + ", username=" + username + ", fullName=" + fullName + "]";

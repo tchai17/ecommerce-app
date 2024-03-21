@@ -24,13 +24,15 @@ public class CartItem {
 	@Column(name = "PRODUCT_SUBTOTAL")
 	private double productSubtotal;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "PRODUCT_ID")
+	@ManyToOne
+	@JoinColumn(name = "FK_PRODUCT_ID")
 	private Product product;
 	
 	@ManyToOne
-	@JoinColumn(name = "CART_ID")
+	@JoinColumn(name = "FK_CART_ID")
 	private Cart cart;
+	
+	public CartItem() {	}
 	
 	public CartItem(Product product, int productQuantity) {
 		setProduct(product);
