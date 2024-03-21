@@ -1,5 +1,7 @@
 package com.fdmgroup.java.timothy_chai_project_ecommerce.app;
 
+import java.util.Objects;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -121,6 +123,27 @@ public class Customer {
 	public String toString() {
 		return "Customer [customerID=" + customerID + ", username=" + username + ", fullName=" + fullName + "]";
 	}
-		
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, cardNumber, cart, customerID, email, fullName, password, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Customer other = (Customer) obj;
+		return Objects.equals(address, other.address) && Objects.equals(cardNumber, other.cardNumber)
+				&& Objects.equals(cart, other.cart) && customerID == other.customerID
+				&& Objects.equals(email, other.email) && Objects.equals(fullName, other.fullName)
+				&& Objects.equals(password, other.password) && Objects.equals(username, other.username);
+	}
+	
+	
 	
 }
