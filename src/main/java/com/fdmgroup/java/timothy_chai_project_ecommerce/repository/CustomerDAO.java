@@ -32,10 +32,7 @@ public class CustomerDAO implements DAO{
     
     public Customer findCustomerById(int customerId) {
     	EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        Customer customer = entityManager.find(Customer.class, customerId);
-        entityManager.getTransaction().commit();
-        return customer;
+        return entityManager.find(Customer.class, customerId);
     }
     
     public Customer findCustomerByUsername(String username) {
