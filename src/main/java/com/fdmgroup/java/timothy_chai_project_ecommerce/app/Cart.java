@@ -1,4 +1,4 @@
-package com.fdmgroup.java.timothy_chai_project_ecommerce;
+package com.fdmgroup.java.timothy_chai_project_ecommerce.app;
 
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import jakarta.persistence.OneToMany;
 
 
 @Entity
-class Cart {
+public class Cart {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -119,7 +119,7 @@ class Cart {
 	}
 	
 	public void checkout() {
-		
+		items.clear();
 	}
 	
 	

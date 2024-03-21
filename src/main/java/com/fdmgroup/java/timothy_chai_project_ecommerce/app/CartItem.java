@@ -1,4 +1,4 @@
-package com.fdmgroup.java.timothy_chai_project_ecommerce;
+package com.fdmgroup.java.timothy_chai_project_ecommerce.app;
 
 import java.util.Objects;
 
@@ -97,10 +97,6 @@ public class CartItem {
 		return Objects.equals(cart, other.cart) && Objects.equals(product, other.product);
 	}
 
-//	@Override
-//	public int hashCode() {
-//		return Objects.hash(cart, cartItemId, product);
-//	}
 
 	
 	
