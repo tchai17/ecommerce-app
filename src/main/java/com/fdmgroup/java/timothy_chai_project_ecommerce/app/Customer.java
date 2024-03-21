@@ -1,20 +1,41 @@
-package com.fdmgroup.java.timothy_chai_project_ecommerce;
+package com.fdmgroup.java.timothy_chai_project_ecommerce.app;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
-class Customer {
+@Entity
+public class Customer {
 
 	
 	// Attributes
-	private int userID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "CUSTOMER_ID")
+	private int customerID;
+	@Column(name = "USERNAME")
 	private String username;
+	@Column(name = "PASSWORD")
 	private String password;
+	@Column(name = "EMAIL")
 	private String email;
+	@Column(name = "ADDRESS")
 	private String address;
+	@Column(name = "FULL_NAME")
 	private String fullName;
+	@Column(name = "CARD_NUMBER")
 	private String cardNumber;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_CART_ID")
 	private Cart cart;
 	
+	// Default no-args constructor should instantiate cart object
 	public Customer() {
 		cart = new Cart();
 	}
@@ -30,8 +51,8 @@ class Customer {
 		
 	}
 
-	public int getUserID() {
-		return userID;
+	public int getCustomerID() {
+		return customerID;
 	}
 
 	public String getUsername() {
@@ -58,8 +79,8 @@ class Customer {
 		return cardNumber;
 	}
 
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setUserID(int customerID) {
+		this.customerID = customerID;
 	}
 
 	public void setUsername(String username) {
@@ -94,6 +115,11 @@ class Customer {
 		setFullName(customer.getFullName());
 		setCardNumber(customer.getCardNumber());
 		
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [customerID=" + customerID + ", username=" + username + ", fullName=" + fullName + "]";
 	}
 		
 	
