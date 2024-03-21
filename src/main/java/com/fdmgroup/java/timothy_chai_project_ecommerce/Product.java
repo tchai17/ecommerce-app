@@ -6,7 +6,14 @@ class Product {
 	private String productName;
 	private int stock;
 	private String imgURL;
-	private float price;
+	private double price;
+	
+	public Product(String productName, int stock, String imgURL, double price) {
+		setProductName(productName);
+		setStock(stock);
+		setImgURL(imgURL);
+		setPrice(price);
+	}
 	
 	public int getProductID() {
 		return productID;
@@ -33,11 +40,11 @@ class Product {
 		this.imgURL = imgURL;
 	}
 	
-	public float getPrice() {
+	public double getPrice() {
         return price;
     }
 	
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 	
