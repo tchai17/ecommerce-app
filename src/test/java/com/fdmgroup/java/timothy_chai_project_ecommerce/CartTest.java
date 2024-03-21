@@ -3,7 +3,9 @@ package com.fdmgroup.java.timothy_chai_project_ecommerce;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +15,7 @@ public class CartTest {
 
 	Cart cart;
 	Product product1;
+	CartItem cartItem1;
 	
 	@BeforeEach
 	void setUp() {
@@ -20,17 +23,20 @@ public class CartTest {
 		cart.setCartID(1);
 		// public Product(String productName, int stock, String imgURL, float price)
 		product1 = new Product("crackers", 5, "hello.html", 5.00);
+		product1.setProductID(1);
     }
 	
 	@Test
 	@DisplayName("1. Check the addToCart() method adds correct product to items")
 	void testAddToCart_addsCorrectProductToItems() {
 		// arrange
-		Map<Product, Integer> actual;
-		Map<Product, Integer> expected = new HashMap<>();
-		expected.put(product1, 1);
+		cartItem1 = new CartItem(product1, 1);
+		cartItem1.setCart(cart);
+		Set<CartItem> actual;
+		Set<CartItem> expected = new HashSet<>();
+		expected.add(cartItem1);
 		// act
-		cart.addToCart(product1, 1);
+		cart.addToCart(cartItem1);
 		actual = cart.getItems();
 		// assert
 		assertEquals(expected, actual);
@@ -38,15 +44,18 @@ public class CartTest {
 	}
 	
 	@Test
-	@DisplayName("2. Check the addToCart() method adds one quantity when product already exists in cart")
-	void testAddToCart_addsOneQuantityWhenProductAlreadyExistsInCart() {
+	@DisplayName("2. Check the addToCart() method adds to quantity when product already exists in cart")
+	void testAddToCart_addsToQuantityWhenProductAlreadyExistsInCart() {
 		// arrange
-		Map<Product, Integer> actual;
-		Map<Product, Integer> expected = new HashMap<>();
-		expected.put(product1, 2);
+		Set<CartItem> actual;
+		Set<CartItem> expected = new HashSet<>();
+		cartItem1 = new CartItem(product1, 2);
+		CartItem cartItem2 = new CartItem(product1, 1);
+		CartItem cartItem3 = new CartItem(product1, 3);
+		expected.add(cartItem3);
 		// act
-		cart.addToCart(product1, 1);
-		cart.addToCart(product1, 1);
+		cart.addToCart(cartItem1);
+		cart.addToCart(cartItem2);
 		actual = cart.getItems();
 
 		// assert
@@ -59,20 +68,22 @@ public class CartTest {
     void testRemoveFromCart_removesCorrectProductFromItems() {
 		// arrange
 		Product product2 = new Product("chocolate", 4, "goodbye.html", 6.00);
-		Map<Product, Integer> setupMap = new HashMap<>();
-		setupMap.put(product1, 3);
-		setupMap.put(product2, 2);
-		cart.setItems(setupMap);
+		cartItem1 = new CartItem(product1, 2);
+		CartItem cartItem2 = new CartItem(product2, 3);
+		Set<CartItem> setup = new HashSet<>();
+		setup.add(cartItem1);
+		setup.add(cartItem2);
+		cart.setItems(setup);
 		
-		Map<Product, Integer> expected = new HashMap<>();
-		expected.put(product1, 3);
+		Set<CartItem> expected = new HashSet<>();
+		expected.add(cartItem1);
 		
-		Map<Product, Integer> actual;
-		
+		Set<CartItem> actual;
 		
 		// act
-		cart.removeFromCart(product2, 2);
+		cart.removeFromCart(cartItem2);
 		actual = cart.getItems();
+		
 		// assert
 		assertEquals(expected, actual);
 		
@@ -83,19 +94,22 @@ public class CartTest {
 	void testRemoveFromCart_removesCorrectQuantityFromItems() {
 		
 		// arrange
+		// add cartItem1 to cart
+		cartItem1 = new CartItem(product1, 5);
+		Set<CartItem> setup = new HashSet<>();
+		setup.add(cartItem1);
+		cart.setItems(setup);
 		
-		Map<Product, Integer> setupMap = new HashMap<>();
-		setupMap.put(product1, 3);
-		cart.setItems(setupMap);
+		CartItem cartItem2 = new CartItem(product1, 2);
+		Set<CartItem> expected = new HashSet<>();
+		expected.add(cartItem2);
 		
-		Map<Product, Integer> expected = new HashMap<>();
-		expected.put(product1, 1);
-		
-		Map<Product, Integer> actual;
+		Set<CartItem> actual;
 		
 		// act
-		cart.removeFromCart(product1, 2);
+		cart.removeFromCart(new CartItem(product1, 3));
 		actual = cart.getItems();
+		
 		// assert
 		assertEquals(expected, actual);
 	}

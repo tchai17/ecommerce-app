@@ -1,74 +1,122 @@
 package com.fdmgroup.java.timothy_chai_project_ecommerce;
 
-import java.util.HashMap;
-import java.util.Map;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+
+@Entity
 class Cart {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "CART_ID")
 	private int cartID;
-	private Map<Product, Integer> items;
-	private float totalPrice;
+	@Column(name = "TOTAL_PRICE")
+	private double totalPrice;
+	
+	@OneToMany(mappedBy = "cart")
+	private Set<CartItem> items;
 	
 	public Cart() {
-		items = new HashMap<>();
+		items = new HashSet<>();
 	}
 	
 	public int getCartID() {
 		return cartID;
 	}
-	public Map<Product, Integer> getItems() {
+	public Set<CartItem> getItems() {
 		return items;
 	}
-	public float getTotalPrice() {
+	public double getTotalPrice() {
 		return totalPrice;
 	}
 	public void setCartID(int cartID) {
 		this.cartID = cartID;
 	}
-	public void setItems(Map<Product, Integer> items) {
+	public void setItems(Set<CartItem> items) {
 		this.items = items;
 	}
-	public void setTotalPrice(float totalPrice) {
+	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 	
-	public void addToCart(Product product, int quantity) {
-		
-		// check if product exists in db
-		
-		// if product exists in cart
-		if ( items.containsKey(product) ){
-			items.put(product, items.get(product) + quantity);
+	
+	
+	@Override
+	public String toString() {
+		return "Cart [cartID=" + cartID + "]";
+	}
+
+	public void addToCart(CartItem item) {
+			
+		if ( cartHasProduct(item) ) {
+			items.forEach( cartItem -> {
+				if ( cartItem.getProduct().equals(item.getProduct()) ) {
+                    cartItem.setProductQuantity(cartItem.getProductQuantity() + item.getProductQuantity());
+                }
+			});
 		}
 		else {
-			// if product does not exist in cart
-			items.put(product, quantity);
-	        totalPrice += product.getPrice() * quantity;
+			items.add(item);
 		}
+
+		
 		;
 	}
 	
-	public void removeFromCart(Product product, int quantity) {
+	public void removeFromCart(CartItem item) {
 		
-		// check if product exists in db
+		CartItem targetItem = new CartItem( new Product(), 0 );
+		if ( cartHasProduct(item) ) {
+			Optional<CartItem> target = findMatchingCartItem(item);
+			if ( target.isPresent() ) {
+				targetItem = target.get();
+			}
+		}
+		else {
+			return;
+		}
+		if ( targetItem.getProductQuantity() > item.getProductQuantity() ) {
+			targetItem.setProductQuantity(targetItem.getProductQuantity() - item.getProductQuantity());
 		
-        // if product exists in cart
-        if ( !items.containsKey(product) ){
-        	return;
-        }     
-		
-        if ( quantity >= items.get(product) ) {
-        	// if quantity >= cart quantity
-    		items.remove(product, quantity);
-            totalPrice -= product.getPrice();
-        } else {
-        	// if quantity < cart quantity
-            items.put(product, items.get(product) - quantity);
-        }
-		
-        
+		} else {
+			items.remove(targetItem);
+		}   
         
     }
+	
+	private boolean cartHasProduct ( CartItem item ) {
+		List<Product> products = new ArrayList<>();
+		
+		items.forEach( cartItem -> products.add(cartItem.getProduct()) );
+		
+		if ( products.contains( item.getProduct() ) ) {
+			return true;
+		}
+		return false;
+	}
+	
+	private Optional<CartItem> findMatchingCartItem ( CartItem item ) {
+		
+		for ( CartItem cartItem : items ) {
+			if ( cartItem.getProduct().equals(item.getProduct()) ) {
+                return Optional.of(cartItem);
+            }
+		}
+		return Optional.empty();
+		
+	}
 	
 	public void checkout() {
 		
