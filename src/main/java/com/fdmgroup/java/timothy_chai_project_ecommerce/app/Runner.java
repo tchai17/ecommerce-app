@@ -28,18 +28,22 @@ public class Runner {
 		Product product1 = new Product("product1", 10, "product1.html", 5.00);
 		Product product2 = new Product("product2", 10, "product2.html", 7.00);
 		
-		// Persist instances
-		customerDAO.persist(customer1);
-		customerDAO.persist(customer2);
+
 		productDAO.persist(product1);
 		productDAO.persist(product2);
 		
-
-		
-		// Add products to cart
+		// Add products to carts
 		CartItem cartItem1 = new CartItem(product1, 5);
+		cartItem1.setCart(customer1.getCart()); // Explicitly set cart for cartItem1
 		customer1.getCart().addToCart(cartItem1);
+
+		CartItem cartItem2 = new CartItem(product2, 3);
+		cartItem2.setCart(customer2.getCart()); // Explicitly set cart for cartItem2
+		customer2.getCart().addToCart(cartItem2);
+		
+//		// Persist instances
 		customerDAO.persist(customer1);
+		customerDAO.persist(customer2);	
 
 		
 //		cartDAO.addProductToCart(customer1.getCart(), cartItem1);
