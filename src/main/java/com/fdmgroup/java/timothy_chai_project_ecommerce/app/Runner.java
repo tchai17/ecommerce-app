@@ -6,8 +6,21 @@ import com.fdmgroup.java.timothy_chai_project_ecommerce.repository.ProductDAO;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+/**
+ * @author - timothy.chai
+ * 
+ * The Runner class is responsible for initializing all main application classes and DAO classes for the operation of the application
+ * @see Customer
+ * @see Cart
+ * @see CartItem
+ * @see Product
+ */
 public class Runner {
 
+	/** Main runner method for initializing application
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		// Create DAO instances
