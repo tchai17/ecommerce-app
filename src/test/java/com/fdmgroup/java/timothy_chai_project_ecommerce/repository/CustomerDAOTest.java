@@ -18,6 +18,12 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+/** Responsible for testing methods in CustomerDAO class
+ * 
+ * @author - timothy.chai
+ * 
+ * @see CustomerDAO
+ */
 @ExtendWith(MockitoExtension.class)
 public class CustomerDAOTest {
 	
@@ -34,7 +40,7 @@ public class CustomerDAOTest {
 		customerDAO = new CustomerDAO(mockEMF);
 		when(mockEMF.createEntityManager()).thenReturn(mockEM);
 		customer1 = new Customer("customer1", "password", "email", "address", "fullName", "cardNumber");
-		customer1.setUserID(1);
+		customer1.setCustomerID(1);
 		
     }
 	
@@ -58,7 +64,7 @@ public class CustomerDAOTest {
         when(mockEM.getTransaction()).thenReturn(mockTransaction);
         when(mockEM.find(Customer.class, 1)).thenReturn(customer1);
         Customer newCustomer1 = new Customer("customer1-new", "password123", "email", "address", "fullName123", "cardNumber");
-        newCustomer1.setUserID(1);
+        newCustomer1.setCustomerID(1);
         
         // act
         customerDAO.update(newCustomer1);

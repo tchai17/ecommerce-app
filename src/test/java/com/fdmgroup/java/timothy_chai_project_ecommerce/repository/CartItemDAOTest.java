@@ -19,6 +19,12 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+/** Responsible for testing CartItemDAO class methods
+ * 
+ * @author - timothy.chai
+ * 
+ * @see CartItemDAO
+ */
 @ExtendWith(MockitoExtension.class)
 public class CartItemDAOTest {
 

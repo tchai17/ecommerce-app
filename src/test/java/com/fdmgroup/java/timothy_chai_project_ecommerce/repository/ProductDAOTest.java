@@ -18,6 +18,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 
+
+/** Responsible for testing ProductDAO methods
+ * 
+ * @author - timothy.chai
+ * 
+ * @see ProductDAO
+ */
 @ExtendWith(MockitoExtension.class)
 public class ProductDAOTest {
 

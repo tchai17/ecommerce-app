@@ -9,7 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
+/** Responsible for testing key methods in the Cart class - mainly addToCart and removeFromCart
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Cart
+ */
 public class CartTest {
 
 	Cart cart;

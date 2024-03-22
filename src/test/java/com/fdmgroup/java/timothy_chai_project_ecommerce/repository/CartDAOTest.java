@@ -22,6 +22,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
+
+/** Responsible for testing CartDAO methods
+ * 
+ * @author - timothy.chai
+ * 
+ * @see CartDAO
+ */
 @ExtendWith(MockitoExtension.class)
 public class CartDAOTest {
 
