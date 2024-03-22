@@ -1,3 +1,6 @@
+/** Holds all classes relevant for running the e-commerce application.
+ * 
+ */
 package com.fdmgroup.java.timothy_chai_project_ecommerce.app;
 
 import com.fdmgroup.java.timothy_chai_project_ecommerce.repository.CustomerDAO;
@@ -6,7 +9,7 @@ import com.fdmgroup.java.timothy_chai_project_ecommerce.repository.ProductDAO;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-/**
+/** Responsible for initializing all application classes and DAO classes
  * @author - timothy.chai
  * 
  * The Runner class is responsible for initializing all main application classes and DAO classes for the operation of the application

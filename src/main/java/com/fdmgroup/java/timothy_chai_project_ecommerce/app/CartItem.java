@@ -1,8 +1,10 @@
+/** Holds all classes relevant for running the e-commerce application.
+ * 
+ */
 package com.fdmgroup.java.timothy_chai_project_ecommerce.app;
 
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,15 +12,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
-/** Represents a line item in the shopping cart
+/**
+ * Represents a line item in the shopping cart
+ * 
  * @author - timothy.chai
  * 
- * The CartItem class encapsulates ordering information, holding reference to the Product class and other relevant information
- * like the product quantity and subtotal. It is used primarily when customers wish to add products to their cart
- * When customers wish to add a product to the cart, a new CartItem object is created encapsulating the product and the quantity, 
- * before it is added to the Cart
+ *         The CartItem class encapsulates ordering information, holding
+ *         reference to the Product class and other relevant information like
+ *         the product quantity and subtotal. It is used primarily when
+ *         customers wish to add products to their cart When customers wish to
+ *         add a product to the cart, a new CartItem object is created
+ *         encapsulating the product and the quantity, before it is added to the
+ *         Cart
  * 
  * @see Product
  * @see Cart
@@ -27,20 +33,20 @@ import jakarta.persistence.OneToOne;
 public class CartItem {
 
 	/**
-	 * ID that uniquely identifies this CartItem
-	 * Automatically assigned when persisted
+	 * ID that uniquely identifies this CartItem Automatically assigned when
+	 * persisted
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "CART_ITEM_ID")
 	private int cartItemId;
-	
+
 	/**
 	 * Product quantity for the product that is associated with this CartItem
 	 */
 	@Column(name = "PRODUCT_QUANTITY")
 	private int productQuantity;
-	
+
 	/**
 	 * Subtotal cost for this CartItem
 	 */
@@ -49,6 +55,7 @@ public class CartItem {
 
 	/**
 	 * Product reference for this CartItem
+	 * 
 	 * @see Product
 	 */
 	@ManyToOne
@@ -57,6 +64,7 @@ public class CartItem {
 
 	/**
 	 * Cart which this CartItem is associated with
+	 * 
 	 * @see Cart
 	 */
 	@ManyToOne
@@ -69,11 +77,13 @@ public class CartItem {
 	public CartItem() {
 	}
 
-	
 	/**
-	 * Custom constructor used for specifying the product reference and the product quantity
-	 * @param product Product that is intended to be added to cart
-	 * @param productQuantity The quantity of the specified product that the customer wishes to order
+	 * Custom constructor used for specifying the product reference and the product
+	 * quantity
+	 * 
+	 * @param product         Product that is intended to be added to cart
+	 * @param productQuantity The quantity of the specified product that the
+	 *                        customer wishes to order
 	 * @see Product
 	 */
 	public CartItem(Product product, int productQuantity) {
@@ -84,6 +94,7 @@ public class CartItem {
 
 	/**
 	 * Getter for the ID for this CartItem
+	 * 
 	 * @return cartItemId ID for this CartItem
 	 */
 	public int getCartItemId() {
@@ -92,6 +103,7 @@ public class CartItem {
 
 	/**
 	 * Getter for quantity of the product for this CartItem
+	 * 
 	 * @return productQuantity Quantity of specified Product
 	 */
 	public int getProductQuantity() {
@@ -99,8 +111,9 @@ public class CartItem {
 	}
 
 	/**
-	 * Getter for the subtotal of the product(s) for this CartItem'
-	 * Subtotal is calculated by taking the Product price multiplied by the ordered quantity
+	 * Getter for the subtotal of the product(s) for this CartItem' Subtotal is
+	 * calculated by taking the Product price multiplied by the ordered quantity
+	 * 
 	 * @return productSubtotal Subtotal for this Product order
 	 */
 	public double getProductSubtotal() {
@@ -109,6 +122,7 @@ public class CartItem {
 
 	/**
 	 * Getter for the Product reference of this CartItem
+	 * 
 	 * @return Product Product which customer wishes to order
 	 */
 	public Product getProduct() {
@@ -117,6 +131,7 @@ public class CartItem {
 
 	/**
 	 * Setter for the CartItemID of this CartItem
+	 * 
 	 * @param cartItemId new ID to set for this CartItem
 	 */
 	public void setCartItemId(int cartItemId) {
@@ -125,6 +140,7 @@ public class CartItem {
 
 	/**
 	 * Setter for productQuantity of this CartItem
+	 * 
 	 * @param productQuantity new quantity to set for this CartItem
 	 */
 	public void setProductQuantity(int productQuantity) {
@@ -132,15 +148,17 @@ public class CartItem {
 	}
 
 	/**
-     * Calculates productSubtotal of this CartItem, based on the Product and its quantity, and sets it as the subtotal
-     * 
-     */
+	 * Calculates productSubtotal of this CartItem, based on the Product and its
+	 * quantity, and sets it as the subtotal
+	 * 
+	 */
 	public void calculateProductSubtotal() {
 		this.productSubtotal = this.product.getPrice() * productQuantity;
 	}
 
 	/**
 	 * Setter for the Product reference for this CartItem
+	 * 
 	 * @param product product that customer wishes to purchase
 	 */
 	public void setProduct(Product product) {
@@ -149,6 +167,7 @@ public class CartItem {
 
 	/**
 	 * Setter for the cart reference for this CartItem
+	 * 
 	 * @param cart cart which CartItem is associated with
 	 */
 	public void setCart(Cart cart) {
