@@ -23,17 +23,18 @@ public class CartItem {
 	private int productQuantity;
 	@Column(name = "PRODUCT_SUBTOTAL")
 	private double productSubtotal;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "FK_PRODUCT_ID")
 	private Product product;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "FK_CART_ID")
 	private Cart cart;
-	
-	public CartItem() {	}
-	
+
+	public CartItem() {
+	}
+
 	public CartItem(Product product, int productQuantity) {
 		setProduct(product);
 		setProductQuantity(productQuantity);
@@ -75,8 +76,7 @@ public class CartItem {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return "CartItem [productQuantity=" + productQuantity + ", product=" + product + ", cart=" + cart + "]";
@@ -94,10 +94,4 @@ public class CartItem {
 		return Objects.equals(cart, other.cart) && Objects.equals(product, other.product);
 	}
 
-
-	
-	
-	
-	
-	
 }

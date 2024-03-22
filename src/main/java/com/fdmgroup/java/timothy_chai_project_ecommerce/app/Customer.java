@@ -14,7 +14,6 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Customer {
 
-	
 	// Attributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,17 +31,18 @@ public class Customer {
 	private String fullName;
 	@Column(name = "CARD_NUMBER")
 	private String cardNumber;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_CART_ID")
 	private Cart cart;
-	
-	// Default no-args constructor should instantiate cart object
+
+	// Default no-args constructor
 	public Customer() {
-		
+
 	}
-	
-	public Customer(String username, String password, String email, String address, String fullName, String cardNumber) {
+
+	public Customer(String username, String password, String email, String address, String fullName,
+			String cardNumber) {
 		this.cart = new Cart();
 		setUsername(username);
 		setPassword(password);
@@ -50,7 +50,7 @@ public class Customer {
 		setAddress(address);
 		setFullName(fullName);
 		setCardNumber(cardNumber);
-		
+
 	}
 
 	public int getCustomerID() {
@@ -68,7 +68,7 @@ public class Customer {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
@@ -85,7 +85,6 @@ public class Customer {
 		return cart;
 	}
 
-	
 	public void setUserID(int customerID) {
 		this.customerID = customerID;
 	}
@@ -121,7 +120,7 @@ public class Customer {
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
-	
+
 	public void updateDetails(Customer customer) {
 		setUsername(customer.getUsername());
 		setPassword(customer.getPassword());
@@ -129,18 +128,12 @@ public class Customer {
 		setAddress(customer.getAddress());
 		setFullName(customer.getFullName());
 		setCardNumber(customer.getCardNumber());
-		
+
 	}
 
-	
 	@Override
 	public String toString() {
 		return "Customer [customerID=" + customerID + ", username=" + username + ", fullName=" + fullName + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(address, cardNumber, cart, customerID, email, fullName, password, username);
 	}
 
 	@Override
@@ -157,7 +150,5 @@ public class Customer {
 				&& Objects.equals(email, other.email) && Objects.equals(fullName, other.fullName)
 				&& Objects.equals(password, other.password) && Objects.equals(username, other.username);
 	}
-	
-	
-	
+
 }

@@ -22,59 +22,61 @@ public class Product {
 	private String imgURL;
 	@Column(name = "PRICE")
 	private double price;
-	
+
 	public Product() {
-		
+
 	}
-	
+
 	public Product(String productName, int stock, String imgURL, double price) {
 		setProductName(productName);
 		setStock(stock);
 		setImgURL(imgURL);
 		setPrice(price);
 	}
-	
+
 	public int getProductID() {
 		return productID;
 	}
+
 	public String getProductName() {
 		return productName;
 	}
+
 	public int getStock() {
 		return stock;
 	}
+
 	public String getImgURL() {
 		return imgURL;
 	}
+
 	public void setProductID(int productID) {
 		this.productID = productID;
 	}
+
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
+
 	public void setImgURL(String imgURL) {
 		this.imgURL = imgURL;
 	}
-	
+
 	public double getPrice() {
-        return price;
-    }
-	
-    public void setPrice(double price) {
-        this.price = price;
-    }
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
 	@Override
 	public String toString() {
 		return "Product [productID=" + productID + ", productName=" + productName + ", price=" + price + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(imgURL, price, productID, productName, stock);
 	}
 
 	@Override
@@ -91,7 +93,5 @@ public class Product {
 				&& productID == other.productID && Objects.equals(productName, other.productName)
 				&& stock == other.stock;
 	}
-	
-    
-	
+
 }
