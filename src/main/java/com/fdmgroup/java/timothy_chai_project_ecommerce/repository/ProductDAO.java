@@ -8,28 +8,28 @@ import jakarta.persistence.EntityManagerFactory;
 public class ProductDAO {
 
 	private EntityManagerFactory emf;
-	
-    public ProductDAO(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    
-    public void persist(Product product) {
-    	EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.persist(product);
-        entityManager.getTransaction().commit();
-    }
-    
-    public void remove(Product product) {
-    	EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.remove(product);
-        entityManager.getTransaction().commit();;
-    }
-	
+
+	public ProductDAO(EntityManagerFactory emf) {
+		this.emf = emf;
+	}
+
+	public void persist(Product product) {
+		EntityManager entityManager = emf.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(product);
+		entityManager.getTransaction().commit();
+	}
+
+	public void remove(Product product) {
+		EntityManager entityManager = emf.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.remove(product);
+		entityManager.getTransaction().commit();
+	}
+
 	public Product findProductById(int id) {
 		EntityManager entityManager = emf.createEntityManager();
-        Product product = entityManager.find(Product.class, id);
-        return product;
+		Product product = entityManager.find(Product.class, id);
+		return product;
 	}
 }
