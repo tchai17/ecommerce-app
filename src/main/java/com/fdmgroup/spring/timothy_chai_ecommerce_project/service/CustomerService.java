@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRepository;
 
 
@@ -43,5 +45,20 @@ public class CustomerService {
 	public List<Customer> returnAllCustomers() {
         return customerRepo.findAll();
     }
+	
+	public void addToCart(Customer customer, Product product, int quantity) {
+		customer.getCart().addToCart(new CartItem(product, quantity));
+		this.saveCustomer(customer);
+	}
+	
+	public void removeFromCart(Customer customer, Product product, int quantity) {
+		customer.getCart().removeFromCart(new CartItem(product, quantity));
+		this.saveCustomer(customer);
+	}
+	
+	public void checkoutCart(Customer customer) {
+		customer.getCart().checkout();
+        this.saveCustomer(customer);
+	}
 	
 }

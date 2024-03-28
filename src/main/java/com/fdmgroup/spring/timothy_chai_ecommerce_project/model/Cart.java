@@ -63,7 +63,7 @@ public class Cart {
 	 * @see #getItems()
 	 * @see #setItems(Set)
 	 */
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
 	private Set<CartItem> items;
 
 	/**
@@ -132,6 +132,15 @@ public class Cart {
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+	
+	public void updateTotalPrice() {
+		totalPrice = 0;
+		items.forEach(item -> {
+			totalPrice += item.getProductSubtotal();
+		});
+	}
+	
+	
 
 	/**
 	 * Overriden toString method for printing Cart objects with ID only
@@ -163,6 +172,8 @@ public class Cart {
 			// If cart does not have the incoming product, add item to cart
 			items.add(item);
 		}
+		
+		updateTotalPrice();
 	}
 
 	/**
@@ -197,6 +208,8 @@ public class Cart {
 			items.remove(targetItem);
 		}
 
+		
+		updateTotalPrice();
 	}
 
 	/**
@@ -245,6 +258,7 @@ public class Cart {
 	 */
 	public void checkout() {
 		items.clear();
+		updateTotalPrice();
 	}
 
 	/**
