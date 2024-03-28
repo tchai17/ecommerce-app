@@ -8,11 +8,11 @@
 		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.fdmgroup</groupId>
-	<artifactId>spring.timothy_chai_ecommerce_project</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>spring.timothy_chai_ecommerce_project</name>
-	<description>Ecommerce Solo Project </description>
+		<groupId>com.fdmgroup</groupId>
+		<artifactId>spring.timothy_chai_ecommerce_project</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<name>spring.timothy_chai_ecommerce_project</name>
+		<description>Ecommerce Solo Project </description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
