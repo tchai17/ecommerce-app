@@ -11,7 +11,7 @@
     <h1 th:text="'Welcome ' + ${session.customer.username}"></h1>
 
 
-    <div class="product-grid">
+    <div class="market">
         <th:block th:if="${session.isLoggedIn}">
             <div class="product-container" th:each="product : ${products}">
                 <h2 th:text="${product.productName}"></h2>
