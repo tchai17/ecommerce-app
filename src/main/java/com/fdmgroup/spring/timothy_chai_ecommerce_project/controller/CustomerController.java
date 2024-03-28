@@ -12,6 +12,7 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerServic
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CustomerController {
@@ -30,6 +31,11 @@ public class CustomerController {
     @GetMapping("/register-customer")
     public String customers() {
         return "registerCustomer";
+    }
+    
+    @GetMapping("/login")
+    public String customerLogin() {
+        return "customerLogin";
     }
     
     @PostMapping("/registration")
@@ -60,6 +66,33 @@ public class CustomerController {
     	System.out.println("Registration Complete");
     	
     	return "complete";
+    }
+    
+    @PostMapping("/login-customer")
+    public String processLogin(HttpServletRequest request, HttpSession session) {
+    	System.out.println("Initiate login for existing customer");
+        
+        // Get parameters
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        // Check if username already exists in database
+        List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
+        if ( existingCustomers.isEmpty() ) {
+            System.out.println("Username does not exist in database");
+            return "customerLogin";
+        }
+        
+        // Check if password is correct
+        if ( existingCustomers.get(0).getPassword().equals(password) ) {
+            System.out.println("Password is correct");
+            session.setAttribute("username", existingCustomers.get(0).getUsername() );
+            return "customerHome";
+        }
+        else {
+            System.out.println("Password is incorrect");
+            return "customerLogin";
+        }
     }
 	
 }
