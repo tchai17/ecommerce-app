@@ -144,7 +144,16 @@ public class CartItem {
 	 * @param productQuantity new quantity to set for this CartItem
 	 */
 	public void setProductQuantity(int productQuantity) {
-		this.productQuantity = productQuantity;
+		
+		if ( productQuantity > this.product.getStock() ) {
+			System.out.println("The quantity of the product you are trying to order "
+					+ "is greater than the stock of the product. Quantity is changed to available stock.");
+            this.productQuantity = this.product.getStock();
+		} else {
+			this.productQuantity = productQuantity;
+		}
+		
+		
 	}
 
 	/**
