@@ -2,12 +2,13 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 
 @Repository
-public interface CustomerRepository extends InterfaceRepository<Customer, Integer>{
+public interface CustomerRepository extends JpaRepository<Customer, Integer>{
 
 	public List<Customer> findByUsername(String username);
 	public List<Customer> findByEmail(String email);
