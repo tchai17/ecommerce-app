@@ -78,7 +78,8 @@ public class CustomerController {
         if ( existingCustomers.get(0).getPassword().equals(password) ) {
             System.out.println("Password is correct");
             session.setAttribute("username", existingCustomers.get(0).getUsername() );
-            return "customerHome";
+            session.setAttribute("isLoggedIn", true);
+            return "redirect:/product/dashboard";
         }
         else {
             System.out.println("Password is incorrect");

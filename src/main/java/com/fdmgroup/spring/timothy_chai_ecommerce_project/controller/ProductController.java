@@ -1,7 +1,10 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,5 +51,12 @@ public class ProductController {
     	
     	return "complete";
     
+	}
+	
+	@GetMapping("/dashboard")
+	public String productDisplay(Model model) {
+		List<Product> products = productService.returnAllProducts();
+        model.addAttribute("products", products);
+		return "dashboard";
 	}
 }

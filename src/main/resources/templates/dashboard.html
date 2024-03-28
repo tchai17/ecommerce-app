@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1 th:text="'Welcome ' + ${session.username}"></h1>
+</body>
+
+<div class="product-grid">
+    <th:block th:if="${session.isLoggedIn}">
+        <div class="product-container" th:each="product : ${products}">
+            <h3 th:text="${product.productName}"></h3>
+            <img th:src="${product.imgURL}" alt="${product.productName}">
+            <p th:text="'$' + ${product.price}"></p>
+            <p th:text="'Available stock: '+${product.stock}"></p>
+        </div>
+    </th:block>
+    <th:block th:unless="${session.isLoggedIn}"> 
+        <p>Please login to view products.</p>
+        <a href="@{/customer/login}">Login</a>
+    </th:block>
+</div>
+
+</html>
