@@ -51,13 +51,6 @@ public class CustomerController {
     	// Create new Customer instance
     	Customer newCustomer = new Customer(username, password, email, address, fullName, cardNumber);
     	
-    	// Check if username already exists in database
-    	List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
-    	if ( !existingCustomers.isEmpty() ) {
-    		System.out.println("Username already exists in database");
-    		return "registerCustomer";
-    	}
-    	
     	// Save to DB
     	customerService.saveCustomer(newCustomer);
     	System.out.println(newCustomer);

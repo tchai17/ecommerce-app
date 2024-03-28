@@ -24,7 +24,15 @@ public class CustomerService {
     }
 
 	public void saveCustomer(Customer customer) {
-		customerRepo.save(customer);
+		List<Customer> existingCustomers = customerRepo.findByUsername(customer.getUsername());
+		
+        if (existingCustomers.isEmpty()) {
+            customerRepo.save(customer);
+        }
+        else {
+        	System.out.println("Username already exists, please input a unique username!");
+        }
+		
 	}
 	
 	public Optional<Customer> findCustomerByID(int customerID) {
