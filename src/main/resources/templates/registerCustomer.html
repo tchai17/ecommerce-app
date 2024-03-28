@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration</title>
+</head>
+<body>
+    <h1>Please provide your details:</h1>
+    <form method="POST" action="registration" >
+        <fieldset>
+            <label>Please enter your username:</label><br>
+            <input type="text" name="username" required ><br>
+            <label>Please enter your password:</label><br>
+            <input type="password" name="password" required ><br>
+            <label>Please enter your email address:</label><br>
+            <input type="text" name="email" required ><br>
+            <label>Please enter your shipping address:</label><br>
+            <input type="text" name="address" required ><br>
+            <label>Please enter your full name:</label><br>
+            <input type="text" name="fullName" required ><br>
+            <label>Please enter your credit card number:</label><br>
+            <input type="text" name="cardNumber" ><br>
+            
+            <button type="submit"> Confirm </button>
+        </fieldset>
+    </form>
+</body>
+</html>
