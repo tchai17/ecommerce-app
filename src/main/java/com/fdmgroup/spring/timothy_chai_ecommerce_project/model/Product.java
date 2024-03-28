@@ -164,7 +164,14 @@ public class Product {
 	 * @param stock Updated inventory for this product
 	 */
 	public void setStock(int stock) {
-		this.stock = stock;
+		if ( stock <= 0) {
+			System.out.println("Stock must be positive!");
+			return;
+		}
+		else {
+			this.stock = stock;
+		}
+		
 	}
 
 	/**

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product</title>
+</head>
+<body>
+    <form method="POST" th:action="@{/product/add-product}">
+        <fieldset>
+            <label>Please enter the product name:</label><br>
+            <input type="text" name="productName" required ><br>
+            <label>Please enter the current available stock:</label><br>
+            <input type="number" name="stock" required ><br>
+            <label>Please enter a suitable image URL:</label><br>
+            <input type="text" name="imgURL" required ><br>
+            <label>Please enter the price:</label><br>
+            <input type="text" name="price" required ><br>
+            <button type="submit"> Add To Database </button>
+        </fieldset>
+    </form>
+</body>
+</html>

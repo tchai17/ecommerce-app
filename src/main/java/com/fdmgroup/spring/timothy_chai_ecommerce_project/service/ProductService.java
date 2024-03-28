@@ -24,7 +24,14 @@ public class ProductService {
 	
 	public void saveProduct(Product product) {
 		
-		productRepository.save(product);
+		List<Product> existingProducts = productRepository.findByProductName(product.getProductName());
+		if ( existingProducts.isEmpty() ) {
+			productRepository.save(product);
+		}
+		else {
+			System.out.println("Product already exists");
+		}
+		
 	}
 	
 	public Optional<Product> findProductById(int productId) {
