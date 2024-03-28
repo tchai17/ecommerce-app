@@ -153,12 +153,12 @@ public class Cart {
 
 		// Check if cart has item which has a product which matches the input cartItem
 		if (cartHasProduct(item)) {
-			items.forEach(cartItem -> {
-				// if cart has product, add to quantity
-				if (cartItem.getProduct().equals(item.getProduct())) {
-					cartItem.setProductQuantity(cartItem.getProductQuantity() + item.getProductQuantity());
-				}
-			});
+			
+			Optional<CartItem> cartItem = findMatchingCartItem(item);
+			if ( cartItem.isPresent() ) {
+				cartItem.get().setProductQuantity(cartItem.get().getProductQuantity() + item.getProductQuantity());
+			}
+
 		} else {
 			// If cart does not have the incoming product, add item to cart
 			items.add(item);
