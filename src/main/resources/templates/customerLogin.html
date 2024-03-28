@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" action="login-customer" >
+    <form method="POST" th:action="@{/customer/login-customer}">
         <fieldset>
             <label>Please enter your username:</label><br>
             <input type="text" name="username" required ><br>

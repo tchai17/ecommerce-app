@@ -6,39 +6,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/customer")
 public class CustomerController {
 
 	@Autowired
 	private CustomerService customerService;
-	
-    @Autowired
-    private ProductService productService;
     
     @GetMapping("/")
     public String index() {
         return "index";
     }
     
-    @GetMapping("/register-customer")
+    @GetMapping("/register-customer") // localhost:8080/customer/register-customer
     public String customers() {
         return "registerCustomer";
     }
     
-    @GetMapping("/login")
+    @GetMapping("/login") // localhost:8080/customer/login
     public String customerLogin() {
         return "customerLogin";
     }
     
-    @PostMapping("/registration")
+    @PostMapping("/registration") // localhost:8080/customer/registration
     public String processRegistration(HttpServletRequest request) {
     	System.out.println("Initiate registration for new customer");
     	
@@ -68,7 +66,7 @@ public class CustomerController {
     	return "complete";
     }
     
-    @PostMapping("/login-customer")
+    @PostMapping("/login-customer") // localhost:8080/customer/login-customer
     public String processLogin(HttpServletRequest request, HttpSession session) {
     	System.out.println("Initiate login for existing customer");
         
