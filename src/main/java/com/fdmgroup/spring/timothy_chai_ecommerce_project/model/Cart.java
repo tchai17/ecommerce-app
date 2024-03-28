@@ -146,9 +146,14 @@ public class Cart {
 	/**
 	 * Overriden toString method for printing Cart objects with ID only
 	 */
+//	@Override
+//	public String toString() {
+//		return "Cart [cartID=" + cartID + "items" + "]";
+//	}
+	
 	@Override
 	public String toString() {
-		return "Cart [cartID=" + cartID + "]";
+		return "Cart [cartID=" + cartID + ", totalPrice=" + totalPrice + ", items=" + items + "]";
 	}
 
 	/**
@@ -177,6 +182,8 @@ public class Cart {
 		
 		updateTotalPrice();
 	}
+
+	
 
 	/**
 	 * Removes specified CartItem from cart. If the CartItem specified has a larger

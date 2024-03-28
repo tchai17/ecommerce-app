@@ -111,6 +111,9 @@ public class CustomerController {
     		Cart cart = target.getCart();
     		httpSession.setAttribute("cart", cart);
     		cart.addToCart( new CartItem(product.get(),quantity) );
+    		cart.updateTotalPrice();
+    		System.out.println(cart);
+    		customer.setCart(cart);
     		customerService.saveCustomer(customer);
     		System.out.println("Item added");
         }

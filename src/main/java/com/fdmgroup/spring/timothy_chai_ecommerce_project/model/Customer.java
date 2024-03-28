@@ -226,6 +226,10 @@ public class Customer {
 	public Cart getCart() {
 		return cart;
 	}
+	
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
 
 	/**
 	 * Setter for customer ID
