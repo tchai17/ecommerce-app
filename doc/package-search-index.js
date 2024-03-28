@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.fdmgroup.java.timothy_chai_project_ecommerce.app"},{"l":"com.fdmgroup.java.timothy_chai_project_ecommerce.repository"}];updateSearchResults();
