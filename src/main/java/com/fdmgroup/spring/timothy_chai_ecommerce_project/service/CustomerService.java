@@ -40,4 +40,8 @@ public class CustomerService {
 		return customerRepo.findByUsername(customerName);
 	}
 	
+	public List<Customer> returnAllCustomers() {
+        return customerRepo.findAll();
+    }
+	
 }
