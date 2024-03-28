@@ -135,9 +135,10 @@ public class Cart {
 	
 	public void updateTotalPrice() {
 		totalPrice = 0;
-		items.forEach(item -> {
+		for ( CartItem item : items ) {
 			totalPrice += item.getProductSubtotal();
-		});
+		}
+	
 	}
 	
 	
@@ -170,6 +171,7 @@ public class Cart {
 
 		} else {
 			// If cart does not have the incoming product, add item to cart
+			item.setCart(this);
 			items.add(item);
 		}
 		

@@ -1,15 +1,24 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +29,12 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+    private HttpSession httpSession; 
     
     @GetMapping("/")
     public String index() {
@@ -77,7 +92,7 @@ public class CustomerController {
         // Check if password is correct
         if ( existingCustomers.get(0).getPassword().equals(password) ) {
             System.out.println("Password is correct");
-            session.setAttribute("username", existingCustomers.get(0).getUsername() );
+            session.setAttribute("customer", existingCustomers.get(0) );
             session.setAttribute("isLoggedIn", true);
             return "redirect:/product/dashboard";
         }
@@ -86,5 +101,20 @@ public class CustomerController {
             return "customerLogin";
         }
     }
-	
+
+    @Transactional
+    @PostMapping("/addToCart")
+    public String addToCart(@SessionAttribute Customer customer, int productId, @RequestParam int quantity) {
+    	Optional<Product> product = productService.findProductById(productId);
+    	Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
+    	if ( product.isPresent() ) {
+    		Cart cart = target.getCart();
+    		httpSession.setAttribute("cart", cart);
+    		cart.addToCart( new CartItem(product.get(),quantity) );
+    		customerService.saveCustomer(customer);
+    		System.out.println("Item added");
+        }
+    	return "redirect:/product/dashboard";
+    }
+    
 }

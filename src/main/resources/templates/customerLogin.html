@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
+    <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
     <form method="POST" th:action="@{/customer/login-customer}">
         <fieldset>
             <label>Please enter your username:</label><br>

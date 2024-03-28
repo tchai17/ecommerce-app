@@ -3,9 +3,11 @@
 	<head>
 		<meta charset="ISO-8859-1">
 		<title>Welcome to Snack Shack!</title>
+		<link rel="stylesheet" th:href="@{/styles.css}">
+		
 	</head>
 	<body>
-		<h1>Welcome to Snack Shack!</h1>
+		<h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
 		<form th:action="@{/customer/register-customer}" method="GET">
 			<button type="submit">Register Account</button>
 		</form><br>

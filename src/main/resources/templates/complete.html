@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Complete</title>
+    <link rel="stylesheet" th:href="@{styles.css}">
 </head>
 <body>
+    <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
     <h1>Registration Complete!</h1>
     <form th:action="@{/customer/login}" method="GET">
         <button type="submit">Login</button>

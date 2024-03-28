@@ -6,10 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRepository;
+
+
 
 
 
@@ -23,15 +26,10 @@ public class CustomerService {
         this.customerRepo = customerRepo;
     }
 
+	
+	
 	public void saveCustomer(Customer customer) {
-		List<Customer> existingCustomers = customerRepo.findByUsername(customer.getUsername());
-		
-        if (existingCustomers.isEmpty()) {
             customerRepo.save(customer);
-        }
-        else {
-        	System.out.println("Username already exists, please input a unique username!");
-        }
 		
 	}
 	
@@ -55,12 +53,14 @@ public class CustomerService {
     }
 	
 	public void addToCart(Customer customer, Product product, int quantity) {
-		customer.getCart().addToCart(new CartItem(product, quantity));
+		Cart cart = customer.getCart();
+		cart.addToCart(new CartItem(product, quantity));
 		this.saveCustomer(customer);
 	}
 	
 	public void removeFromCart(Customer customer, Product product, int quantity) {
-		customer.getCart().removeFromCart(new CartItem(product, quantity));
+		Cart cart = customer.getCart();
+		cart.removeFromCart(new CartItem(product, quantity));
 		this.saveCustomer(customer);
 	}
 	

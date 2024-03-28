@@ -4,24 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 <body>
-    <h1 th:text="'Welcome ' + ${session.username}"></h1>
+    <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
+    <h1 th:text="'Welcome ' + ${session.customer.username}"></h1>
+
+
+    <div class="product-grid">
+        <th:block th:if="${session.isLoggedIn}">
+            <div class="product-container" th:each="product : ${products}">
+                <h2 th:text="${product.productName}"></h2>
+                <img th:src="${product.imgURL}" alt="${product.productName}">
+                <p th:text="'$' + ${product.price}"></p>
+                <p th:text="'Available stock: '+${product.stock}"></p>
+                <form th:action="@{/customer/addToCart(productId=${product.productID})}" method="post">
+                    <input type="number" name="quantity" min="1">
+                    <button type="submit" >Add To Cart</button>
+                </form>
+            </div>
+        </th:block>
+        <th:block th:unless="${session.isLoggedIn}"> 
+            <p>Please login to view products.</p>
+            <a href="@{/customer/login}">Login</a>
+        </th:block>
+    </div>
 </body>
-
-<div class="product-grid">
-    <th:block th:if="${session.isLoggedIn}">
-        <div class="product-container" th:each="product : ${products}">
-            <h3 th:text="${product.productName}"></h3>
-            <img th:src="${product.imgURL}" alt="${product.productName}">
-            <p th:text="'$' + ${product.price}"></p>
-            <p th:text="'Available stock: '+${product.stock}"></p>
-        </div>
-    </th:block>
-    <th:block th:unless="${session.isLoggedIn}"> 
-        <p>Please login to view products.</p>
-        <a href="@{/customer/login}">Login</a>
-    </th:block>
-</div>
-
 </html>
