@@ -28,9 +28,23 @@ public class CustomerService {
 
 	
 	
-	public void saveCustomer(Customer customer) {
-            customerRepo.save(customer);
+	public void saveNewCustomer(Customer customer) {
+         List<Customer> existingCustomers = customerRepo.findByUsername(customer.getUsername());
+         if ( existingCustomers.isEmpty() ) {
+             customerRepo.save(customer);
+         }
+         else {
+             System.out.println("Customer already exists");
+         }
 		
+	}
+	
+	public void updateCustomer(Customer customer) {
+		Optional<Customer> targetCustomer = customerRepo.findById(customer.getCustomerID());
+		
+        if ( targetCustomer.isPresent() ) {
+            customerRepo.save(customer);
+        }
 	}
 	
 	public Optional<Customer> findCustomerByID(int customerID) {
@@ -55,18 +69,18 @@ public class CustomerService {
 	public void addToCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
 		cart.addToCart(new CartItem(product, quantity));
-		this.saveCustomer(customer);
+		this.updateCustomer(customer);
 	}
 	
 	public void removeFromCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
 		cart.removeFromCart(new CartItem(product, quantity));
-		this.saveCustomer(customer);
+		this.updateCustomer(customer);
 	}
 	
 	public void checkoutCart(Customer customer) {
 		customer.getCart().checkout();
-        this.saveCustomer(customer);
+        this.updateCustomer(customer);
 	}
 	
 }

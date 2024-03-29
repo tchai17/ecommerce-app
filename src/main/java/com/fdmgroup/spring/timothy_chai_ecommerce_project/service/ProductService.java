@@ -22,16 +22,24 @@ public class ProductService {
     
 	}
 	
-	public void saveProduct(Product product) {
+	public void saveProduct(Product newProduct) {
 		
-		List<Product> existingProducts = productRepository.findByProductName(product.getProductName());
+		List<Product> existingProducts = productRepository.findByProductName(newProduct.getProductName());
 		if ( existingProducts.isEmpty() ) {
-			productRepository.save(product);
+			productRepository.save(newProduct);
 		}
 		else {
 			System.out.println("Product already exists");
 		}
 		
+	}
+	
+	public void updateProduct(Product product) {
+		Optional<Product> targetProduct = productRepository.findById(product.getProductID());
+		if ( targetProduct.isPresent() ) {
+            targetProduct.get().setProductName(product.getProductName());
+            productRepository.save(targetProduct.get());
+        }
 	}
 	
 	public Optional<Product> findProductById(int productId) {
