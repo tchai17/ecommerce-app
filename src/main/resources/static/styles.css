@@ -37,3 +37,13 @@ button{
     height:200px;
     width:200px;
 }
+
+.cart-icon img{
+    position: fixed;
+    bottom: 2vh; right: 4vh;
+    width: 7.5vh; height: 7.5vh;
+}
+
+#cart-container{
+    border: 2px black;
+}

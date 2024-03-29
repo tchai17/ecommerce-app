@@ -6,6 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function setSelectedProductId(select) {
+            var selectedValue = select.value;
+            console.log("Selected product ID:", selectedValue);
+            $("#selectedProductId").val(selectedValue);
+        }
+
+        // Ensure productID is set before form submission
+        $(document).ready(function() {
+            $("#removeFromCartForm").submit(function(event) {
+                var selectedProductId = $("#selectedProductId").val();
+                if (selectedProductId === "0") {
+                    alert("Please select a product.");
+                    event.preventDefault(); // Prevent form submission if product is not selected
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -20,12 +39,12 @@
                 <img th:src="${product.imgURL}" alt="${product.productName}">
                 <p th:text="'$' + ${product.price}"></p>
                 <p th:text="'Available stock: '+${product.stock}"></p>
-                <form th:action="@{/customer/addToCart(productId=${product.productID})}" method="post">
+                <form th:action="@{/customer/addToCart(productId=${product.productID})}" method="POST">
                     <input type="number" name="quantity" min="1">
                     <button type="submit">Add To Cart</button>
                 </form>
             </div>
-            <div id="cart-container" >
+            <div id="cart-container">
                 <table id="myList">
                     <tr>
                         <th>Product Name</th>
@@ -45,18 +64,20 @@
                     </tr>
                 </table>
                 <div>
-                    <form action="removeFromCart" method="POST">
-                        <select class="form-control"  id="dropdownProduct">
+                    <form th:action="@{/customer/removeFromCart}" method="POST">
+                        <select class="form-control" id="dropdownProduct" onchange="setSelectedProductId(this)">
                             <option value="0">select item</option>
-                            <option th:each="cartItem : ${session.customer.cart.items}" 
-                            th:value="${cartItem.product.productID}" th:text="${cartItem.product.productName}"></option>
+                            <option th:each="cartItem : ${session.customer.cart.items}"
+                                th:value="${cartItem.product.productID}" th:text="${cartItem.product.productName}">
+                            </option>
                         </select>
-                        <input type="number" id="removeQuantity" min="1" value="1">
+                        <input type="hidden" id="selectedProductId" name="productID">
+                        <input type="number" id="removeQuantity" name="removeQuantity" min="1" value="1">
                         <button type="submit" id="removeFromCartButton">Remove from Cart</button>
                     </form>
-                    
+
                 </div>
-                
+
             </div>
 
 
@@ -69,14 +90,13 @@
             <a href="@{/customer/login}">Login</a>
         </th:block>
     </div>
-    <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js">
         $(document).ready(function () {
             $(".cart-icon").click(function (event) {
                 event.preventDefault(); // Prevent default link behavior
                 $("#cart-container").toggle(); // Toggle visibility
             });
         });
-
     </script>
 </body>
 
