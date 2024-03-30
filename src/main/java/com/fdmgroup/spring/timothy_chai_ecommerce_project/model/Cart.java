@@ -216,6 +216,7 @@ public class Cart {
 
 		} else {
 			items.remove(targetItem);
+			System.out.println(targetItem + " is removed");
 		}
 
 		updateTotalPrice();
@@ -251,7 +252,7 @@ public class Cart {
 	 * @param item Input CartItem to check against
 	 * @return result Returns an Optional wrapping the target CartItem
 	 */
-	private Optional<CartItem> findMatchingCartItem(CartItem item) {
+	public Optional<CartItem> findMatchingCartItem(CartItem item) {
 
 		for (CartItem cartItem : items) {
 			if (cartItem.getProduct().equals(item.getProduct())) {

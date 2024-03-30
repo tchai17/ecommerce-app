@@ -17,6 +17,8 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartItemService;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
 
@@ -40,6 +42,13 @@ public class CustomerController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private CartItemService cartItemService;
+	
+	
+	@Autowired
+	private CartService cartService;
+	
 	/** The session that is used to store the customer information. */
 	@Autowired
 	private HttpSession httpSession;
@@ -198,9 +207,7 @@ public class CustomerController {
 	@PostMapping("/removeFromCart")
 	public String removeFromCart(@SessionAttribute Customer customer, @RequestParam int productID,
 			@RequestParam(value = "productQuantity") int quantity) {
-
-
-
+		
 		Optional<Product> product = productService.findProductById(productID);
 		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
 
@@ -208,18 +215,31 @@ public class CustomerController {
 		if (product.isPresent()) {
 
 			// Get customer's cart and set as session attribute
+			customerService.updateCustomer(target);
 			Cart cart = target.getCart();
 			httpSession.setAttribute("cart", cart);
 
 			// Remove from cart and update
+			Optional<CartItem> matchingItem = cart.findMatchingCartItem(new CartItem(product.get(), quantity));
+			
+			if (matchingItem.isPresent()) {
+				if ( quantity >= matchingItem.get().getProductQuantity() ) {
+					cart.removeFromCart(new CartItem(product.get(), quantity));
+					cartItemService.deleteCartItemFromDatabase(matchingItem.get());
+				}
+			}
+			
 			cart.removeFromCart(new CartItem(product.get(), quantity));
 			cart.updateTotalPrice();
 
 			// Save as customer
-			customer.setCart(cart);
-			customerService.updateCustomer(customer);
+			cartService.updateCart(cart);
+			target.setCart(cart);
+			customerService.updateCustomer(target);
+			System.out.println(cart);
 			System.out.println("Item removed");
 		}
+		System.out.println();
 		return "redirect:/product/dashboard";
 	}
 	
@@ -251,7 +271,7 @@ public class CustomerController {
 
 			// Save as customer
 			customer.setCart(cart);
-			customerService.updateCustomer(customer);
+			customerService.updateCustomer(target);
 			System.out.println("Item quantity updated - ");
 		}
 		return "redirect:/product/dashboard";

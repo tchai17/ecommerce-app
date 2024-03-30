@@ -46,4 +46,5 @@ button{
 
 #cart-container{
     border: 2px black;
+    align-content: right;
 }

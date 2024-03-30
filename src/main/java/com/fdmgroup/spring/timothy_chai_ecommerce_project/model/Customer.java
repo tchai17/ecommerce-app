@@ -226,7 +226,7 @@ public class Customer {
 	public Cart getCart() {
 		return cart;
 	}
-	
+
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
@@ -291,18 +291,15 @@ public class Customer {
 	 * @param cardNumber Specifies the new credit card number to be used for payment
 	 */
 	public void setCardNumber(String cardNumber) {
-		
-		if ( isNumber(cardNumber) && cardNumber.length() == 16 ) {
-	            this.cardNumber = cardNumber; 
-		}
-		else {
+
+		if (isNumber(cardNumber) && cardNumber.length() == 16) {
+			this.cardNumber = cardNumber;
+		} else {
 			System.out.println("Invalid cardNumber");
 		}
-		
-		
+
 	}
-			
-	
+
 	/**
 	 * Updates customer details based on the input Customer object
 	 * 
@@ -347,12 +344,12 @@ public class Customer {
 
 	private boolean isNumber(String stringNumber) {
 		try {
-            Long.parseLong(stringNumber);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    
+			Long.parseLong(stringNumber);
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		return true;
+
 	}
-	
+
 }

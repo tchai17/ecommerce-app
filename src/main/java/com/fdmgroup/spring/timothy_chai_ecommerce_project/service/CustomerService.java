@@ -99,41 +99,6 @@ public class CustomerService {
 		return customerRepo.findAll();
 	}
 
-	/**
-	 * Adds a new product to the customer's cart.
-	 * 
-	 * @param customer the customer who is adding the product to their cart
-	 * @param product  the product that is being added to the cart
-	 * @param quantity the quantity of the product that is being added to the cart
-	 */
-	public void addToCart(Customer customer, Product product, int quantity) {
-		Cart cart = customer.getCart();
-		cart.addToCart(new CartItem(product, quantity));
-		this.updateCustomer(customer);
-	}
-
-	/**
-	 * Removes a product from the customer's cart.
-	 * 
-	 * @param customer the customer who is removing the product from their cart
-	 * @param product  the product that is being removed from the cart
-	 * @param quantity the quantity of the product that is being removed from the
-	 *                 cart
-	 */
-	public void removeFromCart(Customer customer, Product product, int quantity) {
-		Cart cart = customer.getCart();
-		cart.removeFromCart(new CartItem(product, quantity));
-		this.updateCustomer(customer);
-	}
-
-	/**
-	 * Checks out the customer's cart.
-	 * 
-	 * @param customer the customer whose cart is being checked out
-	 */
-	public void checkoutCart(Customer customer) {
-		customer.getCart().checkout();
-		this.updateCustomer(customer);
-	}
+	
 
 }
