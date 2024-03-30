@@ -133,29 +133,24 @@ public class Cart {
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	
+
 	/**
 	 * Calculates the total price of all items in the cart.
 	 * 
 	 * @return the total price of all items in the cart
 	 */
 	public void updateTotalPrice() {
-	    totalPrice = 0;
-	    for (CartItem item : items) {
-	        totalPrice += item.getProductSubtotal();
-	    }
+		totalPrice = 0;
+		for (CartItem item : items) {
+			totalPrice += item.getProductSubtotal();
+		}
 	}
-		
-	
 
 	/**
-	 * Overriden toString method for printing Cart objects with ID only
+	 * Overriden toString method for printing Cart objects with ID, total price, and
+	 * items in the cart
 	 */
-//	@Override
-//	public String toString() {
-//		return "Cart [cartID=" + cartID + "items" + "]";
-//	}
-	
+
 	@Override
 	public String toString() {
 		return "Cart [cartID=" + cartID + ", totalPrice=" + totalPrice + ", items=" + items + "]";
@@ -173,9 +168,9 @@ public class Cart {
 
 		// Check if cart has item which has a product which matches the input cartItem
 		if (cartHasProduct(item)) {
-			
+
 			Optional<CartItem> cartItem = findMatchingCartItem(item);
-			if ( cartItem.isPresent() ) {
+			if (cartItem.isPresent()) {
 				cartItem.get().setProductQuantity(cartItem.get().getProductQuantity() + item.getProductQuantity());
 			}
 
@@ -184,11 +179,9 @@ public class Cart {
 			item.setCart(this);
 			items.add(item);
 		}
-		
+
 		updateTotalPrice();
 	}
-
-	
 
 	/**
 	 * Removes specified CartItem from cart. If the CartItem specified has a larger
@@ -222,7 +215,6 @@ public class Cart {
 			items.remove(targetItem);
 		}
 
-		
 		updateTotalPrice();
 	}
 

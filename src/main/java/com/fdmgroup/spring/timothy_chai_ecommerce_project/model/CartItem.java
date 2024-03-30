@@ -186,8 +186,6 @@ public class CartItem {
 	/**
 	 * Overriden toString method for printing CartItem objects to console
 	 */
-	
-
 	@Override
 	public String toString() {
 		return "CartItem [cartItemId=" + cartItemId + ", productQuantity=" + productQuantity + ", productSubtotal="
