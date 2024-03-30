@@ -57,14 +57,21 @@
                         <td th:text="${cartItem.productQuantity}"></td>
                         <td th:text="${cartItem.product.price}"></td>
                         <td th:text="${cartItem.productSubtotal}"></td>
+                        <td>
+                            <form th:action="@{/customer/removeFromCart}" method="POST">
+                                <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
+                                <input type="hidden" th:value="${cartItem.productQuantity}" name="productQuantity">
+                                <button type="submit">Remove All</button>
+                            </form>
+                        </td>
                     </tr>
                     <tr>
-                        <td colspan="3" text-align="right"><b>Cart Total:</b></td>
+                        <td colspan="4" text-align="right"><b>Cart Total:</b></td>
                         <td th:text="${session.customer.cart.totalPrice}"></td>
                     </tr>
                 </table>
                 <div>
-                    <form th:action="@{/customer/removeFromCart}" method="POST">
+                    <!-- <form th:action="@{/customer/removeFromCart}" method="POST">
                         <select class="form-control" id="dropdownProduct" onchange="setSelectedProductId(this)">
                             <option value="0">select item</option>
                             <option th:each="cartItem : ${session.customer.cart.items}"
@@ -74,7 +81,7 @@
                         <input type="hidden" id="selectedProductId" name="productID">
                         <input type="number" id="removeQuantity" name="removeQuantity" min="1" value="1">
                         <button type="submit" id="removeFromCartButton">Remove from Cart</button>
-                    </form>
+                    </form> -->
 
                 </div>
 

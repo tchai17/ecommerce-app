@@ -23,36 +23,66 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * This class is the customer controller that handles all the requests related
+ * to the customer.
+ */
 @Controller
 @RequestMapping("/customer")
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class CustomerController {
 
+	/** The customer service that is used to interact with the customer data. */
 	@Autowired
 	private CustomerService customerService;
 
+	/** The product service that is used to interact with the product data. */
 	@Autowired
 	private ProductService productService;
 
+	/** The session that is used to store the customer information. */
 	@Autowired
 	private HttpSession httpSession;
 
+	/**
+	 * This method is used to handle the index page of the customer.
+	 * 
+	 * @return the index page of the customer
+	 */
 	@GetMapping("/")
 	public String index() {
 		return "index";
 	}
 
-	@GetMapping("/register-customer") // localhost:8080/customer/register-customer
-	public String customers() {
+	/**
+	 * This method is used to handle the register-customer request.
+	 * 
+	 * @return the registerCustomer view
+	 */
+	@GetMapping("/register-customer")
+	public String registerCustomer() {
 		return "registerCustomer";
 	}
 
-	@GetMapping("/login") // localhost:8080/customer/login
-	public String customerLogin() {
+	/**
+	 * This method is used to handle the login request
+	 * 
+	 * @return the customerLogin view
+	 */
+	@GetMapping("/login")
+	public String loginCustomer() {
 		return "customerLogin";
 	}
 
-	@PostMapping("/registration") // localhost:8080/customer/registration
+	/**
+	 * This method is used to process the customer registration form. It retrieves
+	 * the form parameters and creates a new customer object. It then saves the
+	 * customer to the database and displays a "registration complete" message.
+	 * 
+	 * @param request the HTTP request object
+	 * @return the "complete" page after registering the customer
+	 */
+	@PostMapping("/registration")
 	public String processRegistration(HttpServletRequest request) {
 		System.out.println("Initiate registration for new customer");
 
@@ -75,7 +105,18 @@ public class CustomerController {
 		return "complete";
 	}
 
-	@PostMapping("/login-customer") // localhost:8080/customer/login-customer
+	/**
+	 * This method is used to process the customer login form. It retrieves the form
+	 * parameters and checks if the username and password match an existing customer
+	 * in the database. If the login is successful, the customer's information is
+	 * stored in the session and the user is redirected to the product dashboard. If
+	 * the login fails, the user is redirected back to the customer login page.
+	 * 
+	 * @param request the HTTP request object
+	 * @return the view to be displayed after login. If login is successful, user is
+	 *         redirected to the product dashboard.
+	 */
+	@PostMapping("/login-customer")
 	public String processLogin(HttpServletRequest request) {
 		System.out.println("Initiate login for existing customer");
 
@@ -108,6 +149,17 @@ public class CustomerController {
 		}
 	}
 
+	/**
+	 * This method is used to add an item to the cart. It retrieves the customer
+	 * information from the session, adds the item to the cart, updates the cart,
+	 * and saves the customer information. Then it redirects the user to the product
+	 * dashboard.
+	 * 
+	 * @param customer  the customer information
+	 * @param productId the product ID
+	 * @param quantity  the quantity of the item
+	 * @return the redirect to the product dashboard
+	 */
 	@Transactional(readOnly = false)
 	@PostMapping("/addToCart")
 	public String addToCart(@SessionAttribute Customer customer, int productId, @RequestParam int quantity) {
@@ -133,16 +185,24 @@ public class CustomerController {
 		return "redirect:/product/dashboard";
 	}
 
+	/**
+	 * This method is used to remove an item from the cart. It retrieves the
+	 * customer information from the session, removes the item from the cart,
+	 * updates the cart, and saves the customer information. Then it redirects the
+	 * user to the product dashboard.
+	 * 
+	 * @param customer  the customer information
+	 * @param productID the product ID
+	 * @param quantity  the quantity of the item to be removed
+	 * @return the redirect to the product dashboard
+	 */
+	@Transactional(readOnly = false)
 	@PostMapping("/removeFromCart")
 	public String removeFromCart(@SessionAttribute Customer customer, @RequestParam String productID,
-			@RequestParam(value = "removeQuantity") String quantity) {
+			@RequestParam(value = "productQuantity") String quantity) {
 
-		System.out.println("productID: "+productID);
-		System.out.println("quantity: "+quantity);
-		
 		int realProductID = Integer.parseInt(productID);
 		int realQuantity = Integer.parseInt(quantity);
-	
 
 		Optional<Product> product = productService.findProductById(realProductID);
 		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
