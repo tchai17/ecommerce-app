@@ -160,7 +160,6 @@ public class CustomerController {
 	 * @param quantity  the quantity of the item
 	 * @return the redirect to the product dashboard
 	 */
-	@Transactional(readOnly = false)
 	@PostMapping("/addToCart")
 	public String addToCart(@SessionAttribute Customer customer, int productId, @RequestParam int quantity) {
 		// Get relevant product and customer that is logged in
@@ -196,15 +195,13 @@ public class CustomerController {
 	 * @param quantity  the quantity of the item to be removed
 	 * @return the redirect to the product dashboard
 	 */
-	@Transactional(readOnly = false)
 	@PostMapping("/removeFromCart")
-	public String removeFromCart(@SessionAttribute Customer customer, @RequestParam String productID,
-			@RequestParam(value = "productQuantity") String quantity) {
+	public String removeFromCart(@SessionAttribute Customer customer, @RequestParam int productID,
+			@RequestParam(value = "productQuantity") int quantity) {
 
-		int realProductID = Integer.parseInt(productID);
-		int realQuantity = Integer.parseInt(quantity);
 
-		Optional<Product> product = productService.findProductById(realProductID);
+
+		Optional<Product> product = productService.findProductById(productID);
 		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
 
 		// if product is found
@@ -215,13 +212,47 @@ public class CustomerController {
 			httpSession.setAttribute("cart", cart);
 
 			// Remove from cart and update
-			cart.removeFromCart(new CartItem(product.get(), realQuantity));
+			cart.removeFromCart(new CartItem(product.get(), quantity));
 			cart.updateTotalPrice();
 
 			// Save as customer
 			customer.setCart(cart);
 			customerService.updateCustomer(customer);
 			System.out.println("Item removed");
+		}
+		return "redirect:/product/dashboard";
+	}
+	
+	
+	@PostMapping("/updateCartItemQuantity")
+	public String updateCartItemQuantity(@SessionAttribute Customer customer, @RequestParam int productID,
+            @RequestParam(value = "updateQuantity") String direction) {
+		
+		Optional<Product> product = productService.findProductById(productID);
+		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
+		int quantity = 1;
+		
+		// if product is found
+		if (product.isPresent()) {
+
+			// Get customer's cart and set as session attribute
+			Cart cart = target.getCart();
+			httpSession.setAttribute("cart", cart);
+			
+			// Get direction
+			if (direction.equals("plus")) {
+				addToCart(customer, productID, quantity);
+			}
+			else {
+				removeFromCart(customer, productID, quantity);
+			}
+			System.out.println("Total price updated - ");
+			cart.updateTotalPrice();
+
+			// Save as customer
+			customer.setCart(cart);
+			customerService.updateCustomer(customer);
+			System.out.println("Item quantity updated - ");
 		}
 		return "redirect:/product/dashboard";
 	}

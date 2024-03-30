@@ -169,9 +169,11 @@ public class Cart {
 		// Check if cart has item which has a product which matches the input cartItem
 		if (cartHasProduct(item)) {
 
-			Optional<CartItem> cartItem = findMatchingCartItem(item);
-			if (cartItem.isPresent()) {
-				cartItem.get().setProductQuantity(cartItem.get().getProductQuantity() + item.getProductQuantity());
+			Optional<CartItem> targetItem = findMatchingCartItem(item);
+			if (targetItem.isPresent()) {
+				CartItem target = targetItem.get();
+				target.setProductQuantity(target.getProductQuantity() + item.getProductQuantity());
+				target.calculateProductSubtotal();
 			}
 
 		} else {
@@ -210,6 +212,7 @@ public class Cart {
 		// Once target CartItem is found, check quantity
 		if (targetItem.getProductQuantity() > item.getProductQuantity()) {
 			targetItem.setProductQuantity(targetItem.getProductQuantity() - item.getProductQuantity());
+			targetItem.calculateProductSubtotal();
 
 		} else {
 			items.remove(targetItem);

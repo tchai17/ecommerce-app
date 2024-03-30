@@ -51,10 +51,18 @@
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Subtotal</th>
+                        <!-- <th>Remove From Cart</th> -->
                     </tr>
                     <tr th:each="cartItem : ${session.customer.cart.items}">
                         <td th:text="${cartItem.product.productName}"></td>
-                        <td th:text="${cartItem.productQuantity}"></td>
+                        <td>
+                            <form th:action="@{/customer/updateCartItemQuantity}" method="POST">
+                                <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
+                                <span th:text="${cartItem.productQuantity}" id="quantity-{{cartItem.product.productID}}"></span>
+                                <button type="submit" name="updateQuantity" value="plus">+</button>
+                                <button type="submit" name="updateQuantity" value="minus">-</button>
+                            </form>
+                        </td>
                         <td th:text="${cartItem.product.price}"></td>
                         <td th:text="${cartItem.productSubtotal}"></td>
                         <td>
