@@ -3,6 +3,8 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,8 @@ import jakarta.servlet.http.HttpSession;
 @Transactional(readOnly = false)
 public class CustomerController {
 
+	private Logger logger = LogManager.getLogger(CustomerController.class);
+	
 	/** The customer service that is used to interact with the customer data. */
 	@Autowired
 	private CustomerService customerService;
@@ -93,7 +97,7 @@ public class CustomerController {
 	 */
 	@PostMapping("/registration")
 	public String processRegistration(HttpServletRequest request) {
-		System.out.println("Initiate registration for new customer");
+		logger.debug("Initiate registration for new customer");
 
 		// Get parameters
 		String username = request.getParameter("username");
@@ -102,14 +106,16 @@ public class CustomerController {
 		String address = request.getParameter("address");
 		String fullName = request.getParameter("fullName");
 		String cardNumber = request.getParameter("cardNumber");
+		
+		logger.debug("Customer details received: " + username + " " + address + " " + " " + email);
 
 		// Create new Customer instance
 		Customer newCustomer = new Customer(username, password, email, address, fullName, cardNumber);
 
+		
 		// Save to DB
 		customerService.saveNewCustomer(newCustomer);
-		System.out.println(newCustomer);
-		System.out.println("Registration Complete");
+		logger.info("New customer account persisted onto database. " + newCustomer);
 
 		return "complete";
 	}
@@ -127,33 +133,40 @@ public class CustomerController {
 	 */
 	@PostMapping("/login-customer")
 	public String processLogin(HttpServletRequest request) {
-		System.out.println("Initiate login for existing customer");
+		
+		logger.debug("Customer clicked on login button");
+		logger.debug("Initiate login request");
 
 		// Get parameters
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		
+		logger.debug("Customer username and password received");
+		logger.debug("Start verification");
 
 		// Check if username already exists in database
 		List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
 		if (existingCustomers.isEmpty()) {
-			System.out.println("Username does not exist in database");
+			
+			logger.info("Username not found in database");
+			logger.debug("Redirecting user back to login page");
 			return "customerLogin";
 		}
 
 		// Check if password is correct
 		if (existingCustomers.get(0).getPassword().equals(password)) {
-			System.out.println("Password is correct");
 			Customer currentCustomer = existingCustomers.get(0);
+			logger.info("Password input is verified for the username: " + currentCustomer.getUsername());
 			Cart cart = currentCustomer.getCart(); // Retrieve current cart
 
-			System.out.println(cart);
+			logger.debug("Retrieving cart information: " + cart);
 
 			httpSession.setAttribute("customer", currentCustomer);
 			httpSession.setAttribute("cart", cart);
 			httpSession.setAttribute("isLoggedIn", true);
 			return "redirect:/product/dashboard";
 		} else {
-			System.out.println("Password is incorrect");
+			logger.info("Password input does not match username: " + existingCustomers.get(0).getUsername());
 			return "customerLogin";
 		}
 	}
@@ -182,13 +195,14 @@ public class CustomerController {
 			httpSession.setAttribute("cart", cart);
 
 			// Add to cart and update
-			cart.addToCart(new CartItem(product.get(), quantity));
+			CartItem newItem = new CartItem(product.get(), quantity);
+			cart.addToCart(newItem);
 			cart.updateTotalPrice();
 
 			// Save as customer
 			customer.setCart(cart);
 			customerService.updateCustomer(customer);
-			System.out.println("Item added");
+			System.out.println("Item " + newItem + " added");
 		}
 		return "redirect:/product/dashboard";
 	}
