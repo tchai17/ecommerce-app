@@ -10,58 +10,78 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartRepository;
 
+/**
+ * This class provides services for managing a customer's shopping cart.
+ */
 @Service
 public class CartService {
 
 	private CartRepository cartRepo;
-	
+
+	/**
+	 * Constructs a new CartService with the specified CartRepository.
+	 * 
+	 * @param cartRepo the CartRepository to use for persisting cart data
+	 */
 	public CartService(CartRepository cartRepo) {
 		this.cartRepo = cartRepo;
 	}
-	
-	public Optional<CartItem> findCartItemInCart(Cart cart, Product product){
+
+	/**
+	 * Finds a CartItem in the specified cart that matches the specified Product.
+	 * 
+	 * @param cart    the cart to search
+	 * @param product the product to match
+	 * @return an Optional containing the matching CartItem, or an empty Optional if
+	 *         no match is found
+	 */
+	public Optional<CartItem> findCartItemInCart(Cart cart, Product product) {
 		return cart.findMatchingCartItem(new CartItem(product, 0));
 	}
-	
+
+	/**
+	 * Updates the specified cart in the database.
+	 * 
+	 * @param cart the cart to update
+	 */
 	public void updateCart(Cart cart) {
 		cartRepo.save(cart);
 	}
-	
+
 	/**
-	 * Adds a new product to the customer's cart.
+	 * Adds the specified product to the specified customer's cart.
 	 * 
-	 * @param customer the customer who is adding the product to their cart
-	 * @param product  the product that is being added to the cart
-	 * @param quantity the quantity of the product that is being added to the cart
+	 * @param customer the customer adding the product to their cart
+	 * @param product  the product being added to the cart
+	 * @param quantity the quantity of the product being added to the cart
 	 */
 	public void addToCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
 		cart.addToCart(new CartItem(product, quantity));
-		this.updateCart(cart);
+		updateCart(cart);
 	}
 
 	/**
-	 * Removes a product from the customer's cart.
+	 * Removes the specified product from the specified customer's cart.
 	 * 
-	 * @param customer the customer who is removing the product from their cart
-	 * @param product  the product that is being removed from the cart
-	 * @param quantity the quantity of the product that is being removed from the
-	 *                 cart
+	 * @param customer the customer removing the product from their cart
+	 * @param product  the product being removed from the cart
+	 * @param quantity the quantity of the product being removed from the cart
 	 */
 	public void removeFromCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
 		cart.removeFromCart(new CartItem(product, quantity));
-		this.updateCart(cart);
+		updateCart(cart);
 	}
 
 	/**
-	 * Checks out the customer's cart.
+	 * Checks out the specified customer's cart.
 	 * 
 	 * @param customer the customer whose cart is being checked out
 	 */
 	public void checkoutCart(Customer customer) {
 		customer.getCart().checkout();
-		this.updateCart(customer.getCart());
+		updateCart(customer.getCart());
 	}
-	
+
 }

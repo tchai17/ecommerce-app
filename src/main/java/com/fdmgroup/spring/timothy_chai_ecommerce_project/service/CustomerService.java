@@ -6,10 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
+
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRepository;
 
 /**

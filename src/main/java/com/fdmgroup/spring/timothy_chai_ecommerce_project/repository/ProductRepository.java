@@ -7,11 +7,23 @@ import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 
-
+/**
+ * This interface provides methods for interacting with the database table
+ * "product".
+ * 
+ * @author TimothyChai
+ *
+ */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-	
-	public List<Product> findByProductName(String productName);
 
+	/**
+	 * This method returns a list of products whose product name matches the given
+	 * parameter.
+	 * 
+	 * @param productName the product name to search for
+	 * @return a list of products whose product name matches the given parameter
+	 */
+	public List<Product> findByProductName(String productName);
 
 }
