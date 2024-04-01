@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +36,7 @@ import jakarta.servlet.http.HttpSession;
 public class CustomerController {
 
 	private Logger logger = LogManager.getLogger(CustomerController.class);
-	
+
 	/** The customer service that is used to interact with the customer data. */
 	@Autowired
 	private CustomerService customerService;
@@ -48,11 +47,10 @@ public class CustomerController {
 
 	@Autowired
 	private CartItemService cartItemService;
-	
-	
+
 	@Autowired
 	private CartService cartService;
-	
+
 	/** The session that is used to store the customer information. */
 	@Autowired
 	private HttpSession httpSession;
@@ -64,6 +62,7 @@ public class CustomerController {
 	 */
 	@GetMapping("/")
 	public String index() {
+		logger.debug("Main page loaded");
 		return "index";
 	}
 
@@ -74,6 +73,7 @@ public class CustomerController {
 	 */
 	@GetMapping("/register-customer")
 	public String registerCustomer() {
+		logger.debug("Customer clicked on Register Account button");
 		return "registerCustomer";
 	}
 
@@ -84,6 +84,7 @@ public class CustomerController {
 	 */
 	@GetMapping("/login")
 	public String loginCustomer() {
+		logger.debug("Customer clicked on login button");
 		return "customerLogin";
 	}
 
@@ -106,13 +107,12 @@ public class CustomerController {
 		String address = request.getParameter("address");
 		String fullName = request.getParameter("fullName");
 		String cardNumber = request.getParameter("cardNumber");
-		
+
 		logger.debug("Customer details received: " + username + " " + address + " " + " " + email);
 
 		// Create new Customer instance
 		Customer newCustomer = new Customer(username, password, email, address, fullName, cardNumber);
 
-		
 		// Save to DB
 		customerService.saveNewCustomer(newCustomer);
 		logger.info("New customer account persisted onto database. " + newCustomer);
@@ -133,21 +133,20 @@ public class CustomerController {
 	 */
 	@PostMapping("/login-customer")
 	public String processLogin(HttpServletRequest request) {
-		
-		logger.debug("Customer clicked on login button");
+
 		logger.debug("Initiate login request");
 
 		// Get parameters
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
+
 		logger.debug("Customer username and password received");
 		logger.debug("Start verification");
 
 		// Check if username already exists in database
 		List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
 		if (existingCustomers.isEmpty()) {
-			
+
 			logger.info("Username not found in database");
 			logger.debug("Redirecting user back to login page");
 			return "customerLogin";
@@ -164,9 +163,13 @@ public class CustomerController {
 			httpSession.setAttribute("customer", currentCustomer);
 			httpSession.setAttribute("cart", cart);
 			httpSession.setAttribute("isLoggedIn", true);
+			logger.debug("Cart is set for this current session");
+			logger.debug("Customer redirected to dashboard");
 			return "redirect:/product/dashboard";
+
 		} else {
 			logger.info("Password input does not match username: " + existingCustomers.get(0).getUsername());
+			logger.debug("Customer redirected back to login page");
 			return "customerLogin";
 		}
 	}
@@ -185,24 +188,37 @@ public class CustomerController {
 	@PostMapping("/addToCart")
 	public String addToCart(@SessionAttribute Customer customer, int productId, @RequestParam int quantity) {
 		// Get relevant product and customer that is logged in
+		logger.debug("Customer requests to add product (ID: " + productId + ")-quantity: " + quantity);
 		Optional<Product> product = productService.findProductById(productId);
+
+		// if product is not found, redirect to dashboard
+		if (product.isEmpty()) {
+			logger.info("Product not found, please check productID: " + productId);
+			return "redirect:/product/dashboard";
+		}
+
 		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
+		logger.debug("Customer details retrieved from database: " + target);
 
 		// if product is found
 		if (product.isPresent()) {
 			// Get customer's cart and set as session attribute
+			logger.debug("Product found: " + product.get());
+
 			Cart cart = target.getCart();
+			logger.debug("Cart details retrieved from database: " + cart);
 			httpSession.setAttribute("cart", cart);
 
 			// Add to cart and update
-			CartItem newItem = new CartItem(product.get(), quantity);
-			cart.addToCart(newItem);
-			cart.updateTotalPrice();
+			cartService.addToCart(customer, product.get(), quantity);
 
 			// Save as customer
+			logger.info("Item added: " + product.get() + " quantity: (" + quantity + ")");
 			customer.setCart(cart);
 			customerService.updateCustomer(customer);
-			System.out.println("Item " + newItem + " added");
+			logger.debug("Cart updated: " + cart);
+			logger.debug("Customer updated: " + customer);
+
 		}
 		return "redirect:/product/dashboard";
 	}
@@ -221,72 +237,88 @@ public class CustomerController {
 	@PostMapping("/removeFromCart")
 	public String removeFromCart(@SessionAttribute Customer customer, @RequestParam int productID,
 			@RequestParam(value = "productQuantity") int quantity) {
-		
+
+		logger.debug("Customer requests to remove product (ID: " + productID + ")-quantity: " + quantity);
 		Optional<Product> product = productService.findProductById(productID);
+		// if product is not found, redirect to dashboard
+		if (product.isEmpty()) {
+			logger.info("Product not found, please check productID: " + productID);
+			return "redirect:/product/dashboard";
+		}
+
 		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
+		logger.debug("Customer details retrieved from database: " + target);
 
 		// if product is found
 		if (product.isPresent()) {
 
+			logger.debug("Product found: " + product.get());
+
 			// Get customer's cart and set as session attribute
-			customerService.updateCustomer(target);
+//			customerService.updateCustomer(target);
 			Cart cart = target.getCart();
 			httpSession.setAttribute("cart", cart);
+			logger.debug("Cart details retrieved from database: " + cart);
 
 			// Remove from cart and update
 			Optional<CartItem> matchingItem = cart.findMatchingCartItem(new CartItem(product.get(), quantity));
-			
+
 			if (matchingItem.isPresent()) {
-				if ( quantity >= matchingItem.get().getProductQuantity() ) {
-					cart.removeFromCart(new CartItem(product.get(), quantity));
+				logger.debug("Matching item with identical product found: " + matchingItem.get());
+				if (quantity >= matchingItem.get().getProductQuantity()) {
+					logger.debug(
+							"Requested quantity-to-remove (" + quantity + ") is greater than matching item quantity"
+									+ " (" + matchingItem.get().getProductQuantity() + ")");
+					cartService.removeFromCart(customer, product.get(), quantity);
+					logger.info("Item removed: " + product.get() + " quantity: (" + quantity + ")");
 					cartItemService.deleteCartItemFromDatabase(matchingItem.get());
+					logger.debug("CartItem instance is removed from cart_item table");
+				} else {
+					cartService.removeFromCart(customer, product.get(), quantity);
+					logger.info("Item removed: " + product.get() + " quantity: (" + quantity + ")");
 				}
+				cart.updateTotalPrice();
 			}
-			
-			cart.removeFromCart(new CartItem(product.get(), quantity));
-			cart.updateTotalPrice();
 
 			// Save as customer
 			cartService.updateCart(cart);
+			logger.debug("Cart updated: " + cart);
 			target.setCart(cart);
 			customerService.updateCustomer(target);
-			System.out.println(cart);
-			System.out.println("Item removed");
+			logger.debug("Customer updated: " + customer);
+
 		}
-		System.out.println();
 		return "redirect:/product/dashboard";
 	}
-	
-	
+
 	@PostMapping("/updateCartItemQuantity")
 	public String updateCartItemQuantity(@SessionAttribute Customer customer, @RequestParam int productID,
-            @RequestParam(value = "updateQuantity") String direction) {
-		
+			@RequestParam(value = "updateQuantity") String direction) {
+
 		Optional<Product> product = productService.findProductById(productID);
 		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
 		int quantity = 1;
-		
+
 		// if product is found
 		if (product.isPresent()) {
 
 			// Get customer's cart and set as session attribute
 			Cart cart = target.getCart();
 			httpSession.setAttribute("cart", cart);
-			
+
 			// Get direction
 			if (direction.equals("plus")) {
 				addToCart(customer, productID, quantity);
-			}
-			else {
+			} else {
 				removeFromCart(customer, productID, quantity);
 			}
-			System.out.println("Total price updated - ");
+
 			cart.updateTotalPrice();
 
 			// Save as customer
 			customer.setCart(cart);
 			customerService.updateCustomer(target);
-			System.out.println("Item quantity updated - ");
+
 		}
 		return "redirect:/product/dashboard";
 	}

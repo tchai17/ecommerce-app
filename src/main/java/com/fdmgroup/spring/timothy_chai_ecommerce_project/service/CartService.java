@@ -57,7 +57,10 @@ public class CartService {
 	 */
 	public void addToCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
-		cart.addToCart(new CartItem(product, quantity));
+		CartItem newItem = new CartItem(product, quantity);
+		newItem.setCart(cart);
+		cart.addToCart(newItem);
+		cart.updateTotalPrice();
 		updateCart(cart);
 	}
 
@@ -70,7 +73,10 @@ public class CartService {
 	 */
 	public void removeFromCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
-		cart.removeFromCart(new CartItem(product, quantity));
+		CartItem newItem = new CartItem(product, quantity);
+		newItem.setCart(cart);
+		cart.addToCart(newItem);
+		cart.updateTotalPrice();
 		updateCart(cart);
 	}
 
