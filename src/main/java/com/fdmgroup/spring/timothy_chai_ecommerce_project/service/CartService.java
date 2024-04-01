@@ -44,7 +44,6 @@ public class CartService {
 	 * 
 	 * @param cart the cart to update
 	 */
-	@SuppressWarnings("null")
 	public void updateCart(Cart cart) {
 		Cart targetCart = cartRepo.findById(cart.getCartID()).get();
 		targetCart.setItems(cart.getItems());
