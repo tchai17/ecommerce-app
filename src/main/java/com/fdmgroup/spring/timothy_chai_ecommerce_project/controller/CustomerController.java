@@ -2,6 +2,7 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -320,6 +321,30 @@ public class CustomerController {
 			customerService.updateCustomer(target);
 
 		}
+		return "redirect:/product/dashboard";
+	}
+
+	@PostMapping("/cartCheckout")
+	public String cartCheckout(@SessionAttribute Customer customer) {
+		// Get customer's cart and set as session attribute
+		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
+		Cart cart = target.getCart();
+		httpSession.setAttribute("cart", cart);
+		logger.debug("Cart details retrieved from database: " + cart);
+
+		Set<CartItem> itemsToDelete = cart.getItems();
+
+		cartService.checkoutCart(cart);
+		itemsToDelete.forEach(item -> {
+			cartItemService.deleteCartItemFromDatabase(item);
+		});
+
+		logger.info("Cart " + target + " is checked out");
+
+		// Save as customer
+		customerService.updateCustomer(target);
+		logger.debug("Customer updated: " + target);
+
 		return "redirect:/product/dashboard";
 	}
 

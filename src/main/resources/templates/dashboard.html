@@ -59,6 +59,16 @@
                         <td colspan="4" text-align="right"><b>Cart Total:</b></td>
                         <td th:text="${session.customer.cart.totalPrice}"></td>
                     </tr>
+                    <tr>
+                        <td colspan="5" text-align="right" id="checkout-row">
+                            
+                            <form th:action="@{/customer/cartCheckout}" method="POST">
+                                <b>Checkout:</b>
+                                <button type="submit" >Checkout</button>
+                            </form>
+                        </td>
+                        
+                    </tr>
                 </table>
                
 

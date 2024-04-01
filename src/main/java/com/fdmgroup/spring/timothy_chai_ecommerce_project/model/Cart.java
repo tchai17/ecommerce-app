@@ -216,7 +216,6 @@ public class Cart {
 
 		} else {
 			items.remove(targetItem);
-			System.out.println(targetItem + " is removed");
 		}
 
 		updateTotalPrice();
