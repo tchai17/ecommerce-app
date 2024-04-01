@@ -21,6 +21,7 @@ public class ProductService {
 	/**
 	 * Autowire the ProductRepository to allow this class to interact with the
 	 * database.
+	 * 
 	 * @see ProductRepository
 	 */
 	@Autowired
@@ -54,8 +55,12 @@ public class ProductService {
 	public void updateProduct(Product product) {
 		Optional<Product> targetProduct = productRepository.findById(product.getProductID());
 		if (targetProduct.isPresent()) {
-			targetProduct.get().setProductName(product.getProductName());
-			productRepository.save(targetProduct.get());
+			Product target = targetProduct.get();
+			target.setProductName(product.getProductName());
+			target.setPrice(product.getPrice());
+			target.setImgURL(product.getImgURL());
+			target.setStock(product.getStock());
+			productRepository.save(target);
 		}
 	}
 
@@ -63,7 +68,7 @@ public class ProductService {
 	 * Finds a product by its ID.
 	 *
 	 * @param productId the ID of the product to find
-	 * @return the product, if found, or an empty {@link Optional} 
+	 * @return the product, if found, or an empty {@link Optional}
 	 * @see Product
 	 */
 	public Optional<Product> findProductById(int productId) {

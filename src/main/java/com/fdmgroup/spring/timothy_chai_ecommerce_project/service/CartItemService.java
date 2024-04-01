@@ -1,5 +1,7 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
@@ -28,7 +30,11 @@ public class CartItemService {
 	 * @param itemToDelete the CartItem to delete
 	 */
 	public void deleteCartItemFromDatabase(CartItem itemToDelete) {
-		cartItemRepo.delete(itemToDelete);
+		Optional<CartItem> target = cartItemRepo.findById(itemToDelete.getCartItemId());
+		if (target.isPresent()) {
+			cartItemRepo.delete(target.get());
+		}
+
 	}
 
 }
