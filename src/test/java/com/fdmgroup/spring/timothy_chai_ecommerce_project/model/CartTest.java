@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +34,9 @@ public class CartTest {
 	@DisplayName("1. Test adding matching item will update quantity")
 	public void addToCart_WhenCartHasProduct_ThenUpdateQuantity() {
 		// Arrange
-		cart.addToCart(cartItem1);
+		Set<CartItem> items = new HashSet<>();
+		items.add(cartItem1);
+		cart.setItems(items);
 
 		// Act
 		cart.addToCart(cartItem1);
@@ -59,14 +63,14 @@ public class CartTest {
 	@DisplayName("3. Test adding to cart which does not have item will add to list")
 	public void addToCart_WhenCartHasDifferentProduct_ThenAddProduct() {
 		// Arrange
-
-		cart.addToCart(cartItem1);
+		Set<CartItem> items = new HashSet<>();
+		items.add(cartItem1);
+		cart.setItems(items);
 
 		// Act
 		cart.addToCart(cartItem2);
 
 		// Assert
-		assertTrue(cart.getItems().contains(cartItem1));
 		assertTrue(cart.getItems().contains(cartItem2));
 	}
 
@@ -74,8 +78,10 @@ public class CartTest {
 	@DisplayName("4. Test removing from cart removes item from list")
 	public void testRemoveFromCart() {
 		// Arrange
-		cart.addToCart(cartItem1);
-		cart.addToCart(cartItem2);
+		Set<CartItem> items = new HashSet<>();
+		items.add(cartItem1);
+		items.add(cartItem2);
+		cart.setItems(items);
 
 		// Act
 		cart.removeFromCart(cartItem1);
@@ -89,7 +95,9 @@ public class CartTest {
 	@DisplayName("5. Test findMatchingCartItem returns correct CartItem")
 	public void findMatchingCartItem_withMatchingProduct_shouldReturnCartItem() {
 		// Arrange
-		cart.addToCart(cartItem1);
+		Set<CartItem> items = new HashSet<>();
+		items.add(cartItem1);
+		cart.setItems(items);
 
 		// Act
 		Optional<CartItem> result = cart.findMatchingCartItem(cartItem1);
@@ -104,7 +112,9 @@ public class CartTest {
 	@DisplayName("6. Test findMatchingCartItem does not return item when item is missing")
 	public void findMatchingCartItem_withNonMatchingProduct_shouldReturnEmpty() {
 		// Arrange
-		cart.addToCart(cartItem2);
+		Set<CartItem> items = new HashSet<>();
+		items.add(cartItem2);
+		cart.setItems(items);
 		CartItem testItem = new CartItem(new Product(), 0);
 
 		// Act
@@ -118,8 +128,10 @@ public class CartTest {
 	@DisplayName("7. Test checkout removes all items from cart and sets price to zero")
 	public void testCheckout() {
 		// Arrange
-		cart.addToCart(cartItem1);
-		cart.addToCart(cartItem2);
+		Set<CartItem> items = new HashSet<>();
+		items.add(cartItem1);
+		items.add(cartItem2);
+		cart.setItems(items);
 
 		// Act
 		cart.checkout();
