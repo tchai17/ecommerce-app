@@ -48,3 +48,17 @@ button{
     border: 2px black;
     align-content: right;
 }
+
+#myList{
+    width: auto;
+   
+
+    th {
+        text-align: left;
+        padding: 0 10px;
+    }
+    td {
+        padding: 0 10px;
+    }
+}
+
