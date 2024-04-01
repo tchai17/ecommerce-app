@@ -76,7 +76,6 @@ public class CartService {
 	public void removeFromCart(Customer customer, Product product, int quantity) {
 		Cart cart = customer.getCart();
 		CartItem newItem = new CartItem(product, quantity);
-//		newItem.setCart(cart);
 		cart.removeFromCart(newItem);
 		cart.updateTotalPrice();
 		updateCart(cart);
