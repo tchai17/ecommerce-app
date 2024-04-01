@@ -271,9 +271,9 @@ public class CustomerController {
 							"Requested quantity-to-remove (" + quantity + ") is greater than matching item quantity"
 									+ " (" + matchingItem.get().getProductQuantity() + ")");
 					cartService.removeFromCart(customer, product.get(), quantity);
-					logger.info("Item removed: " + product.get() + " quantity: (" + quantity + ")");
+					logger.info("Item removed from cart: " + product.get() + " quantity: (" + quantity + ")");
 					cartItemService.deleteCartItemFromDatabase(matchingItem.get());
-					logger.debug("CartItem instance is removed from cart_item table");
+					logger.debug("CartItem instance is removed from cart_item table: " + matchingItem.get());
 				} else {
 					cartService.removeFromCart(customer, product.get(), quantity);
 					logger.info("Item removed: " + product.get() + " quantity: (" + quantity + ")");

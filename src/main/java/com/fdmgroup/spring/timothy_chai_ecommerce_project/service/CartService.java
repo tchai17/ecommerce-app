@@ -2,7 +2,6 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.service;
 
 import java.util.Optional;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
@@ -45,8 +44,11 @@ public class CartService {
 	 * 
 	 * @param cart the cart to update
 	 */
-	public void updateCart(@NonNull Cart cart) {
-		cartRepo.save(cart);
+	@SuppressWarnings("null")
+	public void updateCart(Cart cart) {
+		Cart targetCart = cartRepo.findById(cart.getCartID()).get();
+		targetCart.setItems(cart.getItems());
+		cartRepo.save(targetCart);
 	}
 
 	/**
