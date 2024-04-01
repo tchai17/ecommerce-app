@@ -1,5 +1,6 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -140,7 +141,6 @@ public class CustomerController {
 		// Get parameters
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-
 		logger.debug("Customer username and password received");
 		logger.debug("Start verification");
 
@@ -157,8 +157,8 @@ public class CustomerController {
 		if (existingCustomers.get(0).getPassword().equals(password)) {
 			Customer currentCustomer = existingCustomers.get(0);
 			logger.info("Password input is verified for the username: " + currentCustomer.getUsername());
-			Cart cart = currentCustomer.getCart(); // Retrieve current cart
 
+			Cart cart = currentCustomer.getCart(); // Retrieve current cart
 			logger.debug("Retrieving cart information: " + cart);
 
 			httpSession.setAttribute("customer", currentCustomer);
@@ -166,6 +166,7 @@ public class CustomerController {
 			httpSession.setAttribute("isLoggedIn", true);
 			logger.debug("Cart is set for this current session");
 			logger.debug("Customer redirected to dashboard");
+
 			return "redirect:/product/dashboard";
 
 		} else {
@@ -203,9 +204,8 @@ public class CustomerController {
 
 		// if product is found
 		if (product.isPresent()) {
-			// Get customer's cart and set as session attribute
+			// Get customer's cart and set as session attribute, ensure initialization
 			logger.debug("Product found: " + product.get());
-
 			Cart cart = target.getCart();
 			logger.debug("Cart details retrieved from database: " + cart);
 			httpSession.setAttribute("cart", cart);
@@ -219,8 +219,9 @@ public class CustomerController {
 			customerService.updateCustomer(customer);
 			logger.debug("Cart updated: " + cart);
 			logger.debug("Customer updated: " + customer);
-
+			cart.updateTotalPrice();
 		}
+
 		return "redirect:/product/dashboard";
 	}
 
@@ -256,7 +257,6 @@ public class CustomerController {
 			logger.debug("Product found: " + product.get());
 
 			// Get customer's cart and set as session attribute
-//			customerService.updateCustomer(target);
 			Cart cart = target.getCart();
 			httpSession.setAttribute("cart", cart);
 			logger.debug("Cart details retrieved from database: " + cart);
@@ -278,8 +278,9 @@ public class CustomerController {
 					cartService.removeFromCart(customer, product.get(), quantity);
 					logger.info("Item removed: " + product.get() + " quantity: (" + quantity + ")");
 				}
-				cart.updateTotalPrice();
+
 			}
+			cart.updateTotalPrice();
 
 			// Save as customer
 			cartService.updateCart(cart);
@@ -292,6 +293,17 @@ public class CustomerController {
 		return "redirect:/product/dashboard";
 	}
 
+	/**
+	 * This method is used to update the quantity of an item in the cart. It
+	 * retrieves the customer information from the session, updates the quantity of
+	 * the item, updates the cart, and saves the customer information. Then it
+	 * redirects the user to the product dashboard.
+	 *
+	 * @param customer  the customer information
+	 * @param productID the product ID
+	 * @param direction the direction of the update, either "plus" or "minus"
+	 * @return the redirect to the product dashboard
+	 */
 	@PostMapping("/updateCartItemQuantity")
 	public String updateCartItemQuantity(@SessionAttribute Customer customer, @RequestParam int productID,
 			@RequestParam(value = "updateQuantity") String direction) {
@@ -324,6 +336,15 @@ public class CustomerController {
 		return "redirect:/product/dashboard";
 	}
 
+	/**
+	 * Process cart checkout for the logged-in customer. Retrieves the customer's
+	 * cart from the session attribute, checks out the cart, deletes the cart items
+	 * from the database, updates the customer information, and redirects to the
+	 * product dashboard page.
+	 *
+	 * @param customer The logged-in customer retrieved from session attribute.
+	 * @return A redirection to the product dashboard page.
+	 */
 	@PostMapping("/cartCheckout")
 	public String cartCheckout(@SessionAttribute Customer customer) {
 		// Get customer's cart and set as session attribute
@@ -332,10 +353,12 @@ public class CustomerController {
 		httpSession.setAttribute("cart", cart);
 		logger.debug("Cart details retrieved from database: " + cart);
 
-		Set<CartItem> itemsToDelete = cart.getItems();
-
+		Set<CartItem> itemsToDelete = new HashSet<>(cart.getItems());
+		logger.debug("Items to delete: " + itemsToDelete);
 		cartService.checkoutCart(cart);
+
 		itemsToDelete.forEach(item -> {
+			logger.debug(item + " has been deleted");
 			cartItemService.deleteCartItemFromDatabase(item);
 		});
 
