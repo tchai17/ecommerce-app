@@ -12,13 +12,12 @@ import org.junit.jupiter.api.Test;
 
 public class CartTest {
 
+	// Instances
 	Cart cart;
 	CartItem cartItem1;
 	CartItem cartItem2;
 	Product product1;
 	Product product2;
-
-	// Product(String productName, int stock, String imgURL, double price)
 
 	@BeforeEach
 	void setUp() {
@@ -113,6 +112,21 @@ public class CartTest {
 
 		// Assert
 		assertFalse(result.isPresent());
+	}
+
+	@Test
+	@DisplayName("7. Test checkout removes all items from cart and sets price to zero")
+	public void testCheckout() {
+		// Arrange
+		cart.addToCart(cartItem1);
+		cart.addToCart(cartItem2);
+
+		// Act
+		cart.checkout();
+
+		// Assert
+		assertEquals(0, cart.getItems().size());
+		assertEquals(0, cart.getTotalPrice(), 0);
 	}
 
 }
