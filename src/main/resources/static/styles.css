@@ -49,8 +49,15 @@ button{
 }
 
 #cart-container{
-    border: 2px black;
+    /* border: 2px black; */
+    border-radius: 10px;
+    padding: 10px;
+    opacity: 80%;
     align-content: right;
+    position: fixed;
+    top: 25%;
+    right: 0;
+    background-color: #e7d0ec;
 }
 
 #myList, #likes{
@@ -69,8 +76,6 @@ button{
 }
 
 #checkout-row {
-    /* display: flex; */
-    /* justify-content: flex-start; */
     width: 20%;
     text-align: right;
 }
