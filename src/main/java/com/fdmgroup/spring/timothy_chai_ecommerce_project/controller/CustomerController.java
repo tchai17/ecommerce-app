@@ -23,6 +23,7 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartItemService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.LikeService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,6 +53,9 @@ public class CustomerController {
 
 	@Autowired
 	private CartService cartService;
+
+	@Autowired
+	private LikeService likeService;
 
 	/** The session that is used to store the customer information. */
 	@Autowired
@@ -163,6 +167,7 @@ public class CustomerController {
 
 			httpSession.setAttribute("customer", currentCustomer);
 			httpSession.setAttribute("cart", cart);
+			httpSession.setAttribute("likes", currentCustomer.getLikes());
 			httpSession.setAttribute("isLoggedIn", true);
 			logger.debug("Cart is set for this current session");
 			logger.debug("Customer redirected to dashboard");
@@ -188,14 +193,14 @@ public class CustomerController {
 	 * @return the redirect to the product dashboard
 	 */
 	@PostMapping("/addToCart")
-	public String addToCart(@SessionAttribute Customer customer, int productId, @RequestParam int quantity) {
+	public String addToCart(@SessionAttribute Customer customer, int productID, @RequestParam int quantity) {
 		// Get relevant product and customer that is logged in
-		logger.debug("Customer requests to add product (ID: " + productId + ")-quantity: " + quantity);
-		Optional<Product> product = productService.findProductById(productId);
+		logger.debug("Customer requests to add product (ID: " + productID + ")-quantity: " + quantity);
+		Optional<Product> product = productService.findProductById(productID);
 
 		// if product is not found, redirect to dashboard
 		if (product.isEmpty()) {
-			logger.info("Product not found, please check productID: " + productId);
+			logger.info("Product not found, please check productID: " + productID);
 			return "redirect:/product/dashboard";
 		}
 
@@ -369,6 +374,35 @@ public class CustomerController {
 		// Save as customer
 		customerService.updateCustomer(target);
 		logger.debug("Customer updated: " + target);
+
+		return "redirect:/product/dashboard";
+	}
+
+	@PostMapping("/addToLikes")
+	public String addToLikes(@SessionAttribute Customer customer, @RequestParam int productID) {
+
+		Customer currentCustomer = customerService.findCustomerByID(customer.getCustomerID()).get();
+		httpSession.setAttribute("customer", currentCustomer);
+
+		Product chosenProduct = productService.findProductById(productID).get();
+
+		likeService.addToLikes(currentCustomer, chosenProduct);
+		customerService.updateCustomer(currentCustomer);
+		productService.updateProduct(chosenProduct);
+
+		return "redirect:/product/dashboard";
+	}
+
+	@PostMapping("/removeFromLikes")
+	public String removeFromLikes(@SessionAttribute Customer customer, @RequestParam int productID) {
+		Customer currentCustomer = customerService.findCustomerByID(customer.getCustomerID()).get();
+		httpSession.setAttribute("customer", currentCustomer);
+
+		Product chosenProduct = productService.findProductById(productID).get();
+
+		likeService.removeFromLikes(currentCustomer, chosenProduct);
+		customerService.updateCustomer(currentCustomer);
+		productService.updateProduct(chosenProduct);
 
 		return "redirect:/product/dashboard";
 	}

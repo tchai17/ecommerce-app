@@ -3,15 +3,20 @@
  */
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.model;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 
 /**
@@ -115,6 +120,10 @@ public class Customer {
 	@JoinColumn(name = "FK_CART_ID")
 	private Cart cart;
 
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "LIKES", joinColumns = @JoinColumn(name = "FK_CUSTOMER_ID"), inverseJoinColumns = @JoinColumn(name = "FK_PRODUCT_ID"))
+	private Set<Product> likes;
+
 	/**
 	 * Default no-args constructor for the Customer class
 	 */
@@ -142,7 +151,7 @@ public class Customer {
 		setAddress(address);
 		setFullName(fullName);
 		setCardNumber(cardNumber);
-
+		likes = new HashSet<>();
 	}
 
 	/**
@@ -300,6 +309,14 @@ public class Customer {
 
 	}
 
+	public Set<Product> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(Set<Product> likes) {
+		this.likes = likes;
+	}
+
 	/**
 	 * Updates customer details based on the input Customer object
 	 * 
@@ -312,7 +329,16 @@ public class Customer {
 		setAddress(customer.getAddress());
 		setFullName(customer.getFullName());
 		setCardNumber(customer.getCardNumber());
+		setLikes(customer.getLikes());
 
+	}
+
+	public void addToLikes(Product product) {
+		likes.add(product);
+	}
+
+	public void removeFromLikes(Product product) {
+		likes.remove(product);
 	}
 
 	/**

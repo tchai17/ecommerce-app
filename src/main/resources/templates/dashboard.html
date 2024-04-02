@@ -21,9 +21,12 @@
                 <img th:src="${product.imgURL}" alt="${product.productName}">
                 <p th:text="'$' + ${product.price}"></p>
                 <p th:text="'Available stock: '+${product.stock}"></p>
-                <form th:action="@{/customer/addToCart(productId=${product.productID})}" method="POST">
-                    <input type="number" name="quantity" min="1">
+                <form th:action="@{/customer/addToCart(productID=${product.productID})}" method="POST">
+                    <input type="number" name="quantity" min="1" value="1">
                     <button type="submit">Add To Cart</button>
+                </form>
+                <form th:action="@{/customer/addToLikes(productID=${product.productID})}" method="POST">
+                    <button type="submit">Add To Likes</button>
                 </form>
             </div>
             <div id="cart-container" class="">
@@ -33,7 +36,6 @@
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Subtotal</th>
-                        <!-- <th>Remove From Cart</th> -->
                     </tr>
                     <tr th:each="cartItem : ${session.customer.cart.items}">
                         <td th:text="${cartItem.product.productName}"></td>
@@ -62,7 +64,6 @@
                     </tr>
                     <tr>
                         <td colspan="5" text-align="right" id="checkout-row">
-
                             <form th:action="@{/customer/cartCheckout}" method="POST">
                                 <b>Checkout:</b>
                                 <button type="submit">Checkout</button>
@@ -71,11 +72,34 @@
 
                     </tr>
                 </table>
-
-
+                <div id="likes-container">
+                    <h3>Likes</h3>
+                    <table id="likes">
+                        <tr>
+                            <!-- <th>Product Name</th> -->
+                        </tr>
+                        <tr th:each="product : ${session.customer.likes}" >
+                            <td th:text="${product.productName}"></td>
+                            <td>
+                                <form th:action="@{/customer/removeFromLikes}" method="POST">
+                                    <input type="hidden" th:value="${product.productID}" name="productID">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form th:action="@{/customer/updateCartItemQuantity}" method="POST">
+                                    <input type="hidden" th:value="${product.productID}" name="productID">
+                                    <button type="submit" name="updateQuantity" value="plus">Add To Cart</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- <ul>
+                        <li th:each="product : ${session.customer.likes}" th:text="${product.productName}"></li>
+                    </ul> -->
+                </div>
             </div>
-
-
+            
             <div class="cart-icon" id="toggle-cart-icon" onclick="toggleTable()">
                 <img src="https://static-00.iconduck.com/assets.00/shopping-cart-icon-512x462-yrde1eu0.png" alt="Icon">
             </div>
@@ -91,7 +115,7 @@
             table.classList.toggle("hidden");
         }
     </script>
-    
+
 </body>
 
 </html>
