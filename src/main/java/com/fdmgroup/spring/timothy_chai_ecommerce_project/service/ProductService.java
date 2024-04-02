@@ -3,9 +3,12 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.controller.CustomerController;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.ProductRepository;
 
@@ -15,6 +18,8 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.ProductRepo
  */
 @Service
 public class ProductService {
+
+	private Logger logger = LogManager.getLogger(CustomerController.class);
 
 	private ProductRepository productRepository;
 
@@ -36,11 +41,13 @@ public class ProductService {
 	 * @see Product
 	 */
 	public void saveProduct(Product newProduct) {
-
+		logger.debug("saveProduct called for product: " + newProduct);
 		List<Product> existingProducts = productRepository.findByProductName(newProduct.getProductName());
 		if (existingProducts.isEmpty()) {
+			logger.debug("No product with matching productID found, saving new Product");
 			productRepository.save(newProduct);
 		} else {
+			logger.info("Product already exists, abort save");
 			System.out.println("Product already exists");
 		}
 
@@ -53,14 +60,18 @@ public class ProductService {
 	 * @see Product
 	 */
 	public void updateProduct(Product product) {
+		logger.debug("updateProduct called for product: " + product);
 		Optional<Product> targetProduct = productRepository.findById(product.getProductID());
 		if (targetProduct.isPresent()) {
+			logger.debug("Product with matching ID found, updating product details");
 			Product target = targetProduct.get();
 			target.setProductName(product.getProductName());
 			target.setPrice(product.getPrice());
 			target.setImgURL(product.getImgURL());
 			target.setStock(product.getStock());
 			productRepository.save(target);
+		} else {
+			logger.info("No product with matching productID found, try saving new product");
 		}
 	}
 
@@ -72,12 +83,14 @@ public class ProductService {
 	 * @see Product
 	 */
 	public Optional<Product> findProductById(int productId) {
-
+		logger.debug("findProductById called for productID: " + productId);
 		Optional<Product> product = productRepository.findById(productId);
 		if (product.isPresent()) {
+			logger.debug("Product with matching productID found, returning product: " + product);
 			return product;
 
 		} else {
+			logger.info("No product with matching productID found, returning Optional.empty");
 			return Optional.empty();
 		}
 	}
@@ -89,6 +102,7 @@ public class ProductService {
 	 * @return a list of products with the given name
 	 */
 	public List<Product> findProductByProductName(String productName) {
+		logger.debug("findProductByProductName called for product name: " + productName);
 		return productRepository.findByProductName(productName);
 	}
 
@@ -98,6 +112,7 @@ public class ProductService {
 	 * @return a list of products
 	 */
 	public List<Product> returnAllProducts() {
+		logger.debug("returnAllProducts called");
 		return productRepository.findAll();
 	}
 
