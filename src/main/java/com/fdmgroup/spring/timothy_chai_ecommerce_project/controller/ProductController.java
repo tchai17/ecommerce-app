@@ -1,6 +1,8 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
@@ -86,17 +89,41 @@ public class ProductController {
 	}
 
 	/**
-	 * Displays all products.
+	 * This method is used to display the products and categories on the dashboard.
 	 * 
-	 * @param model the model for the view
+	 * @param selectedCategory the selected category, can be null
+	 * @param model            the model object
 	 * @return the name of the dashboard template
 	 */
 	@GetMapping("/dashboard")
-	public String productDisplay(Model model) {
+	public String productDisplay(@RequestParam(required = false) String selectedCategory, Model model) {
 		logger.debug("Customer is directed to dashboard");
-		List<Product> products = productService.returnAllProducts();
+		List<Product> products = new ArrayList<>();
+		// Check if selectedCategory is null, or 'all', then display all products
+		if (selectedCategory != null) {
+			logger.info("Selected category: " + selectedCategory);
+			if (selectedCategory.equalsIgnoreCase("all")) {
+
+				logger.info("Selected category: " + selectedCategory + ", returning all products");
+				products = productService.returnAllProducts();
+
+			} else {
+
+				// Use value of selectedCategory to filter products
+				model.addAttribute("selectedCategory", selectedCategory);
+				products = productService.findProductByCategory(selectedCategory);
+			}
+
+		} else {
+			products = productService.returnAllProducts();
+		}
+
+		// if page is not loaded before, then set categories as an attribute to response
+		Set<String> categories = productService.returnAllCategories();
 		model.addAttribute("products", products);
-		logger.debug("Products and added to response");
+		model.addAttribute("categories", categories);
+
+		logger.debug("Products and categories added to response");
 		return "dashboard";
 	}
 

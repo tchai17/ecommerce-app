@@ -73,6 +73,9 @@ public class Product {
 	@Column(name = "PRICE")
 	private double price;
 
+	@Column(name = "CATEGORY")
+	private String category;
+
 	/**
 	 * Default no-args constructor
 	 */
@@ -164,14 +167,13 @@ public class Product {
 	 * @param stock Updated inventory for this product
 	 */
 	public void setStock(int stock) {
-		if ( stock <= 0) {
+		if (stock <= 0) {
 			System.out.println("Stock must be positive!");
 			return;
-		}
-		else {
+		} else {
 			this.stock = stock;
 		}
-		
+
 	}
 
 	/**
@@ -190,6 +192,24 @@ public class Product {
 	 */
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	/**
+	 * Returns the category of the product.
+	 *
+	 * @return the category of the product
+	 */
+	public String getCategory() {
+		return category;
+	}
+
+	/**
+	 * Sets the category of the product.
+	 *
+	 * @param category the new category of the product
+	 */
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	/**

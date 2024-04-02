@@ -1,7 +1,9 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -106,6 +108,11 @@ public class ProductService {
 		return productRepository.findByProductName(productName);
 	}
 
+	public List<Product> findProductByCategory(String category) {
+		logger.debug("findProductByCategory called for category: " + category);
+		return productRepository.findByCategory(category);
+	}
+
 	/**
 	 * Returns a list of all products in the database.
 	 *
@@ -114,6 +121,14 @@ public class ProductService {
 	public List<Product> returnAllProducts() {
 		logger.debug("returnAllProducts called");
 		return productRepository.findAll();
+	}
+
+	public Set<String> returnAllCategories() {
+		logger.debug("returnAllCategories called");
+		Set<String> allCategories = new HashSet<>();
+		List<Product> allProducts = productRepository.findAll();
+		allProducts.forEach(product -> allCategories.add(product.getCategory()));
+		return allCategories;
 	}
 
 }

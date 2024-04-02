@@ -16,19 +16,29 @@
 
     <div class="market">
         <th:block th:if="${session.isLoggedIn}">
-            <div class="product-container" th:each="product : ${products}">
-                <h2 th:text="${product.productName}"></h2>
-                <img th:src="${product.imgURL}" alt="${product.productName}">
-                <p th:text="${product.price}" class="price-element"></p>
-                <p th:text="'Available stock: '+${product.stock}"></p>
-                <form th:action="@{/customer/addToCart(productID=${product.productID})}" method="POST">
-                    <input type="number" name="quantity" min="1" value="1">
-                    <button type="submit">Add To Cart</button>
-                </form>
-                <form th:action="@{/customer/addToLikes(productID=${product.productID})}" method="POST">
-                    <button type="submit">Add To Likes</button>
-                </form>
+            <form th:action="@{/product/dashboard}" id="category-selector" method="GET">
+                <select name="selectedCategory">
+                    <option value="all" selected>All</option>
+                    <option th:each="category : ${categories}" th:value="${category}">[[${category}]]</option>
+                </select>
+                <button type="submit">Filter</button>
+            </form>
+            <div class="all-products">
+                <div class="product-container" th:each="product : ${products}">
+                    <h2 th:text="${product.productName}"></h2>
+                    <img th:src="${product.imgURL}" alt="${product.productName}">
+                    <p th:text="${product.price}" class="price-element"></p>
+                    <p th:text="'Available stock: '+${product.stock}"></p>
+                    <form th:action="@{/customer/addToCart(productID=${product.productID})}" method="POST">
+                        <input type="number" name="quantity" min="1" value="1">
+                        <button type="submit">Add To Cart</button>
+                    </form>
+                    <form th:action="@{/customer/addToLikes(productID=${product.productID})}" method="POST">
+                        <button type="submit">Add To Likes</button>
+                    </form>
+                </div>
             </div>
+            
             <div id="cart-container" class="">
                 <table id="myList">
                     <tr>

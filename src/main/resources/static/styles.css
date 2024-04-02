@@ -10,7 +10,7 @@ body{
 .market{
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: left;
     margin: 1vh 0;
     
@@ -27,11 +27,18 @@ button{
     margin:5px 5px 5px 0;
 }
 
+.all-products {
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .product-container {
     width: 30vh;
     height: auto;
     border: 2px black;
     margin: 5px;
+    
 }
 
 .product-container img{
