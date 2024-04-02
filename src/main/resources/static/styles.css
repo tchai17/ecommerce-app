@@ -53,9 +53,11 @@ button{
     align-content: right;
 }
 
-#myList{
+#myList, #likes{
     width: auto;
-   
+    border: 1px black solid;
+    border-radius: 5px;
+    margin: 10px 0;
 
     th {
         text-align: left;
@@ -66,4 +68,10 @@ button{
     }
 }
 
+#checkout-row {
+    /* display: flex; */
+    /* justify-content: flex-start; */
+    width: 20%;
+    text-align: right;
+}
 

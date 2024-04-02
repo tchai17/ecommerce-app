@@ -407,4 +407,18 @@ public class CustomerController {
 		return "redirect:/product/dashboard";
 	}
 
+	@PostMapping("/refresh")
+	public String refresh(@SessionAttribute Customer customer) {
+		Customer currentCustomer = customerService.findCustomerByID(customer.getCustomerID()).get();
+		Cart currentCart = currentCustomer.getCart();
+
+		customerService.updateCustomer(currentCustomer);
+		cartService.updateCart(currentCart);
+
+		httpSession.setAttribute("customer", currentCustomer);
+		httpSession.setAttribute("cart", currentCart);
+
+		return "redirect:/product/dashboard";
+	}
+
 }
