@@ -44,6 +44,10 @@ button{
     width: 7.5vh; height: 7.5vh;
 }
 
+.hidden{
+    display: none;
+}
+
 #cart-container{
     border: 2px black;
     align-content: right;
@@ -61,4 +65,5 @@ button{
         padding: 0 10px;
     }
 }
+
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
-    
+
 </head>
 
 <body>
@@ -26,7 +26,7 @@
                     <button type="submit">Add To Cart</button>
                 </form>
             </div>
-            <div id="cart-container">
+            <div id="cart-container" class="">
                 <table id="myList">
                     <tr>
                         <th>Product Name</th>
@@ -40,7 +40,8 @@
                         <td>
                             <form th:action="@{/customer/updateCartItemQuantity}" method="POST">
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
-                                <span th:text="${cartItem.productQuantity}" id="quantity-{{cartItem.product.productID}}"></span>
+                                <span th:text="${cartItem.productQuantity}"
+                                    id="quantity-{{cartItem.product.productID}}"></span>
                                 <button type="submit" name="updateQuantity" value="plus">+</button>
                                 <button type="submit" name="updateQuantity" value="minus">-</button>
                             </form>
@@ -61,21 +62,21 @@
                     </tr>
                     <tr>
                         <td colspan="5" text-align="right" id="checkout-row">
-                            
+
                             <form th:action="@{/customer/cartCheckout}" method="POST">
                                 <b>Checkout:</b>
-                                <button type="submit" >Checkout</button>
+                                <button type="submit">Checkout</button>
                             </form>
                         </td>
-                        
+
                     </tr>
                 </table>
-               
+
 
             </div>
 
 
-            <div class="cart-icon" id="toggle-cart-icon" onclick="toggleList()">
+            <div class="cart-icon" id="toggle-cart-icon" onclick="toggleTable()">
                 <img src="https://static-00.iconduck.com/assets.00/shopping-cart-icon-512x462-yrde1eu0.png" alt="Icon">
             </div>
         </th:block>
@@ -84,14 +85,13 @@
             <a href="@{/customer/login}">Login</a>
         </th:block>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js">
-        $(document).ready(function () {
-            $(".cart-icon").click(function (event) {
-                event.preventDefault(); // Prevent default link behavior
-                $("#cart-container").toggle(); // Toggle visibility
-            });
-        });
+    <script>
+        function toggleTable() {
+            var table = document.getElementById("cart-container");
+            table.classList.toggle("hidden");
+        }
     </script>
+    
 </body>
 
 </html>
