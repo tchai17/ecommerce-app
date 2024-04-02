@@ -2,6 +2,8 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,49 +16,88 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * This class is the controller for the product management system. It handles
+ * requests for the homepage, adding a new product, and displaying all products.
+ */
 @Controller
 @RequestMapping("/product")
 public class ProductController {
 
+	private Logger logger = LogManager.getLogger(CustomerController.class);
+
+	/** The product service used to interact with the database. */
 	@Autowired
 	private ProductService productService;
-	
+
+	/**
+	 * The homepage for the product management system.
+	 * 
+	 * @return the name of the homepage template
+	 */
 	@GetMapping("/")
-    public String index() {
-        return "index";
-    }
-	
+	public String index() {
+		logger.debug("Main page loaded");
+		return "index";
+	}
+
+	/**
+	 * The page for adding a new product.
+	 * 
+	 * @return the name of the add product template
+	 */
 	@GetMapping("/add-product")
 	public String addProduct() {
-        return "addProduct";
-    }
-	
-	@PostMapping("add-product")
-	public String processRegistration(HttpServletRequest request) {
-    	System.out.println("Initiate registration for new product");
-    	
-    	// Get parameters
-    	String productName = request.getParameter("productName");
-    	String stockString = request.getParameter("stock");
-    	int stock = Integer.parseInt(stockString);
-    	String imgURL = request.getParameter("imgURL");
-    	String priceString = request.getParameter("price");
-    	double price = Double.parseDouble(priceString);
-    	
-    	Product product = new Product(productName, stock, imgURL, price);
-    	System.out.println(product);
-    	
-    	productService.saveProduct(product);
-    	System.out.println("Product saved successfully");
-    	
-    	return "complete";
-    
+		logger.debug("User clicked on add-product button");
+		return "addProduct";
 	}
-	
+
+	/**
+	 * Processes the registration of a new product.
+	 * 
+	 * @param request the HTTP request containing the product information
+	 * @return the name of the completion template
+	 */
+	@PostMapping("/add-product")
+	public String processRegistration(HttpServletRequest request) {
+		logger.info("Request received to register new product");
+
+		// Get parameters
+		String productName = request.getParameter("productName");
+		logger.debug("Product name input received: " + productName);
+		String stockString = request.getParameter("stock");
+		logger.debug("Stock input received: " + stockString);
+		int stock = Integer.parseInt(stockString);
+		String imgURL = request.getParameter("imgURL");
+		logger.debug("Image URL input received: " + imgURL);
+		String priceString = request.getParameter("price");
+		logger.debug("Price input received: " + priceString);
+		double price = Double.parseDouble(priceString);
+
+		Product product = new Product(productName, stock, imgURL, price);
+		logger.info("New product created: " + product);
+
+		productService.saveProduct(product);
+		logger.info("Product saved successfully onto database");
+
+		logger.debug("Redirecting customer to registration-complete page");
+
+		return "complete";
+	}
+
+	/**
+	 * Displays all products.
+	 * 
+	 * @param model the model for the view
+	 * @return the name of the dashboard template
+	 */
 	@GetMapping("/dashboard")
 	public String productDisplay(Model model) {
+		logger.debug("Customer is directed to dashboard");
 		List<Product> products = productService.returnAllProducts();
-        model.addAttribute("products", products);
+		model.addAttribute("products", products);
+		logger.debug("Products and added to response");
 		return "dashboard";
 	}
+
 }
