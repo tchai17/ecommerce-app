@@ -19,7 +19,7 @@
             <div class="product-container" th:each="product : ${products}">
                 <h2 th:text="${product.productName}"></h2>
                 <img th:src="${product.imgURL}" alt="${product.productName}">
-                <p th:text="'$' + ${product.price}"></p>
+                <p th:text="${product.price}" class="price-element"></p>
                 <p th:text="'Available stock: '+${product.stock}"></p>
                 <form th:action="@{/customer/addToCart(productID=${product.productID})}" method="POST">
                     <input type="number" name="quantity" min="1" value="1">
@@ -53,8 +53,8 @@
                                 <button type="submit" name="updateQuantity" value="minus">-</button>
                             </form>
                         </td>
-                        <td th:text="${cartItem.product.price}"></td>
-                        <td th:text="${cartItem.productSubtotal}"></td>
+                        <td th:text="${cartItem.product.price}" class="price-element"></td>
+                        <td th:text="${cartItem.productSubtotal}" class="price-element"></td>
                         <td>
                             <form th:action="@{/customer/removeFromCart}" method="POST">
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
@@ -65,7 +65,7 @@
                     </tr>
                     <tr>
                         <td colspan="4" text-align="right"><b>Cart Total:</b></td>
-                        <td th:text="${session.customer.cart.totalPrice}"></td>
+                        <td th:text="${session.customer.cart.totalPrice}" class="price-element"></td>
                     </tr>
                     <tr>
                         <!-- <td colspan="4"></td> -->
@@ -113,6 +113,12 @@
             var table = document.getElementById("cart-container");
             table.classList.toggle("hidden");
         }
+        const priceElements = document.querySelectorAll('.price-element');
+
+        priceElements.forEach(element => {
+            const price = parseFloat(element.textContent);
+            element.textContent = '$' + price.toFixed(2);
+        });
     </script>
 
 </body>
