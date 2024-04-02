@@ -353,10 +353,12 @@ public class CustomerController {
 		httpSession.setAttribute("cart", cart);
 		logger.debug("Cart details retrieved from database: " + cart);
 
+		// Save a copy of the items to be deleted from the database
 		Set<CartItem> itemsToDelete = new HashSet<>(cart.getItems());
 		logger.debug("Items to delete: " + itemsToDelete);
 		cartService.checkoutCart(cart);
 
+		// Delete entries from the cart_item table
 		itemsToDelete.forEach(item -> {
 			logger.debug(item + " has been deleted");
 			cartItemService.deleteCartItemFromDatabase(item);
