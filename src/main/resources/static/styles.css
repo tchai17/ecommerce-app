@@ -3,6 +3,7 @@
 body{
     /* font-family: Arial, sans-serif; */
     font-family: "Poppins";
+    background-image: linear-gradient(to right, #e7d0ec, #b998ff);
     
 }
 
@@ -12,7 +13,7 @@ body{
     flex-direction: row;
     justify-content: left;
     margin: 1vh 0;
-    background-image: linear-gradient(to right, #e7d0ec, #b998ff);
+    
 }
 
 .page-title{
