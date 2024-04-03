@@ -88,3 +88,17 @@ button{
     text-align: right;
 }
 
+.orders-table{
+    width: auto;
+    th {
+        text-align: left;
+        padding: 0 20px;
+        
+    }
+    td {
+        padding: 0 20px;
+        
+        
+    }
+}
+

@@ -159,7 +159,8 @@ public class CustomerController {
 		httpSession.setAttribute("customer", currentCustomer);
 		httpSession.setAttribute("cart", cart);
 		httpSession.setAttribute("likes", currentCustomer.getLikes());
-//		httpSession.setAttribute("orders", currentCustomer.getOrders());
+		List<Order> orders = currentCustomer.getOrders();
+		httpSession.setAttribute("orders", orders);
 		logger.debug("Customer likes and orders are set for this session");
 		httpSession.setAttribute("isLoggedIn", true);
 		logger.debug("Cart is set for this current session");
