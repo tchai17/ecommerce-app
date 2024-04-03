@@ -29,7 +29,7 @@
                     <img th:src="${product.imgURL}" alt="${product.productName}">
                     <p th:text="${product.price}" class="price-element"></p>
                     <p th:text="'Available stock: '+${product.stock}"></p>
-                    <form th:action="@{/customer/addToCart(productID=${product.productID})}" method="POST">
+                    <form th:action="@{/addToCart(productID=${product.productID})}" method="POST">
                         <input type="number" name="quantity" min="1" value="1">
                         <button type="submit">Add To Cart</button>
                     </form>
@@ -47,7 +47,7 @@
                         <th>Price</th>
                         <th>Subtotal</th>
                         <th>
-                            <form th:action="@{/customer/refresh}" method="POST">
+                            <form th:action="@{/refresh}" method="POST">
                                 <button type="submit">Refresh</button>
                             </form>
                         </th>
@@ -55,7 +55,7 @@
                     <tr th:each="cartItem : ${session.customer.cart.items}">
                         <td th:text="${cartItem.product.productName}"></td>
                         <td>
-                            <form th:action="@{/customer/updateCartItemQuantity}" method="POST">
+                            <form th:action="@{/updateCartItemQuantity}" method="POST">
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
                                 <span th:text="${cartItem.productQuantity}"
                                     id="quantity-{{cartItem.product.productID}}"></span>
@@ -66,7 +66,7 @@
                         <td th:text="${cartItem.product.price}" class="price-element"></td>
                         <td th:text="${cartItem.productSubtotal}" class="price-element"></td>
                         <td>
-                            <form th:action="@{/customer/removeFromCart}" method="POST">
+                            <form th:action="@{/removeFromCart}" method="POST">
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
                                 <input type="hidden" th:value="${cartItem.productQuantity}" name="productQuantity">
                                 <button type="submit">Remove All</button>
