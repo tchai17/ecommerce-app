@@ -17,6 +17,7 @@ public class Application {
 		try {
 			SpringApplication.run(Application.class, args);
 		} catch (Exception e) {
+//			For debugging purposes, use commented-code
 //			e.printStackTrace();
 //			System.out.println(e.getMessage());
 

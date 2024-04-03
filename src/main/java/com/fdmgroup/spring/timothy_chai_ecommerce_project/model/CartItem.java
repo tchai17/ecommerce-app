@@ -192,6 +192,9 @@ public class CartItem {
 				+ productSubtotal + ", product=" + product + "]";
 	}
 
+	/**
+	 * Overriden .equals method for testing
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -205,9 +208,5 @@ public class CartItem {
 				&& productQuantity == other.productQuantity
 				&& Double.doubleToLongBits(productSubtotal) == Double.doubleToLongBits(other.productSubtotal);
 	}
-
-//	/**
-//	 * Overriden .equals method for testing
-//	 */
 
 }

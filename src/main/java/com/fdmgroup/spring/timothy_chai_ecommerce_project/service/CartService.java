@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.controller.CustomerController;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
@@ -20,7 +19,7 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartReposit
 @Service
 public class CartService {
 
-	private Logger logger = LogManager.getLogger(CustomerController.class);
+	private Logger logger = LogManager.getLogger(CartService.class);
 
 	@Autowired
 	private CartRepository cartRepo;
@@ -56,6 +55,7 @@ public class CartService {
 		logger.debug("updateCart is called for cart: " + cart);
 		Cart targetCart = cartRepo.findById(cart.getCartID()).get();
 		logger.debug("Cart with matching cartID is found, saving items");
+
 		targetCart.setItems(cart.getItems());
 
 		cartRepo.save(targetCart);
@@ -76,8 +76,6 @@ public class CartService {
 		Cart cart = customer.getCart();
 		logger.debug("Cart of target customer retrieved");
 		CartItem newItem = new CartItem(product, quantity);
-//		newItem.setCart(cart);
-//		logger.debug("Cart is set for new CartItem");
 		cart.addToCart(newItem);
 		logger.debug("New CartItem is added to cart");
 		cart.updateTotalPrice();
