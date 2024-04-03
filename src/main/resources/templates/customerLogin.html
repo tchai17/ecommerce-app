@@ -17,5 +17,8 @@
             <button type="submit"> Login </button>
         </fieldset>
     </form>
+    <div class="error-message" th:if="${error}">
+        <p>Username or password is invalid!</p>
+    </div>
 </body>
 </html>

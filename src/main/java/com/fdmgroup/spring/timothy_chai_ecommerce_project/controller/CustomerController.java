@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -84,7 +85,7 @@ public class CustomerController {
 	 * @return The "complete" page after registering the customer.
 	 */
 	@PostMapping("/registration")
-	public String processRegistration(HttpServletRequest request) {
+	public String processRegistration(HttpServletRequest request, Model model) {
 		logger.debug("Initiate registration for new customer");
 
 		// Get parameters
@@ -115,7 +116,7 @@ public class CustomerController {
 	 *         redirected to the product dashboard.
 	 */
 	@PostMapping("/login-customer")
-	public String processLogin(HttpServletRequest request) {
+	public String processLogin(HttpServletRequest request, Model model) {
 
 		logger.debug("Initiate login request");
 
@@ -129,6 +130,7 @@ public class CustomerController {
 		List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
 		if (existingCustomers.isEmpty()) {
 			logger.info("Username not found in database: " + username);
+			model.addAttribute("error", true);
 			logger.debug("Redirecting user back to login page");
 			return "customerLogin";
 		}
@@ -136,6 +138,7 @@ public class CustomerController {
 		// Check if username matches only one entry
 		if (existingCustomers.size() > 1) {
 			logger.info("Username input is not unique: " + username);
+			model.addAttribute("error", true);
 			logger.debug("Redirecting user back to login page");
 			return "customerLogin";
 		}
@@ -144,6 +147,7 @@ public class CustomerController {
 		if (!existingCustomers.get(0).getPassword().equals(password)) {
 			logger.info("Password input does not match username: " + existingCustomers.get(0).getUsername());
 			logger.debug("Customer redirected back to login page");
+			model.addAttribute("error", true);
 			return "customerLogin";
 		}
 
