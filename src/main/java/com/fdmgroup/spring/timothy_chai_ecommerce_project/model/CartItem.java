@@ -25,8 +25,10 @@ import jakarta.persistence.ManyToOne;
  *         the product quantity and subtotal. It is used primarily when
  *         customers wish to add products to their cart When customers wish to
  *         add a product to the cart, a new CartItem object is created
- *         encapsulating the product and the quantity, before it is added to the
- *         Cart
+ *         encapsulating the product and the quantity.
+ * 
+ *         When a Cart is checked-out, CartItems are linked to the Order that is
+ *         created based on the Cart
  * 
  * @see Product
  * @see Cart
@@ -171,14 +173,29 @@ public class CartItem {
 		this.product = product;
 	}
 
+	/**
+	 * Get the order that this cart item belongs to.
+	 * 
+	 * @return the order that this cart item belongs to
+	 */
 	public Order getOrder() {
 		return order;
 	}
 
+	/**
+	 * Set the order that this cart item belongs to.
+	 * 
+	 * @param order the order that this cart item belongs to
+	 */
 	public void setOrder(Order order) {
 		this.order = order;
 	}
 
+	/**
+	 * Sets the product subtotal.
+	 *
+	 * @param productSubtotal the product subtotal
+	 */
 	public void setProductSubtotal(double productSubtotal) {
 		this.productSubtotal = productSubtotal;
 	}

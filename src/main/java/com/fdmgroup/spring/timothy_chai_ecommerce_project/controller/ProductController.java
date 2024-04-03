@@ -21,7 +21,12 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This class is the controller for the product management system. It handles
- * requests for the homepage, adding a new product, and displaying all products.
+ * all product-related requests for the homepage like adding a new product, and
+ * displaying all products.
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Product
  */
 @Controller
 @RequestMapping("/product")
@@ -34,18 +39,8 @@ public class ProductController {
 	private ProductService productService;
 
 	/**
-	 * The homepage for the product management system.
-	 * 
-	 * @return the name of the homepage template
-	 */
-	@GetMapping("/")
-	public String index() {
-		logger.debug("Main page loaded");
-		return "index";
-	}
-
-	/**
-	 * The page for adding a new product.
+	 * Handles requests for registration of a new product and directs the user to
+	 * the product registration form
 	 * 
 	 * @return the name of the add product template
 	 */
@@ -56,7 +51,8 @@ public class ProductController {
 	}
 
 	/**
-	 * Processes the registration of a new product.
+	 * Handles form inputs for new product registration and processes the
+	 * registration of a new product.
 	 * 
 	 * @param request the HTTP request containing the product information
 	 * @return the name of the completion template
@@ -81,6 +77,7 @@ public class ProductController {
 		Product product = new Product(productName, stock, imgURL, price);
 		logger.info("New product created: " + product);
 
+		// Save onto database
 		productService.saveProduct(product);
 		logger.info("Product saved successfully onto database");
 
@@ -90,7 +87,8 @@ public class ProductController {
 	}
 
 	/**
-	 * This method is used to display the products and categories on the dashboard.
+	 * Handles requests after user login and redirection to the dashboard. Displays
+	 * the products and categories on the dashboard.
 	 * 
 	 * @param selectedCategory the selected category, can be null
 	 * @param model            the model object

@@ -27,7 +27,13 @@ import jakarta.servlet.http.HttpSession;
 
 /**
  * This class is the customer controller that handles all the requests related
- * to the customer.
+ * to the customer. These requests include customer registration, login, adding
+ * to likes, and removing from likes
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Customer
+ * 
  */
 @Controller
 @RequestMapping("/customer")
@@ -47,17 +53,6 @@ public class CustomerController {
 
 	@Autowired
 	private HttpSession httpSession;
-
-	/**
-	 * Handles the index page of the customer.
-	 * 
-	 * @return The index page of the customer.
-	 */
-	@GetMapping("/")
-	public String index() {
-		logger.debug("Main page loaded");
-		return "index";
-	}
 
 	/**
 	 * Handles the request for registering a new customer account.

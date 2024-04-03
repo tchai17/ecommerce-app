@@ -11,6 +11,10 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartItemRep
 
 /**
  * This class provides business logic for CartItem entities.
+ * 
+ * @author - timothy.chai
+ * 
+ * @see CartItem
  */
 @Service
 public class CartItemService {

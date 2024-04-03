@@ -15,6 +15,10 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartReposit
 
 /**
  * This class provides services for managing a customer's shopping cart.
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Cart
  */
 @Service
 public class CartService {
@@ -104,9 +108,9 @@ public class CartService {
 	}
 
 	/**
-	 * Checks out the specified customer's cart.
+	 * Checks out the specified cart.
 	 * 
-	 * @param customer the customer whose cart is being checked out
+	 * @param cart the cart being checked out
 	 */
 	public void clearCart(Cart cart) {
 		logger.debug("clearCart is called for cart: " + cart);

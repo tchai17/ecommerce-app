@@ -24,6 +24,16 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService
 
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * This class is the controller responsible for handling all cart-related
+ * requests, including adding to the cart, removing from the cart, and checking
+ * out
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Cart
+ *
+ */
 @Controller
 @Transactional(readOnly = false)
 public class CartController {

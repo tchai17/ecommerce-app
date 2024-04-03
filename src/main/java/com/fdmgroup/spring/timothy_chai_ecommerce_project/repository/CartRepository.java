@@ -9,7 +9,9 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
  * This interface provides methods for interacting with the database table
  * "cart".
  * 
- * @author TimothyChai
+ * @author timothy.chai
+ * 
+ * @see Cart
  *
  */
 @Repository

@@ -15,10 +15,18 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartItemRep
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRepository;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.OrderRepository;
 
+/**
+ * This service class is used to create and manage orders.
+ * 
+ * @author timothy.chai
+ * 
+ * @see Order
+ *
+ */
 @Service
 public class OrderService {
 
-	private Logger logger = LogManager.getLogger(OrderService.class);
+	private static Logger logger = LogManager.getLogger(OrderService.class);
 
 	@Autowired
 	private OrderRepository orderRepo;
@@ -29,34 +37,48 @@ public class OrderService {
 	@Autowired
 	private CustomerRepository customerRepo;
 
-	public OrderService(OrderRepository orderRepo) {
-		this.orderRepo = orderRepo;
-	}
-
+	/**
+	 * Saves the given order to the database.
+	 * 
+	 * @param order
+	 * @return
+	 */
 	public Order save(Order order) {
 		return orderRepo.save(order);
 	}
 
+	/**
+	 * Creates a new order for the given customer.
+	 * 
+	 * @param customer
+	 * @return
+	 */
 	public Order createOrder(Customer customer) {
+		logger.debug("createOrder called for customer " + customer);
+
 		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getCustomerID());
 		if (optionalCustomer.isEmpty()) {
 			return new Order();
-		} else {
-			Customer currentCustomer = optionalCustomer.get();
-			Cart cart = currentCustomer.getCart();
-			Order order = new Order(cart, currentCustomer);
-			for (CartItem cartItem : cart.getItems()) {
-				CartItem newCartItem = new CartItem();
-				newCartItem.setProduct(cartItem.getProduct());
-				newCartItem.setProductQuantity(cartItem.getProductQuantity());
-				newCartItem.setProductSubtotal(cartItem.getProductSubtotal());
-				newCartItem.setOrder(order); // Set order reference for the new cart item
-				cartItemRepo.save(newCartItem); // Persist new cart item
-			}
-			orderRepo.save(order);
-			return order;
 		}
+		Customer currentCustomer = optionalCustomer.get();
+		Cart cart = currentCustomer.getCart();
 
+		// add items of cart to order
+		Order order = new Order(cart, currentCustomer);
+
+		for (CartItem cartItem : cart.getItems()) {
+			// perform deep copy of each item in the cart
+			CartItem newCartItem = new CartItem();
+			newCartItem.setProduct(cartItem.getProduct());
+			newCartItem.setProductQuantity(cartItem.getProductQuantity());
+			newCartItem.setProductSubtotal(cartItem.getProductSubtotal());
+
+			// Set order reference for the new cart item and persist
+			newCartItem.setOrder(order);
+			cartItemRepo.save(newCartItem);
+		}
+		orderRepo.save(order);
+		return order;
 	}
 
 }

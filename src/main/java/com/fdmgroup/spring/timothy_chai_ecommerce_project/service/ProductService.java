@@ -16,12 +16,17 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.ProductRepo
 /**
  * This class provides business logic for managing products in the system. It
  * uses the ProductRepository to store and retrieve products from the database.
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Product
  */
 @Service
 public class ProductService {
 
 	private Logger logger = LogManager.getLogger(ProductService.class);
 
+	@Autowired
 	private ProductRepository productRepository;
 
 	/**
@@ -43,10 +48,13 @@ public class ProductService {
 	 */
 	public void saveProduct(Product newProduct) {
 		logger.debug("saveProduct called for product: " + newProduct);
+
+		// Check if a product with the same name already exists
 		List<Product> existingProducts = productRepository.findByProductName(newProduct.getProductName());
 		if (existingProducts.isEmpty()) {
 			logger.debug("No product with matching productID found, saving new Product");
 			productRepository.save(newProduct);
+
 		} else {
 			logger.info("Product already exists, abort save");
 			System.out.println("Product already exists");
@@ -62,15 +70,20 @@ public class ProductService {
 	 */
 	public void updateProduct(Product product) {
 		logger.debug("updateProduct called for product: " + product);
+
+		// Check if product exists in database
 		Optional<Product> targetProduct = productRepository.findById(product.getProductID());
 		if (targetProduct.isPresent()) {
 			logger.debug("Product with matching ID found, updating product details");
+
+			// Perform deep copy of input product, then save managed instance
 			Product target = targetProduct.get();
 			target.setProductName(product.getProductName());
 			target.setPrice(product.getPrice());
 			target.setImgURL(product.getImgURL());
 			target.setStock(product.getStock());
 			productRepository.save(target);
+
 		} else {
 			logger.info("No product with matching productID found, try saving new product");
 		}
@@ -91,6 +104,7 @@ public class ProductService {
 			return product;
 
 		} else {
+			// if product is not found in database, return empty optional
 			logger.info("No product with matching productID found, returning Optional.empty");
 			return Optional.empty();
 		}
@@ -107,6 +121,12 @@ public class ProductService {
 		return productRepository.findByProductName(productName);
 	}
 
+	/**
+	 * Returns a list of products that match the given category.
+	 * 
+	 * @param category the category to filter by
+	 * @return a list of products that match the given category
+	 */
 	public List<Product> findProductByCategory(String category) {
 		logger.debug("findProductByCategory called for category: " + category);
 		return productRepository.findByCategory(category);
@@ -122,9 +142,16 @@ public class ProductService {
 		return productRepository.findAll();
 	}
 
+	/**
+	 * Returns a set containing all the categories of products in the database.
+	 * 
+	 * @return allCategories a set containing all the categories of products in the
+	 *         database
+	 */
 	public Set<String> returnAllCategories() {
 		logger.debug("returnAllCategories called");
 		Set<String> allCategories = new HashSet<>();
+		// get all products, then add their categories to the set (no duplicates)
 		List<Product> allProducts = productRepository.findAll();
 		allProducts.forEach(product -> allCategories.add(product.getCategory()));
 		return allCategories;

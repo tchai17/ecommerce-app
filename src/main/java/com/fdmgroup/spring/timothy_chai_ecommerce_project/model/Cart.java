@@ -68,13 +68,19 @@ public class Cart {
 	@JoinColumn(name = "FK_CART_ITEM_ID")
 	private List<CartItem> items;
 
+	/**
+	 * Holds the Customer reference which owns this Cart
+	 * 
+	 * @see Customer
+	 */
 	@OneToOne
 	@JoinColumn(name = "FK_CUSTOMER_ID")
 	private Customer customer;
 
 	/**
-	 * Default no-args constructor for the Cart class Initializes the items set for
-	 * holding CartItem objects
+	 * Default no-args constructor for the Cart class
+	 * 
+	 * Initializes the items set for holding CartItem objects
 	 * 
 	 * @see #items
 	 */
@@ -285,7 +291,7 @@ public class Cart {
 	}
 
 	/**
-	 * Checks out all items in the cart
+	 * Clears the items in the cart, usually after checkout
 	 */
 	public void clearCart() {
 		items.clear();

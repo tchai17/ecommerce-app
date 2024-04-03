@@ -13,6 +13,10 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRep
 
 /**
  * This service provides operations for managing customers in the system.
+ * 
+ * @author - timothy.chai
+ * 
+ * @see Customer
  */
 @Service
 public class CustomerService {

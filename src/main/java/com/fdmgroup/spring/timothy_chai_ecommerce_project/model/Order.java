@@ -16,29 +16,60 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+/**
+ * Represents an order in the system. An order is associated with a customer and
+ * contains a list of ordered items.
+ * 
+ * @author timothy.chai
+ * 
+ * @see Customer
+ * @see CartItem
+ *
+ */
 @Entity
 @Table(name = "orders")
 public class Order {
 
+	/**
+	 * The unique identifier for this order.
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ORDER_ID")
 	private int orderID;
 
+	/**
+	 * The customer who placed this order.
+	 */
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_CUSTOMER_ID")
 	private Customer customer;
 
+	/**
+	 * The items that were ordered in this order.
+	 */
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private List<CartItem> orderedItems;
 
+	/**
+	 * The date and time that this order was placed.
+	 */
 	@Column(name = "ORDER_DATE")
 	private Date orderDate;
 
+	/**
+	 * Default no-args constructor
+	 */
 	public Order() {
 
 	}
 
+	/**
+	 * Creates a new order based on the given cart and customer.
+	 * 
+	 * @param cart     the cart containing the items to be ordered
+	 * @param customer the customer placing the order
+	 */
 	public Order(Cart cart, Customer customer) {
 		orderedItems = new ArrayList<>();
 		/*
@@ -129,6 +160,9 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
+	/**
+	 * Overriden equals method for tests
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -142,6 +176,9 @@ public class Order {
 				&& orderID == other.orderID && Objects.equals(orderedItems, other.orderedItems);
 	}
 
+	/**
+	 * Overriden toString method for printing onto console and logs
+	 */
 	@Override
 	public String toString() {
 		return "Order [orderID=" + orderID + ", customer=" + customer + ", orderedItems=" + orderedItems

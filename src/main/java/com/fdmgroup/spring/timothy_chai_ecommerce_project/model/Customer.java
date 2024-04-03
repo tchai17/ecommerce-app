@@ -33,15 +33,18 @@ import jakarta.persistence.OneToOne;
  *         address, full name, and credit card information. Upon creating an
  *         account and persisting onto the database, the Customer instance is
  *         automatically assigned an ID, and will have a shopping Cart object
- *         which the customer can use to purchase products.
+ *         which the customer can use to purchase products. In addition, the
+ *         Customer will also have a set of products which he has 'liked' and a
+ *         list of past Orders.
  * 
- *         The Customer class has mainly getters and setters for each attribute,
- *         except for the cart attribute, which only has a getter. The Customer
- *         class also has updateDetails which allows existing customers to
- *         update any of the attributes, except for the cart attribute and the
- *         customerID, which cannot be changed after registration.
+ *         The Customer class has mainly getters and setters for each attribute.
+ *         The Customer class also has updateDetails which allows existing
+ *         customers to update any of the attributes, except for the cart
+ *         attribute and the customerID, which cannot be changed after
+ *         registration.
  * 
  * @see Cart
+ * @see Order
  * @see #updateDetails(Customer)
  * 
  */
@@ -252,14 +255,29 @@ public class Customer {
 		return cart;
 	}
 
+	/**
+	 * Returns the set of products that are 'liked' by this customer
+	 * 
+	 * @return the set of products that are 'liked' by this customer
+	 */
 	public Set<Product> getLikes() {
 		return likes;
 	}
 
+	/**
+	 * Returns the list of orders made by this customer
+	 * 
+	 * @return the list of orders made by this customer
+	 */
 	public List<Order> getOrders() {
 		return orders;
 	}
 
+	/**
+	 * Sets the shopping cart for this customer
+	 * 
+	 * @param cart the shopping cart to set for this customer
+	 */
 	public void setCart(Cart cart) {
 		cart.setCustomer(this);
 		this.cart = cart;
@@ -334,10 +352,20 @@ public class Customer {
 
 	}
 
+	/**
+	 * Sets the products that are 'liked' by this customer
+	 * 
+	 * @param likes the set of products that are 'liked' by this customer
+	 */
 	public void setLikes(Set<Product> likes) {
 		this.likes = likes;
 	}
 
+	/**
+	 * Sets the orders for this customer
+	 * 
+	 * @param orders the orders to set for this customer
+	 */
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
@@ -358,10 +386,20 @@ public class Customer {
 
 	}
 
+	/**
+	 * Adds the given product to the set of products liked by the customer.
+	 *
+	 * @param product the product to add to the customer's list of likes
+	 */
 	public void addToLikes(Product product) {
 		likes.add(product);
 	}
 
+	/**
+	 * Removes the given product from the set of products liked by the customer.
+	 *
+	 * @param product the product to remove from the customer's list of likes
+	 */
 	public void removeFromLikes(Product product) {
 		likes.remove(product);
 	}
@@ -375,6 +413,8 @@ public class Customer {
 	}
 
 	/**
+	 * Overriden equals for testing and comparison
+	 * 
 	 * @return result Returns true if the input Customer object is equal to this
 	 *         Customer object
 	 */
