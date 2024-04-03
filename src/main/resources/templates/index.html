@@ -7,16 +7,19 @@
 		
 	</head>
 	<body>
-		<h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
-		<form th:action="@{/customer/register-customer}" method="GET">
-			<button type="submit">Register Account</button>
-		</form><br>
-		<form th:action="@{/customer/login}" method="GET">
-			<button type="submit">Login</button>
-		</form><br>
-		<form th:action="@{/product/add-product}" method="GET">
-			<button type="submit">Add New Product</button>
-		</form><br>
+		<h1 class="page-title" ><a th:href="@{/}">SNACK SHACK</a></h1>
+		<div class="homepage">
+			<form th:action="@{/customer/register-customer}" method="GET">
+				<button type="submit" class="button-4">Register Account</button>
+			</form><br>
+			<form th:action="@{/customer/login}" method="GET">
+				<button type="submit" class="button-4">Login</button>
+			</form><br>
+			<form th:action="@{/product/add-product}" method="GET">
+				<button type="submit" class="button-4">Add New Product</button>
+			</form><br>
+		</div>
+		
 
 	</body>
 </html>

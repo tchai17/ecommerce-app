@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
+
 <body>
     <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
-    <form method="POST" th:action="@{/customer/login-customer}">
-        <fieldset>
-            <label>Please enter your username:</label><br>
-            <input type="text" name="username" required ><br>
-            <label>Please enter your password:</label><br>
-            <input type="password" name="password" required ><br>
-            <button type="submit"> Login </button>
-        </fieldset>
-    </form>
-    <div class="error-message" th:if="${error}">
-        <p>Username or password is invalid!</p>
+    <div class="main">
+        <form method="POST" th:action="@{/customer/login-customer}">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="username">Please enter your username:</label><br>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Please enter your password:</label><br>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="button-4"> Login </button>
+        </form>
+        <div class="error-message" th:if="${error}">
+            <p>Username or password is invalid!</p>
+        </div>
     </div>
+
 </body>
+
 </html>

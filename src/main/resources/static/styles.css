@@ -1,30 +1,105 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
-body{
+
+body {
     /* font-family: Arial, sans-serif; */
     font-family: "Poppins";
     background-image: linear-gradient(to right, #e7d0ec, #b998ff);
-    
+
 }
 
-.market{
+.homepage {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: auto;
+    width:fit-content;
+    .button-4 {
+        margin: 0 20px;
+    }
+    
+}
+.main{
+    margin: auto;
+    width:fit-content;
+    text-align: center;
+}
+
+/* CSS */
+.button-4 {
+    appearance: none;
+    background-color: #FAFBFC;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    box-sizing: border-box;
+    color: #24292E;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Poppins";
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    padding: 6px 16px;
+    position: relative;
+    transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+    word-wrap: break-word;
+}
+
+.button-4:hover {
+    background-color: #F3F4F6;
+    text-decoration: none;
+    transition-duration: 0.1s;
+}
+
+.button-4:disabled {
+    background-color: #FAFBFC;
+    border-color: rgba(27, 31, 35, 0.15);
+    color: #959DA5;
+    cursor: default;
+}
+
+.button-4:active {
+    background-color: #EDEFF2;
+    box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+    transition: none 0s;
+}
+
+.button-4:focus {
+    outline: 1px transparent;
+}
+
+.button-4:before {
+    display: none;
+}
+
+.button-4:-webkit-details-marker {
+    display: none;
+}
+
+.market {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: left;
     margin: 1vh 0;
-    
+
 }
 
-.page-title{
+.page-title {
     font-family: 'Kalam';
     font-size: 800;
     text-align: center;
 }
 
-button{
-    padding:5px;
-    margin:5px 5px 5px 0;
+button {
+    padding: 5px;
+    margin: 5px 5px 5px 0;
 }
 
 .all-products {
@@ -38,29 +113,31 @@ button{
     height: auto;
     border: 2px black;
     margin: 5px;
-    
+
 }
 
-.product-container img{
-    height:200px;
-    width:200px;
+.product-container img {
+    height: 200px;
+    width: 200px;
 }
 
-.cart-icon img{
+.cart-icon img {
     position: fixed;
-    bottom: 2vh; right: 4vh;
-    width: 7.5vh; height: 7.5vh;
+    bottom: 2vh;
+    right: 4vh;
+    width: 7.5vh;
+    height: 7.5vh;
 }
 
-.hidden{
+.hidden {
     display: none;
 }
 
-#cart-container{
+#cart-container {
     /* border: 2px black; */
     border-radius: 10px;
     padding: 10px;
-    opacity: 80%;
+    opacity: 90%;
     align-content: right;
     position: fixed;
     top: 25%;
@@ -68,7 +145,8 @@ button{
     background-color: #fdf2ff;
 }
 
-#myList, #likes{
+#myList,
+#likes {
     width: auto;
     border: 1px black solid;
     border-radius: 5px;
@@ -78,6 +156,7 @@ button{
         text-align: left;
         padding: 0 10px;
     }
+
     td {
         padding: 0 10px;
     }
@@ -88,23 +167,26 @@ button{
     text-align: right;
 }
 
-.orders-table{
+.orders-table {
     width: auto;
+
     th {
         text-align: left;
         padding: 0 20px;
-        
+
     }
+
     td {
         padding: 0 20px;
-        
+
     }
+
     tr {
         border: 1px black solid;
     }
 }
 
-.popular{
+.popular {
     text-align: left;
     position: absolute;
     top: 10px;
@@ -113,18 +195,20 @@ button{
     background: #ffffd1;
     border-radius: 10px;
 
-    h3{
+    h3 {
         padding: 0 10px;
     }
+
     th {
         padding: 0 10px;
     }
+
     td {
-        padding: 0 10px;     
+        padding: 0 10px;
     }
 }
 
-.error-message p{
+.error-message p {
     color: red;
     /* background: white;
     border-radius: 5px; */
@@ -133,4 +217,8 @@ button{
 
 .form-group {
     margin: 10px 0;
+}
+
+.small-button{
+    padding: 4px;
 }

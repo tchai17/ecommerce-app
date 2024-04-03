@@ -15,7 +15,7 @@
 
     <div>
         <form th:action="@{/customer/orders}" method="GET">
-            <button type="submit">View Past Orders</button>
+            <button type="submit" class="button-4">View Past Orders</button>
         </form>
     </div>
 
@@ -26,7 +26,7 @@
                     <option value="all" selected>All</option>
                     <option th:each="category : ${categories}" th:value="${category}">[[${category}]]</option>
                 </select>
-                <button type="submit">Filter</button>
+                <button type="submit" class="button-4">Filter</button>
             </form>
             <div class="all-products">
                 <div class="product-container" th:each="product : ${products}">
@@ -36,10 +36,10 @@
                     <p th:text="'Available stock: '+${product.stock}"></p>
                     <form th:action="@{/addToCart(productID=${product.productID})}" method="POST">
                         <input type="number" name="quantity" min="1" value="1">
-                        <button type="submit">Add To Cart</button>
+                        <button type="submit" class="button-4">Add To Cart</button>
                     </form>
                     <form th:action="@{/customer/addToLikes(productID=${product.productID})}" method="POST">
-                        <button type="submit">Add To Likes</button>
+                        <button type="submit" class="button-4">Add To Likes</button>
                     </form>
                 </div>
             </div>
@@ -69,19 +69,21 @@
                         <th>Subtotal</th>
                         <th>
                             <form th:action="@{/refresh}" method="POST">
-                                <button type="submit">Refresh</button>
+                                <button type="submit" class="button-4">Refresh</button>
                             </form>
                         </th>
                     </tr>
                     <tr th:each="cartItem : ${session.customer.cart.items}">
                         <td th:text="${cartItem.product.productName}"></td>
                         <td>
-                            <form th:action="@{/updateCartItemQuantity}" method="POST">
+                            <form th:action="@{/updateCartItemQuantity}" class="updateForm" method="POST">
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
                                 <span th:text="${cartItem.productQuantity}"
                                     id="quantity-{{cartItem.product.productID}}"></span>
-                                <button type="submit" name="updateQuantity" value="plus">+</button>
-                                <button type="submit" name="updateQuantity" value="minus">-</button>
+                                <button type="submit" name="updateQuantity" value="plus" class="button-4 small-button"
+                                    >+</button>
+                                <button type="submit" name="updateQuantity" value="minus" class="button-4 small-button"
+                                    >-</button>
                             </form>
                         </td>
                         <td th:text="${cartItem.product.price}" class="price-element"></td>
@@ -90,7 +92,7 @@
                             <form th:action="@{/removeFromCart}" method="POST">
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
                                 <input type="hidden" th:value="${cartItem.productQuantity}" name="productQuantity">
-                                <button type="submit">Remove All</button>
+                                <button type="submit" class="button-4">Remove All</button>
                             </form>
                         </td>
                     </tr>
@@ -99,11 +101,11 @@
                         <td th:text="${session.customer.cart.totalPrice}" class="price-element"></td>
                     </tr>
                     <tr>
-                       
+
                         <td colspan="5" text-align="right" id="checkout-row">
                             <form th:action="@{/checkout}" method="POST">
                                 <b>Checkout:</b>
-                                <button type="submit">Checkout</button>
+                                <button type="submit" class="button-4">Checkout</button>
                             </form>
                         </td>
 
@@ -120,13 +122,14 @@
                             <td>
                                 <form th:action="@{/updateCartItemQuantity}" method="POST">
                                     <input type="hidden" th:value="${product.productID}" name="productID">
-                                    <button type="submit" name="updateQuantity" value="plus">Add To Cart</button>
+                                    <button type="submit" name="updateQuantity" value="plus" class="button-4">Add To
+                                        Cart</button>
                                 </form>
                             </td>
                             <td>
                                 <form th:action="@{/customer/removeFromLikes}" method="POST">
                                     <input type="hidden" th:value="${product.productID}" name="productID">
-                                    <button type="submit">Remove</button>
+                                    <button type="submit" class="button-4">Remove</button>
                                 </form>
                             </td>
 
