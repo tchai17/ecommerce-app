@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,186 +30,269 @@ public class CartController {
 
 	private Logger logger = LogManager.getLogger(CartController.class);
 
+	/**
+	 * This is the autowired CartService instance.
+	 */
 	@Autowired
 	private CartService cartService;
 
+	/**
+	 * This is the autowired OrderService instance.
+	 */
 	@Autowired
 	private OrderService orderService;
 
+	/**
+	 * This is the autowired CustomerService instance.
+	 */
 	@Autowired
 	private CustomerService customerService;
 
+	/**
+	 * This is the autowired ProductService instance.
+	 */
 	@Autowired
 	private ProductService productService;
 
+	/**
+	 * This is the autowired CartItemService instance.
+	 */
 	@Autowired
 	private CartItemService cartItemService;
 
+	/**
+	 * This is the autowired HttpSession instance.
+	 */
 	@Autowired
 	private HttpSession session;
 
+	/**
+	 * This is the index page for the cart. It is simply a redirect to the cart
+	 * page.
+	 * 
+	 * @return A redirect to the cart page.
+	 */
 	@RequestMapping("/")
 	public String index() {
 		return "index";
 	}
 
 	/**
+	 * This method is called when the user clicks on the 'Add to Cart' button
+	 * located either under each product display, or from the 'likes' list
+	 * 
 	 * This method is used to add an item to the cart. It retrieves the customer
 	 * information from the session, adds the item to the cart, updates the cart,
 	 * and saves the customer information. Then it redirects the user to the product
 	 * dashboard.
 	 * 
-	 * @param customer  the customer information
-	 * @param productId the product ID
-	 * @param quantity  the quantity of the item
-	 * @return the redirect to the product dashboard
+	 * @param customer  the customer instance who made the request
+	 * @param productId the product ID of the product to be added
+	 * @param quantity  the quantity of the product to be added
+	 * @return link redirect to the product dashboard
 	 */
 	@PostMapping("/addToCart")
 	public String addToCart(@SessionAttribute Customer customer, int productID, @RequestParam int quantity) {
-		// Get relevant product and customer that is logged in
+
+		// Get relevant product and customer that is logged in from database
 		logger.debug("Customer requests to add product (ID: " + productID + ")-quantity: " + quantity);
-		Optional<Product> product = productService.findProductById(productID);
+		Optional<Product> optionalProduct = productService.findProductById(productID);
 
 		// if product is not found, redirect to dashboard
-		if (product.isEmpty()) {
+		if (optionalProduct.isEmpty()) {
 			logger.info("Product not found, please check productID: " + productID);
 			return "redirect:/product/dashboard";
 		}
 
-		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
-		logger.debug("Customer details retrieved from database: " + target);
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
 
-		// if product is found
-		if (product.isPresent()) {
-			// Get customer's cart and set as session attribute, ensure initialization
-			logger.debug("Product found: " + product.get());
-			Cart cart = target.getCart();
-			logger.debug("Cart details retrieved from database: " + cart);
-			session.setAttribute("cart", cart);
-
-			// Add to cart and update
-			cartService.addToCart(customer, product.get(), quantity);
-
-			// Save as customer
-			logger.info("Item added: " + product.get() + " quantity: (" + quantity + ")");
-			customer.setCart(cart);
-			customerService.updateCustomer(customer);
-			logger.debug("Cart updated: " + cart);
-			logger.debug("Customer updated: " + customer);
-			cart.updateTotalPrice();
+		// if customer is not found, redirect to dashboard
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found, please check customerID: " + customer.getCustomerID());
+			return "redirect:/product/dashboard";
 		}
+
+		// if product and customer is found, proceed to add product to cart
+		Customer currentCustomer = optionalCustomer.get();
+		Product product = optionalProduct.get();
+		logger.debug("Customer details retrieved from database: " + currentCustomer);
+		logger.debug("Product found: " + product);
+
+		// Get customer's cart and set as session attribute, avoid lazy initialization
+		// exception
+		Cart cart = currentCustomer.getCart();
+		logger.debug("Cart details retrieved from database: " + cart);
+		session.setAttribute("cart", cart);
+
+		// Add to cart and update
+		cartService.addToCart(customer, product, quantity);
+		logger.info("Item added: " + product + " quantity: (" + quantity + ")");
+
+		// Save as customer
+		customer.setCart(cart);
+		customerService.updateCustomer(customer);
+		logger.debug("Cart updated: " + cart);
+		logger.debug("Customer updated: " + customer);
+		cart.updateTotalPrice();
 
 		return "redirect:/product/dashboard";
 	}
 
 	/**
+	 * This method is called when the user clicks on any of the 'Remove From Cart'
+	 * buttons located next to each product
+	 * 
 	 * This method is used to remove an item from the cart. It retrieves the
 	 * customer information from the session, removes the item from the cart,
 	 * updates the cart, and saves the customer information. Then it redirects the
 	 * user to the product dashboard.
 	 * 
-	 * @param customer  the customer information
-	 * @param productID the product ID
+	 * @param customer  the customer instance who made the request
+	 * @param productID the product ID of the product to be removed
 	 * @param quantity  the quantity of the item to be removed
-	 * @return the redirect to the product dashboard
+	 * @return link redirect to the product dashboard
 	 */
 	@PostMapping("/removeFromCart")
 	public String removeFromCart(@SessionAttribute Customer customer, @RequestParam int productID,
 			@RequestParam(value = "productQuantity") int quantity) {
 
 		logger.debug("Customer requests to remove product (ID: " + productID + ")-quantity: " + quantity);
-		Optional<Product> product = productService.findProductById(productID);
+
 		// if product is not found, redirect to dashboard
-		if (product.isEmpty()) {
+		Optional<Product> optionalProduct = productService.findProductById(productID);
+		if (optionalProduct.isEmpty()) {
 			logger.info("Product not found, please check productID: " + productID);
 			return "redirect:/product/dashboard";
 		}
 
-		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
-		logger.debug("Customer details retrieved from database: " + target);
-
-		// if product is found
-		if (product.isPresent()) {
-
-			logger.debug("Product found: " + product.get());
-
-			// Get customer's cart and set as session attribute
-			Cart cart = target.getCart();
-			session.setAttribute("cart", cart);
-			logger.debug("Cart details retrieved from database: " + cart);
-
-			// Remove from cart and update
-			Optional<CartItem> matchingItem = cart.findMatchingCartItem(new CartItem(product.get(), quantity));
-
-			if (matchingItem.isPresent()) {
-				logger.debug("Matching item with identical product found: " + matchingItem.get());
-				if (quantity >= matchingItem.get().getProductQuantity()) {
-					logger.debug(
-							"Requested quantity-to-remove (" + quantity + ") is greater than matching item quantity"
-									+ " (" + matchingItem.get().getProductQuantity() + ")");
-					cartService.removeFromCart(customer, product.get(), quantity);
-					logger.info("Item removed from cart: " + product.get() + " quantity: (" + quantity + ")");
-					cartItemService.deleteCartItemFromDatabase(matchingItem.get());
-					logger.debug("CartItem instance is removed from cart_item table: " + matchingItem.get());
-				} else {
-					cartService.removeFromCart(customer, product.get(), quantity);
-					logger.info("Item removed: " + product.get() + " quantity: (" + quantity + ")");
-				}
-
-			}
-			cart.updateTotalPrice();
-
-			// Save as customer
-			cartService.updateCart(cart);
-			logger.debug("Cart updated: " + cart);
-			target.setCart(cart);
-			customerService.updateCustomer(target);
-			logger.debug("Customer updated: " + customer);
-
+		// if customer is not found, redirect to dashboard
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found, please check customerID: " + customer.getCustomerID());
+			return "redirect:/product/dashboard";
 		}
+
+		Customer target = optionalCustomer.get();
+		Product product = optionalProduct.get();
+		logger.debug("Customer details retrieved from database: " + target);
+		logger.debug("Product found: " + product);
+
+		// if product and customer is found, proceed to remove from cart
+
+		// Get customer's cart and set as session attribute, avoid lazy initialization
+		// exception
+		Cart cart = target.getCart();
+		session.setAttribute("cart", cart);
+		logger.debug("Cart details retrieved from database: " + cart);
+
+		// Remove from cart and update
+
+		// Determine if cart has the product that is requested to be removed
+		// Create a new CartItem object for searching purposes
+		Optional<CartItem> optionalItem = cart.findMatchingCartItem(new CartItem(product, quantity));
+		if (optionalItem.isEmpty()) {
+			logger.info("Item not found in cart: " + product + " quantity: (" + quantity + ")");
+			return "redirect:/product/dashboard";
+		}
+
+		// if cart has matching item, proceed to remove requested quantity
+		CartItem matchingItem = optionalItem.get();
+		logger.debug("Matching item with identical product found: " + matchingItem);
+
+		// if requested quantity exceeds quantity in cart, then remove item entirely,
+		// and remove from cartItem database
+		if (quantity >= matchingItem.getProductQuantity()) {
+			logger.debug("Requested quantity-to-remove (" + quantity + ") is greater than matching item quantity" + " ("
+					+ matchingItem.getProductQuantity() + ")");
+			cartService.removeFromCart(customer, product, quantity);
+			logger.info("Item removed from cart: " + product + " quantity: (" + quantity + ")");
+
+			// removing from database
+			cartItemService.deleteCartItemFromDatabase(matchingItem);
+			logger.debug("CartItem instance is removed from cart_item table: " + matchingItem);
+
+		} else {
+			// otherwise, just change quantity
+			cartService.removeFromCart(customer, product, quantity);
+			logger.info("Item removed: " + product + " quantity: (" + quantity + ")");
+		}
+
+		// Update total price and persist to avoid discrepancies from database
+		cart.updateTotalPrice();
+		cartService.updateCart(cart);
+		logger.debug("Cart updated: " + cart);
+
+		// Persist customer details to database
+		target.setCart(cart);
+		customerService.updateCustomer(target);
+		logger.debug("Customer updated: " + customer);
+
 		return "redirect:/product/dashboard";
 	}
 
 	/**
-	 * This method is used to update the quantity of an item in the cart. It
-	 * retrieves the customer information from the session, updates the quantity of
-	 * the item, updates the cart, and saves the customer information. Then it
-	 * redirects the user to the product dashboard.
+	 * This method is used to update the quantity of an item in the cart. This
+	 * method is called when a customer presses the +/- buttons on the webpage,
+	 * indicating to add or remove one unit of product
+	 * 
+	 * This method confirms if the customer wishes to add or remove one unit of the
+	 * requested product, then calls the addToCart or removeFromCart methods
+	 * accordingly
 	 *
 	 * @param customer  the customer information
 	 * @param productID the product ID
 	 * @param direction the direction of the update, either "plus" or "minus"
 	 * @return the redirect to the product dashboard
+	 * 
+	 * @see #addToCart(Customer, int, int)
+	 * @see #removeFromCart(Customer, int, int)
+	 * 
 	 */
 	@PostMapping("/updateCartItemQuantity")
 	public String updateCartItemQuantity(@SessionAttribute Customer customer, @RequestParam int productID,
 			@RequestParam(value = "updateQuantity") String direction) {
 
-		Optional<Product> product = productService.findProductById(productID);
-		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
+		logger.debug("Customer requests to update quantity from pressing +/- button");
+
+		// if product is not found, redirect to dashboard
+		Optional<Product> optionalProduct = productService.findProductById(productID);
+		if (optionalProduct.isEmpty()) {
+			logger.info("Product not found, please check productID: " + productID);
+			return "redirect:/product/dashboard";
+		}
+
+		// if customer is not found, redirect to dashboard
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found, please check customerID: " + customer.getCustomerID());
+			return "redirect:/product/dashboard";
+		}
+
+		// if product and customer is found, proceed
+		Customer target = optionalCustomer.get();
+		Product product = optionalProduct.get();
+		logger.debug("Customer details retrieved from database: " + target);
+		logger.debug("Product found: " + product);
+
+		// Get customer's cart and set as session attribute
+		Cart cart = target.getCart();
+		session.setAttribute("cart", cart);
 		int quantity = 1;
 
-		// if product is found
-		if (product.isPresent()) {
-
-			// Get customer's cart and set as session attribute
-			Cart cart = target.getCart();
-			session.setAttribute("cart", cart);
-
-			// Get direction
-			if (direction.equals("plus")) {
-				addToCart(customer, productID, quantity);
-			} else {
-				removeFromCart(customer, productID, quantity);
-			}
-
-			cart.updateTotalPrice();
-
-			// Save as customer
-			customer.setCart(cart);
-			customerService.updateCustomer(target);
-
+		// Get direction
+		if (direction.equals("plus")) {
+			addToCart(customer, productID, quantity);
+		} else {
+			removeFromCart(customer, productID, quantity);
 		}
+
+		// Update total price and persist to avoid discrepancies from database
+		cart.updateTotalPrice();
+
+		// Save as customer
+		customer.setCart(cart);
+		customerService.updateCustomer(target);
+
 		return "redirect:/product/dashboard";
 	}
 
@@ -225,34 +307,62 @@ public class CartController {
 	 * @return A redirection to the product dashboard page.
 	 */
 	@PostMapping("/checkout")
-	public String submitOrder(@SessionAttribute Customer customer, Model model) {
+	public String submitOrder(@SessionAttribute Customer customer) {
+		logger.debug("Cart checkout requested for customer " + customer);
+
+		// if customer is not found, redirect to login page
 		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
 		if (optionalCustomer.isEmpty()) {
 			return "customerLogin";
-		} else {
-			Customer currentCustomer = optionalCustomer.get();
-			Cart cart = currentCustomer.getCart();
-			orderService.createOrder(currentCustomer);
-			cartService.clearCart(cart);
-			cartService.updateCart(cart);
-			currentCustomer.setCart(cart);
-			customerService.updateCustomer(currentCustomer);
-			return "redirect:/product/dashboard";
 		}
+
+		// if customer is found, proceed to create order
+		Customer currentCustomer = optionalCustomer.get();
+		orderService.createOrder(currentCustomer);
+
+		// clear cart once order has been created to avoid mismanaged items
+		Cart cart = currentCustomer.getCart();
+		cartService.clearCart(cart);
+
+		// persist onto database
+		cartService.updateCart(cart);
+		currentCustomer.setCart(cart);
+		customerService.updateCustomer(currentCustomer);
+		return "redirect:/product/dashboard";
 
 	}
 
+	/**
+	 * Handles the POST request for refreshing the customer's cart. This method
+	 * updates the customer's information and cart in the session and redirects to
+	 * the product dashboard page.
+	 *
+	 * @param customer the currently logged-in customer retrieved from session
+	 *                 attributes.
+	 * @return link the redirection to the product dashboard page.
+	 */
 	@PostMapping("/refresh")
 	public String refresh(@SessionAttribute Customer customer) {
-		Customer currentCustomer = customerService.findCustomerByID(customer.getCustomerID()).get();
+
+		// if customer is not found, redirect to login page
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
+		if (optionalCustomer.isEmpty()) {
+			return "customerLogin";
+		}
+
+		// Retrieve the current customer and their cart from the session
+		Customer currentCustomer = optionalCustomer.get();
 		Cart currentCart = currentCustomer.getCart();
 
+		// Update the customer and cart in the database
 		customerService.updateCustomer(currentCustomer);
 		cartService.updateCart(currentCart);
 
+		// Update the session attributes with the updated customer and cart
 		session.setAttribute("customer", currentCustomer);
 		session.setAttribute("cart", currentCart);
 
+		// Redirect to the product dashboard page
 		return "redirect:/product/dashboard";
 	}
 
