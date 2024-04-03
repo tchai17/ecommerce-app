@@ -3,9 +3,9 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +62,7 @@ public class CartServiceTest {
 		Product product2 = new Product("Product2", 99, "img.url", 10.00);
 		CartItem cartItem1 = new CartItem(product1, 1);
 		CartItem cartItem2 = new CartItem(product2, 3);
-		Set<CartItem> items = new HashSet<CartItem>();
+		List<CartItem> items = new ArrayList<CartItem>();
 		items.add(cartItem1);
 		items.add(cartItem2);
 		cart.setItems(items);
@@ -82,7 +82,7 @@ public class CartServiceTest {
 		Product product1 = new Product("Product1", 99, "img.url", 15.00);
 		Product product2 = new Product("Product2", 99, "img.url", 10.00);
 		CartItem cartItem1 = new CartItem(product1, 1);
-		Set<CartItem> items = new HashSet<CartItem>();
+		List<CartItem> items = new ArrayList<CartItem>();
 		items.add(cartItem1);
 
 		cart.setItems(items);
@@ -105,16 +105,15 @@ public class CartServiceTest {
 		Customer customer = new Customer();
 		customer.setCart(cart);
 		CartItem cartItem1 = new CartItem(product1, 1);
-		Set<CartItem> items = new HashSet<CartItem>();
+		List<CartItem> items = new ArrayList<CartItem>();
 		items.add(cartItem1);
 		Mockito.when(mockCartRepo.findById(cart.getCartID())).thenReturn(Optional.ofNullable(cart));
 
 		// Act
 		cartService.addToCart(customer, product1, 1);
-		Set<CartItem> actual = customer.getCart().getItems();
+		List<CartItem> actual = customer.getCart().getItems();
 		// Assert
 
-//		assertEquals(items, actual);
 		assertTrue(customer.getCart().getItems().contains(cartItem1));
 
 	}

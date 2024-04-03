@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ public class CartTest {
 	@DisplayName("1. Test adding matching item will update quantity")
 	public void addToCart_WhenCartHasProduct_ThenUpdateQuantity() {
 		// Arrange
-		Set<CartItem> items = new HashSet<>();
+		List<CartItem> items = new ArrayList<>();
 		items.add(cartItem1);
 		cart.setItems(items);
 
@@ -63,7 +63,7 @@ public class CartTest {
 	@DisplayName("3. Test adding to cart which does not have item will add to list")
 	public void addToCart_WhenCartHasDifferentProduct_ThenAddProduct() {
 		// Arrange
-		Set<CartItem> items = new HashSet<>();
+		List<CartItem> items = new ArrayList<>();
 		items.add(cartItem1);
 		cart.setItems(items);
 
@@ -78,7 +78,7 @@ public class CartTest {
 	@DisplayName("4. Test removing from cart removes item from list")
 	public void testRemoveFromCart() {
 		// Arrange
-		Set<CartItem> items = new HashSet<>();
+		List<CartItem> items = new ArrayList<>();
 		items.add(cartItem1);
 		items.add(cartItem2);
 		cart.setItems(items);
@@ -95,7 +95,7 @@ public class CartTest {
 	@DisplayName("5. Test findMatchingCartItem returns correct CartItem")
 	public void findMatchingCartItem_withMatchingProduct_shouldReturnCartItem() {
 		// Arrange
-		Set<CartItem> items = new HashSet<>();
+		List<CartItem> items = new ArrayList<>();
 		items.add(cartItem1);
 		cart.setItems(items);
 
@@ -112,7 +112,7 @@ public class CartTest {
 	@DisplayName("6. Test findMatchingCartItem does not return item when item is missing")
 	public void findMatchingCartItem_withNonMatchingProduct_shouldReturnEmpty() {
 		// Arrange
-		Set<CartItem> items = new HashSet<>();
+		List<CartItem> items = new ArrayList<>();
 		items.add(cartItem2);
 		cart.setItems(items);
 		CartItem testItem = new CartItem(new Product(), 0);

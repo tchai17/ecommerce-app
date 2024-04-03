@@ -4,11 +4,9 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -68,7 +66,7 @@ public class Cart {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "FK_CART_ITEM_ID")
-	private Set<CartItem> items;
+	private List<CartItem> items;
 
 	@OneToOne
 	@JoinColumn(name = "FK_CUSTOMER_ID")
@@ -81,7 +79,7 @@ public class Cart {
 	 * @see #items
 	 */
 	public Cart() {
-		items = new HashSet<>();
+		items = new ArrayList<>();
 	}
 
 	/**
@@ -100,7 +98,7 @@ public class Cart {
 	 * @return items Set of CartItem objects specifying the products and quantities
 	 * @see CartItem
 	 */
-	public Set<CartItem> getItems() {
+	public List<CartItem> getItems() {
 		return items;
 	}
 
@@ -146,7 +144,7 @@ public class Cart {
 	 * @param items Set of CartItem objects specifying the products and quantities
 	 * @see CartItem
 	 */
-	public void setItems(Set<CartItem> items) {
+	public void setItems(List<CartItem> items) {
 		this.items = items;
 	}
 
