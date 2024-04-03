@@ -138,7 +138,7 @@ public class Customer {
 	@JoinTable(name = "LIKES", joinColumns = @JoinColumn(name = "FK_CUSTOMER_ID"), inverseJoinColumns = @JoinColumn(name = "FK_PRODUCT_ID"))
 	private Set<Product> likes;
 
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Order> orders;
 
 	/**

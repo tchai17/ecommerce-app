@@ -13,6 +13,11 @@
     <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
     <h1 th:text="'Welcome ' + ${session.customer.username}"></h1>
 
+    <div>
+        <form th:action="@{/customer/orders}" method="GET">
+            <button type="submit">View Past Orders</button>
+        </form>
+    </div>
 
     <div class="market">
         <th:block th:if="${session.isLoggedIn}">

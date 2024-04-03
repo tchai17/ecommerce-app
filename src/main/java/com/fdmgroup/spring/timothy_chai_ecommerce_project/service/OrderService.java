@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Order;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartItemRepository;
@@ -65,20 +64,21 @@ public class OrderService {
 
 		// add items of cart to order
 		Order order = new Order(cart, currentCustomer);
+		order.updateOrderTotalPrice();
 
-		for (CartItem cartItem : cart.getItems()) {
-			// perform deep copy of each item in the cart
-			CartItem newCartItem = new CartItem();
-			newCartItem.setProduct(cartItem.getProduct());
-			newCartItem.setProductQuantity(cartItem.getProductQuantity());
-			newCartItem.setProductSubtotal(cartItem.getProductSubtotal());
-
-			// Set order reference for the new cart item and persist
-			newCartItem.setOrder(order);
-			cartItemRepo.save(newCartItem);
-		}
 		orderRepo.save(order);
 		return order;
 	}
+
+//	public List<Order> getOrdersFromCustomer(Customer customer) {
+//		List<Order> orders = new ArrayList<>();
+//		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getCustomerID());
+//		if (optionalCustomer.isEmpty()) {
+//			return orders;
+//		}
+//		Customer currentCustomer = optionalCustomer.get();
+//		return currentCustomer.getOrders();
+//
+//	}
 
 }

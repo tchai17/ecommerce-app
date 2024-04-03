@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Order;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.LikeService;
@@ -158,6 +159,8 @@ public class CustomerController {
 		httpSession.setAttribute("customer", currentCustomer);
 		httpSession.setAttribute("cart", cart);
 		httpSession.setAttribute("likes", currentCustomer.getLikes());
+//		httpSession.setAttribute("orders", currentCustomer.getOrders());
+		logger.debug("Customer likes and orders are set for this session");
 		httpSession.setAttribute("isLoggedIn", true);
 		logger.debug("Cart is set for this current session");
 		logger.debug("Customer redirected to dashboard");
@@ -257,6 +260,24 @@ public class CustomerController {
 		productService.updateProduct(chosenProduct);
 
 		return "redirect:/product/dashboard";
+	}
+
+	@GetMapping("/orders")
+	public String goToOrders(@SessionAttribute Customer customer) {
+		// Check if customer exists in database
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database");
+			return "redirect:/customer/login";
+		}
+		Customer currentCustomer = optionalCustomer.get();
+		httpSession.setAttribute("customer", currentCustomer);
+		logger.debug("Customer added to session");
+		List<Order> orders = currentCustomer.getOrders();
+		orders.forEach(order -> order.updateOrderTotalPrice());
+		httpSession.setAttribute("orders", orders);
+
+		return "orders";
 	}
 
 }

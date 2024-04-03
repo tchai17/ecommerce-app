@@ -57,6 +57,9 @@ public class Order {
 	@Column(name = "ORDER_DATE")
 	private Date orderDate;
 
+	@Column(name = "ORDER_TOTAL_PRICE")
+	private double orderTotalPrice;
+
 	/**
 	 * Default no-args constructor
 	 */
@@ -85,6 +88,7 @@ public class Order {
 			orderedItems.add(newCartItem); // Persist new cart item
 		});
 		orderDate = new Date(); // current date and time
+		updateOrderTotalPrice();
 		setCustomer(customer);
 	}
 
@@ -158,6 +162,19 @@ public class Order {
 	 */
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	public double getOrderTotalPrice() {
+		return orderTotalPrice;
+	}
+
+	public void setOrderTotalPrice(double orderTotalPrice) {
+		this.orderTotalPrice = orderTotalPrice;
+	}
+
+	public void updateOrderTotalPrice() {
+		this.orderTotalPrice = 0.0;
+		orderedItems.forEach(item -> orderTotalPrice += item.getProductSubtotal());
 	}
 
 	/**

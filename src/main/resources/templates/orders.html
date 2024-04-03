@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+    <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
+    <h2>Your Orders</h2>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Details</th>
+                    <th>Order Date</th>
+                    <th>Total Price</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr th:each="order : ${session.orders}">
+                    <td th:text="${order.orderID}"></td>
+                    <td th:text="${order.customer.username}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="cartItem : ${order.orderedItems}">
+                                <span
+                                    th:text="${cartItem.product.productName} + '(Qty: ' + ${cartItem.productQuantity}+ ')'">
+                                </span>
+                                <!-- <span th:text="${cartItem.productSubtotal}"> </span> -->
+                            </li>
+                        </ul>
+                    </td>
+
+                    <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${order.orderTotalPrice}" class="price-element"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <form method="GET" th:action="@{/product/dashboard}">
+        <fieldset>
+            <button type="submit"> Back To Dashboard </button>
+        </fieldset>
+    </form>
+    <script>
+        const priceElements = document.querySelectorAll('.price-element');
+
+        priceElements.forEach(element => {
+            const price = parseFloat(element.textContent);
+            element.textContent = '$' + price.toFixed(2);
+        });
+    </script>
+</body>
+
+</html>
