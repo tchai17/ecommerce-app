@@ -40,7 +40,7 @@
             </div>
             
             <div id="cart-container" class="">
-                <table id="myList">
+                <table id="myList" th:sort="productID">
                     <tr>
                         <th>Product Name</th>
                         <th>Quantity</th>
@@ -52,7 +52,7 @@
                             </form>
                         </th>
                     </tr>
-                    <tr th:each="cartItem : ${session.customer.cart.items}">
+                    <tr th:each="cartItem : ${session.customer.cart.items}" >
                         <td th:text="${cartItem.product.productName}"></td>
                         <td>
                             <form th:action="@{/updateCartItemQuantity}" method="POST">
@@ -97,7 +97,7 @@
                         <tr th:each="product : ${session.customer.likes}">
                             <td th:text="${product.productName}"></td>
                             <td>
-                                <form th:action="@{/customer/updateCartItemQuantity}" method="POST">
+                                <form th:action="@{/updateCartItemQuantity}" method="POST">
                                     <input type="hidden" th:value="${product.productID}" name="productID">
                                     <button type="submit" name="updateQuantity" value="plus">Add To Cart</button>
                                 </form>
