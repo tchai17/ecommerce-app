@@ -1,6 +1,10 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Order;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartItemRepository;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRepository;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.OrderRepository;
 
@@ -30,8 +35,8 @@ public class OrderService {
 	@Autowired
 	private OrderRepository orderRepo;
 
-	@Autowired
-	private CartItemRepository cartItemRepo;
+//	@Autowired
+//	private CartItemRepository cartItemRepo;
 
 	@Autowired
 	private CustomerRepository customerRepo;
@@ -70,15 +75,18 @@ public class OrderService {
 		return order;
 	}
 
-//	public List<Order> getOrdersFromCustomer(Customer customer) {
-//		List<Order> orders = new ArrayList<>();
-//		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getCustomerID());
-//		if (optionalCustomer.isEmpty()) {
-//			return orders;
-//		}
-//		Customer currentCustomer = optionalCustomer.get();
-//		return currentCustomer.getOrders();
-//
-//	}
+	public Map<Product, Integer> findPopularProducts() {
+		List<Order> allOrders = orderRepo.findAll();
+		Map<Product, Integer> productMap = new HashMap<>();
+		BiFunction<Integer, Integer, Integer> addValue = (currentValue, amountToAdd) -> currentValue + amountToAdd;
+		for (Order order : allOrders) {
+			for (CartItem cartItem : order.getOrderedItems()) {
+				Product product = cartItem.getProduct();
+				int quantity = cartItem.getProductQuantity();
+				productMap.merge(product, quantity, addValue);
+			}
+		}
+		return productMap;
+	}
 
 }

@@ -2,6 +2,7 @@ package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.OrderService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +39,9 @@ public class ProductController {
 	/** The product service used to interact with the database. */
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private OrderService orderService;
 
 	/**
 	 * Handles requests for registration of a new product and directs the user to
@@ -116,10 +121,13 @@ public class ProductController {
 			products = productService.returnAllProducts();
 		}
 
+		Map<Product, Integer> productMap = orderService.findPopularProducts();
+
 		// if page is not loaded before, then set categories as an attribute to response
 		Set<String> categories = productService.returnAllCategories();
 		model.addAttribute("products", products);
 		model.addAttribute("categories", categories);
+		model.addAttribute("popularProducts", productMap);
 
 		logger.debug("Products and categories added to response");
 		return "dashboard";

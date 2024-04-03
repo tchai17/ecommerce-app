@@ -43,7 +43,22 @@
                     </form>
                 </div>
             </div>
-            
+            <div class="popular">
+                <h3>Popular Products</h3>
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Product Name</th>
+                        <th>Total Quantity Ordered</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="entry : ${popularProducts}">
+                        <td th:text="${entry.key.productName}"></td>  <td th:text="${entry.value}"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
             <div id="cart-container" class="">
                 <table id="myList" th:sort="productID">
                     <tr>
