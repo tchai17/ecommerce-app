@@ -77,6 +77,7 @@ public class ProductController {
 		logger.debug("Price input received: " + priceString);
 		double price = Double.parseDouble(priceString);
 
+		// Create new instance of product for persistence
 		Product product = new Product(productName, stock, imgURL, price);
 		logger.info("New product created: " + product);
 
@@ -102,13 +103,12 @@ public class ProductController {
 		// Check if selectedCategory is null, or 'all', then display all products
 		if (selectedCategory != null) {
 			logger.info("Selected category: " + selectedCategory);
-			if (selectedCategory.equalsIgnoreCase("all")) {
 
+			if (selectedCategory.equalsIgnoreCase("all")) {
 				logger.info("Selected category: " + selectedCategory + ", returning all products");
 				products = productService.returnAllProducts();
 
 			} else {
-
 				// Use value of selectedCategory to filter products
 				model.addAttribute("selectedCategory", selectedCategory);
 				products = productService.findProductByCategory(selectedCategory);

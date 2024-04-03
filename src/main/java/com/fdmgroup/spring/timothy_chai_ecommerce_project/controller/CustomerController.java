@@ -1,9 +1,7 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -338,43 +336,6 @@ public class CustomerController {
 			customerService.updateCustomer(target);
 
 		}
-		return "redirect:/product/dashboard";
-	}
-
-	/**
-	 * Process cart checkout for the logged-in customer. Retrieves the customer's
-	 * cart from the session attribute, checks out the cart, deletes the cart items
-	 * from the database, updates the customer information, and redirects to the
-	 * product dashboard page.
-	 *
-	 * @param customer The logged-in customer retrieved from session attribute.
-	 * @return A redirection to the product dashboard page.
-	 */
-	@PostMapping("/cartCheckout")
-	public String cartCheckout(@SessionAttribute Customer customer) {
-		// Get customer's cart and set as session attribute
-		Customer target = customerService.findCustomerByID(customer.getCustomerID()).get();
-		Cart cart = target.getCart();
-		httpSession.setAttribute("cart", cart);
-		logger.debug("Cart details retrieved from database: " + cart);
-
-		// Save a copy of the items to be deleted from the database
-		Set<CartItem> itemsToDelete = new HashSet<>(cart.getItems());
-		logger.debug("Items to delete: " + itemsToDelete);
-		cartService.checkoutCart(cart);
-
-		// Delete entries from the cart_item table
-		itemsToDelete.forEach(item -> {
-			logger.debug(item + " has been deleted");
-			cartItemService.deleteCartItemFromDatabase(item);
-		});
-
-		logger.info("Cart " + target + " is checked out");
-
-		// Save as customer
-		customerService.updateCustomer(target);
-		logger.debug("Customer updated: " + target);
-
 		return "redirect:/product/dashboard";
 	}
 

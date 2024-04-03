@@ -64,14 +64,9 @@ public class CartItem {
 	@JoinColumn(name = "FK_PRODUCT_ID")
 	private Product product;
 
-	/**
-	 * Cart which this CartItem is associated with
-	 * 
-	 * @see Cart
-	 */
 	@ManyToOne
-	@JoinColumn(name = "FK_CART_ID")
-	private Cart cart;
+	@JoinColumn(name = "FK_ORDER_ID")
+	private Order order;
 
 	/**
 	 * Default no-args constructor
@@ -146,16 +141,15 @@ public class CartItem {
 	 * @param productQuantity new quantity to set for this CartItem
 	 */
 	public void setProductQuantity(int productQuantity) {
-		
-		if ( productQuantity > this.product.getStock() ) {
+
+		if (productQuantity > this.product.getStock()) {
 			System.out.println("The quantity of the product you are trying to order "
 					+ "is greater than the stock of the product. Quantity is changed to available stock.");
-            this.productQuantity = this.product.getStock();
+			this.productQuantity = this.product.getStock();
 		} else {
 			this.productQuantity = productQuantity;
 		}
-		
-		
+
 	}
 
 	/**
@@ -177,13 +171,16 @@ public class CartItem {
 		this.product = product;
 	}
 
-	/**
-	 * Setter for the cart reference for this CartItem
-	 * 
-	 * @param cart cart which CartItem is associated with
-	 */
-	public void setCart(Cart cart) {
-		this.cart = cart;
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public void setProductSubtotal(double productSubtotal) {
+		this.productSubtotal = productSubtotal;
 	}
 
 	/**
@@ -192,12 +189,9 @@ public class CartItem {
 	@Override
 	public String toString() {
 		return "CartItem [cartItemId=" + cartItemId + ", productQuantity=" + productQuantity + ", productSubtotal="
-				+ productSubtotal + ", product=" + product + ", cartID=" + cart.getCartID() + "]";
+				+ productSubtotal + ", product=" + product + "]";
 	}
 
-	/**
-	 * Overriden .equals method for testing
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -207,7 +201,13 @@ public class CartItem {
 		if (getClass() != obj.getClass())
 			return false;
 		CartItem other = (CartItem) obj;
-		return Objects.equals(cart, other.cart) && Objects.equals(product, other.product);
+		return Objects.equals(order, other.order) && Objects.equals(product, other.product)
+				&& productQuantity == other.productQuantity
+				&& Double.doubleToLongBits(productSubtotal) == Double.doubleToLongBits(other.productSubtotal);
 	}
+
+//	/**
+//	 * Overriden .equals method for testing
+//	 */
 
 }

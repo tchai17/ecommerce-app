@@ -3,7 +3,9 @@
  */
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 /**
@@ -116,13 +119,24 @@ public class Customer {
 	 * 
 	 * @see Cart
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "FK_CART_ID")
 	private Cart cart;
 
+	/**
+	 * The products that are 'liked' by this customer
+	 * 
+	 * The likes field in the Customer class represents the set of products that the
+	 * customer likes.
+	 * 
+	 * 
+	 */
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "LIKES", joinColumns = @JoinColumn(name = "FK_CUSTOMER_ID"), inverseJoinColumns = @JoinColumn(name = "FK_PRODUCT_ID"))
 	private Set<Product> likes;
+
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<Order> orders;
 
 	/**
 	 * Default no-args constructor for the Customer class
@@ -145,6 +159,7 @@ public class Customer {
 	public Customer(String username, String password, String email, String address, String fullName,
 			String cardNumber) {
 		this.cart = new Cart();
+		this.cart.setCustomer(this);
 		setUsername(username);
 		setPassword(password);
 		setEmail(email);
@@ -152,6 +167,7 @@ public class Customer {
 		setFullName(fullName);
 		setCardNumber(cardNumber);
 		likes = new HashSet<>();
+		orders = new ArrayList<>();
 	}
 
 	/**
@@ -236,7 +252,16 @@ public class Customer {
 		return cart;
 	}
 
+	public Set<Product> getLikes() {
+		return likes;
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
 	public void setCart(Cart cart) {
+		cart.setCustomer(this);
 		this.cart = cart;
 	}
 
@@ -309,12 +334,12 @@ public class Customer {
 
 	}
 
-	public Set<Product> getLikes() {
-		return likes;
-	}
-
 	public void setLikes(Set<Product> likes) {
 		this.likes = likes;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.controller.CustomerController;
@@ -21,6 +22,7 @@ public class CartService {
 
 	private Logger logger = LogManager.getLogger(CustomerController.class);
 
+	@Autowired
 	private CartRepository cartRepo;
 
 	/**
@@ -74,8 +76,8 @@ public class CartService {
 		Cart cart = customer.getCart();
 		logger.debug("Cart of target customer retrieved");
 		CartItem newItem = new CartItem(product, quantity);
-		newItem.setCart(cart);
-		logger.debug("Cart is set for new CartItem");
+//		newItem.setCart(cart);
+//		logger.debug("Cart is set for new CartItem");
 		cart.addToCart(newItem);
 		logger.debug("New CartItem is added to cart");
 		cart.updateTotalPrice();
@@ -108,11 +110,11 @@ public class CartService {
 	 * 
 	 * @param customer the customer whose cart is being checked out
 	 */
-	public void checkoutCart(Cart cart) {
-		logger.debug("checkoutCart is called for cart: " + cart);
-		cart.checkout();
+	public void clearCart(Cart cart) {
+		logger.debug("clearCart is called for cart: " + cart);
+		cart.clearCart();
 		updateCart(cart);
-		logger.info("checkoutCart is completed");
+		logger.info("clearCart is completed");
 	}
 
 }

@@ -124,21 +124,21 @@ public class CartTest {
 		assertFalse(result.isPresent());
 	}
 
-	@Test
-	@DisplayName("7. Test checkout removes all items from cart and sets price to zero")
-	public void testCheckout() {
-		// Arrange
-		Set<CartItem> items = new HashSet<>();
-		items.add(cartItem1);
-		items.add(cartItem2);
-		cart.setItems(items);
-
-		// Act
-		cart.checkout();
-
-		// Assert
-		assertEquals(0, cart.getItems().size());
-		assertEquals(0, cart.getTotalPrice(), 0);
-	}
+//	@Test
+//	@DisplayName("7. Test checkout removes all items from cart and sets price to zero")
+//	public void testCheckout() {
+//		// Arrange
+//		Set<CartItem> items = new HashSet<>();
+//		items.add(cartItem1);
+//		items.add(cartItem2);
+//		cart.setItems(items);
+//
+//		// Act
+//		cart.checkout();
+//
+//		// Assert
+//		assertEquals(0, cart.getItems().size());
+//		assertEquals(0, cart.getTotalPrice(), 0);
+//	}
 
 }

@@ -17,7 +17,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 /**
  * Represents a shopping cart for the customer
@@ -64,8 +66,13 @@ public class Cart {
 	 * @see #getItems()
 	 * @see #setItems(Set)
 	 */
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "FK_CART_ITEM_ID")
 	private Set<CartItem> items;
+
+	@OneToOne
+	@JoinColumn(name = "FK_CUSTOMER_ID")
+	private Customer customer;
 
 	/**
 	 * Default no-args constructor for the Cart class Initializes the items set for
@@ -104,6 +111,24 @@ public class Cart {
 	 */
 	public double getTotalPrice() {
 		return totalPrice;
+	}
+
+	/**
+	 * Returns the customer associated with the cart.
+	 * 
+	 * @return the customer associated with the cart
+	 */
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	/**
+	 * Sets the customer associated with the cart.
+	 * 
+	 * @param customer the customer to set
+	 */
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	/**
@@ -178,7 +203,6 @@ public class Cart {
 
 		} else {
 			// If cart does not have the incoming product, add item to cart
-			item.setCart(this);
 			items.add(item);
 		}
 
@@ -263,9 +287,9 @@ public class Cart {
 	}
 
 	/**
-	 * Checks out all items in the cart Implemented in later versions
+	 * Checks out all items in the cart
 	 */
-	public void checkout() {
+	public void clearCart() {
 		items.clear();
 		updateTotalPrice();
 	}
