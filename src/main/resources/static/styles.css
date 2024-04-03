@@ -119,6 +119,12 @@ button {
 .product-container img {
     height: 200px;
     width: 200px;
+    border-radius: 5px;
+}
+
+.product-details {
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .cart-icon img {
@@ -127,6 +133,7 @@ button {
     right: 4vh;
     width: 7.5vh;
     height: 7.5vh;
+    
 }
 
 .hidden {
@@ -134,7 +141,6 @@ button {
 }
 
 #cart-container {
-    /* border: 2px black; */
     border-radius: 10px;
     padding: 10px;
     opacity: 90%;
@@ -210,8 +216,6 @@ button {
 
 .error-message p {
     color: red;
-    /* background: white;
-    border-radius: 5px; */
     width: auto;
 }
 

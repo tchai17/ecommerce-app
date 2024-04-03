@@ -32,8 +32,11 @@
                 <div class="product-container" th:each="product : ${products}">
                     <h2 th:text="${product.productName}"></h2>
                     <img th:src="${product.imgURL}" alt="${product.productName}">
-                    <p th:text="${product.price}" class="price-element"></p>
-                    <p th:text="'Available stock: '+${product.stock}"></p>
+                    <div class="product-details">
+                        <p th:text="${product.price}" class="price-element"></p>
+                        <p th:text="'Available stock: '+${product.stock}"></p>
+                    </div>
+
                     <form th:action="@{/addToCart(productID=${product.productID})}" method="POST">
                         <input type="number" name="quantity" min="1" value="1">
                         <button type="submit" class="button-4">Add To Cart</button>
@@ -56,6 +59,13 @@
                         <tr th:each="entry : ${popularProducts}">
                             <td th:text="${entry.key.productName}"></td>
                             <td th:text="${entry.value}"></td>
+                            <td>
+                                <form th:action="@{/updateCartItemQuantity}" method="POST">
+                                    <input type="hidden" th:value="${entry.key.productID}" name="productID">
+                                    <button type="submit" name="updateQuantity" value="plus" class="button-4">Add To
+                                        Cart</button>
+                                </form>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -80,10 +90,10 @@
                                 <input type="hidden" th:value="${cartItem.product.productID}" name="productID">
                                 <span th:text="${cartItem.productQuantity}"
                                     id="quantity-{{cartItem.product.productID}}"></span>
-                                <button type="submit" name="updateQuantity" value="plus" class="button-4 small-button"
-                                    >+</button>
-                                <button type="submit" name="updateQuantity" value="minus" class="button-4 small-button"
-                                    >-</button>
+                                <button type="submit" name="updateQuantity" value="plus"
+                                    class="button-4 small-button">+</button>
+                                <button type="submit" name="updateQuantity" value="minus"
+                                    class="button-4 small-button">-</button>
                             </form>
                         </td>
                         <td th:text="${cartItem.product.price}" class="price-element"></td>
