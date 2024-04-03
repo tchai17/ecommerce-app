@@ -1,9 +1,9 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.model;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,7 +30,7 @@ public class Order {
 	private Customer customer;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-	private Set<CartItem> orderedItems;
+	private List<CartItem> orderedItems;
 
 	@Column(name = "ORDER_DATE")
 	private Date orderDate;
@@ -40,7 +40,11 @@ public class Order {
 	}
 
 	public Order(Cart cart, Customer customer) {
-		orderedItems = new HashSet<>();
+		orderedItems = new ArrayList<>();
+		/*
+		 * Creates a deep copy of all items in the cart Doing this avoids issues when
+		 * cart is cleared or items are removed from the database
+		 */
 		cart.getItems().forEach(item -> {
 			CartItem newCartItem = new CartItem();
 			newCartItem.setProduct(item.getProduct());
@@ -53,34 +57,74 @@ public class Order {
 		setCustomer(customer);
 	}
 
+	/**
+	 * Returns the order ID.
+	 * 
+	 * @return the order ID
+	 */
 	public int getOrderID() {
 		return orderID;
 	}
 
+	/**
+	 * Sets the order ID.
+	 * 
+	 * @param orderID the order ID to set
+	 */
 	public void setOrderID(int orderID) {
 		this.orderID = orderID;
 	}
 
-	public Set<CartItem> getOrderedItems() {
+	/**
+	 * Returns the ordered items.
+	 * 
+	 * @return the ordered items
+	 */
+	public List<CartItem> getOrderedItems() {
 		return orderedItems;
 	}
 
-	public void setOrderedItems(Set<CartItem> orderedItems) {
+	/**
+	 * Sets the ordered items.
+	 * 
+	 * @param orderedItems the ordered items to set
+	 */
+	public void setOrderedItems(List<CartItem> orderedItems) {
 		this.orderedItems = orderedItems;
 	}
 
+	/**
+	 * Returns the customer.
+	 * 
+	 * @return the customer
+	 */
 	public Customer getCustomer() {
 		return customer;
 	}
 
+	/**
+	 * Sets the customer.
+	 * 
+	 * @param customer the customer to set
+	 */
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
 
+	/**
+	 * Returns the order date.
+	 * 
+	 * @return the order date
+	 */
 	public Date getOrderDate() {
 		return orderDate;
 	}
 
+	/**
+	 * Sets the order date.
+	 * 
+	 * @param orderDate the order date to set
+	 */
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
