@@ -35,9 +35,6 @@ public class OrderService {
 	@Autowired
 	private OrderRepository orderRepo;
 
-//	@Autowired
-//	private CartItemRepository cartItemRepo;
-
 	@Autowired
 	private CustomerRepository customerRepo;
 
@@ -62,21 +59,26 @@ public class OrderService {
 
 		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getCustomerID());
 		if (optionalCustomer.isEmpty()) {
+			logger.info("customer is not found in database - please verify: " + customer);
 			return new Order();
 		}
 		Customer currentCustomer = optionalCustomer.get();
 		Cart cart = currentCustomer.getCart();
+		logger.info("customer found in database - getting cart information");
 
 		// add items of cart to order
 		Order order = new Order(cart, currentCustomer);
 		order.updateOrderTotalPrice();
+		logger.info("New order is created");
 
 		orderRepo.save(order);
 		return order;
 	}
 
 	public Map<Product, Integer> findPopularProducts() {
+		logger.debug("findPopularProducts called");
 		List<Order> allOrders = orderRepo.findAll();
+		logger.debug("Finding all orders in OrderRepository");
 		Map<Product, Integer> productMap = new HashMap<>();
 		BiFunction<Integer, Integer, Integer> addValue = (currentValue, amountToAdd) -> currentValue + amountToAdd;
 		for (Order order : allOrders) {
@@ -86,6 +88,7 @@ public class OrderService {
 				productMap.merge(product, quantity, addValue);
 			}
 		}
+		logger.info("Popular product map is created");
 		return productMap;
 	}
 

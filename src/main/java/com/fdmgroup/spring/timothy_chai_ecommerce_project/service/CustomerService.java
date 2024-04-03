@@ -64,7 +64,7 @@ public class CustomerService {
 		if (targetCustomer.isPresent()) {
 			// Update the customer in the database
 			customerRepo.save(customer);
-			logger.debug("Customer with matching ID found, updating customer, called CustomerRepository.save()");
+			logger.info("Customer with matching ID found, updating customer, called CustomerRepository.save()");
 		} else {
 			logger.info("No customer with matching ID found, abort update");
 		}
@@ -84,7 +84,7 @@ public class CustomerService {
 
 		// Check if the customer exists in the database
 		if (customer.isPresent()) {
-			logger.debug("Customer with matching ID found");
+			logger.info("Customer with matching ID found");
 			return customer;
 		} else {
 			logger.info("No customer with matching ID found, returning empty Optional");

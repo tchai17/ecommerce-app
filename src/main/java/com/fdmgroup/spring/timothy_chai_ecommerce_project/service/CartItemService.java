@@ -41,7 +41,7 @@ public class CartItemService {
 		logger.debug("deleteCartItemFromDatabase is called for item: " + itemToDelete);
 		Optional<CartItem> target = cartItemRepo.findById(itemToDelete.getCartItemId());
 		if (target.isPresent()) {
-			logger.debug("Matching item is deleted: " + target.get());
+			logger.info("Matching item is deleted: " + target.get());
 			cartItemRepo.delete(target.get());
 		}
 
