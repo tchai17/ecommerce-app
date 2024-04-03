@@ -28,17 +28,9 @@
                     <td th:text="${order.orderID}"></td>
                     <td th:text="${order.customer.username}"></td>
                     <td>
-                        <p th:each="cartItem : ${order.orderedItems}" th:text="${cartItem.product.productName} + '(Qty: ' + ${cartItem.productQuantity}+ ')'"></p>
-                        <!-- <ul>
-                            <li th:each="cartItem : ${order.orderedItems}">
-                                <span
-                                    th:text="${cartItem.product.productName} + '(Qty: ' + ${cartItem.productQuantity}+ ')'">
-                                </span>
-                                
-                            </li>
-                        </ul> -->
+                        <p th:each="cartItem : ${order.orderedItems}"
+                            th:text="${cartItem.product.productName} + '(Qty: ' + ${cartItem.productQuantity}+ ')'"></p>
                     </td>
-
                     <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd')}"></td>
                     <td th:text="${order.orderTotalPrice}" class="price-element"></td>
                 </tr>
@@ -47,18 +39,12 @@
     </div>
 
     <form method="GET" th:action="@{/product/dashboard}">
-        <fieldset>
-            <button type="submit"> Back To Dashboard </button>
-        </fieldset>
-    </form>
-    <script>
-        const priceElements = document.querySelectorAll('.price-element');
 
-        priceElements.forEach(element => {
-            const price = parseFloat(element.textContent);
-            element.textContent = '$' + price.toFixed(2);
-        });
-    </script>
+        <button type="submit"> Back To Dashboard </button>
+
+    </form>
+    <script type="text/javascript" th:src="@{/main.js}"></script>
+
 </body>
 
 </html>

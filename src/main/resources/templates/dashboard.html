@@ -47,17 +47,18 @@
                 <h3>Popular Products</h3>
                 <table class="table table-striped">
                     <thead>
-                      <tr>
-                        <th>Product Name</th>
-                        <th>Total Quantity Ordered</th>
-                      </tr>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Total Ordered</th>
+                        </tr>
                     </thead>
                     <tbody>
-                      <tr th:each="entry : ${popularProducts}">
-                        <td th:text="${entry.key.productName}"></td>  <td th:text="${entry.value}"></td>
-                      </tr>
+                        <tr th:each="entry : ${popularProducts}">
+                            <td th:text="${entry.key.productName}"></td>
+                            <td th:text="${entry.value}"></td>
+                        </tr>
                     </tbody>
-                  </table>
+                </table>
             </div>
             <div id="cart-container" class="">
                 <table id="myList" th:sort="productID">
@@ -72,7 +73,7 @@
                             </form>
                         </th>
                     </tr>
-                    <tr th:each="cartItem : ${session.customer.cart.items}" >
+                    <tr th:each="cartItem : ${session.customer.cart.items}">
                         <td th:text="${cartItem.product.productName}"></td>
                         <td>
                             <form th:action="@{/updateCartItemQuantity}" method="POST">
@@ -98,7 +99,7 @@
                         <td th:text="${session.customer.cart.totalPrice}" class="price-element"></td>
                     </tr>
                     <tr>
-                        <!-- <td colspan="4"></td> -->
+                       
                         <td colspan="5" text-align="right" id="checkout-row">
                             <form th:action="@{/checkout}" method="POST">
                                 <b>Checkout:</b>
@@ -108,7 +109,7 @@
 
                     </tr>
                 </table>
-                
+
                 <div id="likes-container">
                     <table id="likes">
                         <tr>
@@ -128,10 +129,10 @@
                                     <button type="submit">Remove</button>
                                 </form>
                             </td>
-                            
+
                         </tr>
                     </table>
-                   
+
                 </div>
             </div>
 
@@ -144,18 +145,8 @@
             <a href="@{/customer/login}">Login</a>
         </th:block>
     </div>
-    <script>
-        function toggleTable() {
-            var table = document.getElementById("cart-container");
-            table.classList.toggle("hidden");
-        }
-        const priceElements = document.querySelectorAll('.price-element');
+    <script type="text/javascript" th:src="@{/main.js}"></script>
 
-        priceElements.forEach(element => {
-            const price = parseFloat(element.textContent);
-            element.textContent = '$' + price.toFixed(2);
-        });
-    </script>
 
 </body>
 
