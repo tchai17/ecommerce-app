@@ -97,6 +97,12 @@
                         <tr th:each="product : ${session.customer.likes}">
                             <td th:text="${product.productName}"></td>
                             <td>
+                                <form th:action="@{/customer/updateCartItemQuantity}" method="POST">
+                                    <input type="hidden" th:value="${product.productID}" name="productID">
+                                    <button type="submit" name="updateQuantity" value="plus">Add To Cart</button>
+                                </form>
+                            </td>
+                            <td>
                                 <form th:action="@{/customer/removeFromLikes}" method="POST">
                                     <input type="hidden" th:value="${product.productID}" name="productID">
                                     <button type="submit">Remove</button>
