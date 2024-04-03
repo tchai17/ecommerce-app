@@ -1,6 +1,8 @@
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.controller;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +18,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartItemService;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.LikeService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.ProductService;
@@ -36,31 +36,22 @@ public class CustomerController {
 
 	private Logger logger = LogManager.getLogger(CustomerController.class);
 
-	/** The customer service that is used to interact with the customer data. */
 	@Autowired
 	private CustomerService customerService;
 
-	/** The product service that is used to interact with the product data. */
 	@Autowired
 	private ProductService productService;
 
 	@Autowired
-	private CartItemService cartItemService;
-
-	@Autowired
-	private CartService cartService;
-
-	@Autowired
 	private LikeService likeService;
 
-	/** The session that is used to store the customer information. */
 	@Autowired
 	private HttpSession httpSession;
 
 	/**
-	 * This method is used to handle the index page of the customer.
+	 * Handles the index page of the customer.
 	 * 
-	 * @return the index page of the customer
+	 * @return The index page of the customer.
 	 */
 	@GetMapping("/")
 	public String index() {
@@ -69,9 +60,9 @@ public class CustomerController {
 	}
 
 	/**
-	 * This method is used to handle the register-customer request.
+	 * Handles the request for registering a new customer account.
 	 * 
-	 * @return the registerCustomer view
+	 * @return The registerCustomer view.
 	 */
 	@GetMapping("/register-customer")
 	public String registerCustomer() {
@@ -80,9 +71,9 @@ public class CustomerController {
 	}
 
 	/**
-	 * This method is used to handle the login request
+	 * Handles the login request.
 	 * 
-	 * @return the customerLogin view
+	 * @return The customerLogin view.
 	 */
 	@GetMapping("/login")
 	public String loginCustomer() {
@@ -91,12 +82,10 @@ public class CustomerController {
 	}
 
 	/**
-	 * This method is used to process the customer registration form. It retrieves
-	 * the form parameters and creates a new customer object. It then saves the
-	 * customer to the database and displays a "registration complete" message.
+	 * Processes the customer registration form.
 	 * 
-	 * @param request the HTTP request object
-	 * @return the "complete" page after registering the customer
+	 * @param request The HTTP request object containing registration form data.
+	 * @return The "complete" page after registering the customer.
 	 */
 	@PostMapping("/registration")
 	public String processRegistration(HttpServletRequest request) {
@@ -123,14 +112,10 @@ public class CustomerController {
 	}
 
 	/**
-	 * This method is used to process the customer login form. It retrieves the form
-	 * parameters and checks if the username and password match an existing customer
-	 * in the database. If the login is successful, the customer's information is
-	 * stored in the session and the user is redirected to the product dashboard. If
-	 * the login fails, the user is redirected back to the customer login page.
+	 * Processes the customer login form.
 	 * 
-	 * @param request the HTTP request object
-	 * @return the view to be displayed after login. If login is successful, user is
+	 * @param request The HTTP request object containing login form data.
+	 * @return The view to be displayed after login. If login is successful, user is
 	 *         redirected to the product dashboard.
 	 */
 	@PostMapping("/login-customer")
@@ -138,7 +123,7 @@ public class CustomerController {
 
 		logger.debug("Initiate login request");
 
-		// Get parameters
+		// Get parameters from form
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		logger.debug("Customer username and password received");
@@ -147,44 +132,84 @@ public class CustomerController {
 		// Check if username already exists in database
 		List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
 		if (existingCustomers.isEmpty()) {
+			logger.info("Username not found in database: " + username);
+			logger.debug("Redirecting user back to login page");
+			return "customerLogin";
+		}
 
-			logger.info("Username not found in database");
+		// Check if username matches only one entry
+		if (existingCustomers.size() > 1) {
+			logger.info("Username input is not unique: " + username);
 			logger.debug("Redirecting user back to login page");
 			return "customerLogin";
 		}
 
 		// Check if password is correct
-		if (existingCustomers.get(0).getPassword().equals(password)) {
-			Customer currentCustomer = existingCustomers.get(0);
-			logger.info("Password input is verified for the username: " + currentCustomer.getUsername());
-
-			Cart cart = currentCustomer.getCart(); // Retrieve current cart
-			logger.debug("Retrieving cart information: " + cart);
-
-			httpSession.setAttribute("customer", currentCustomer);
-			httpSession.setAttribute("cart", cart);
-			httpSession.setAttribute("likes", currentCustomer.getLikes());
-			httpSession.setAttribute("isLoggedIn", true);
-			logger.debug("Cart is set for this current session");
-			logger.debug("Customer redirected to dashboard");
-
-			return "redirect:/product/dashboard";
-
-		} else {
+		if (!existingCustomers.get(0).getPassword().equals(password)) {
 			logger.info("Password input does not match username: " + existingCustomers.get(0).getUsername());
 			logger.debug("Customer redirected back to login page");
 			return "customerLogin";
 		}
+
+		// if password is correct, retrieve customer information from database
+		Customer currentCustomer = existingCustomers.get(0);
+		logger.info("Password input is verified for the username: " + currentCustomer.getUsername());
+
+		// Retrieve current cart
+		Cart cart = currentCustomer.getCart();
+		logger.debug("Retrieving cart information: " + cart);
+
+		// Save customer, cart, and likes to session
+		httpSession.setAttribute("customer", currentCustomer);
+		httpSession.setAttribute("cart", cart);
+		httpSession.setAttribute("likes", currentCustomer.getLikes());
+		httpSession.setAttribute("isLoggedIn", true);
+		logger.debug("Cart is set for this current session");
+		logger.debug("Customer redirected to dashboard");
+
+		return "redirect:/product/dashboard";
+
 	}
 
+	/**
+	 * Adds a product to the customer's likes.
+	 * 
+	 * @param customer  The currently logged-in customer retrieved from session
+	 *                  attributes.
+	 * @param productID The ID of the product to be added to likes.
+	 * @return A redirection to the product dashboard page.
+	 */
 	@PostMapping("/addToLikes")
 	public String addToLikes(@SessionAttribute Customer customer, @RequestParam int productID) {
+		// Check if customer exists in database
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database");
+			return "redirect:/customer/login";
+		}
 
-		Customer currentCustomer = customerService.findCustomerByID(customer.getCustomerID()).get();
+		Customer currentCustomer = optionalCustomer.get();
 		httpSession.setAttribute("customer", currentCustomer);
+		logger.debug("Customer added to session");
 
-		Product chosenProduct = productService.findProductById(productID).get();
+		// Check if product exists in database
+		Optional<Product> optionalProduct = productService.findProductById(productID);
+		if (optionalProduct.isEmpty()) {
+			logger.info("Product not found in database");
+			return "redirect:/product/dashboard";
+		}
 
+		Product chosenProduct = optionalProduct.get();
+		logger.debug("Product found in database");
+
+		// Check if product is already in likes
+		Set<Product> likes = currentCustomer.getLikes();
+		if (likes.contains(chosenProduct)) {
+			logger.info("Product already in customer's likes");
+			return "redirect:/product/dashboard";
+		}
+
+		// add to likes and persist
 		likeService.addToLikes(currentCustomer, chosenProduct);
 		customerService.updateCustomer(currentCustomer);
 		productService.updateProduct(chosenProduct);
@@ -192,13 +217,46 @@ public class CustomerController {
 		return "redirect:/product/dashboard";
 	}
 
+	/**
+	 * Removes a product from the customer's likes.
+	 * 
+	 * @param customer  the currently logged-in customer retrieved from session
+	 *                  attributes.
+	 * @param productID the ID of the product to be removed from likes.
+	 * @return link the redirection to the product dashboard page.
+	 */
 	@PostMapping("/removeFromLikes")
 	public String removeFromLikes(@SessionAttribute Customer customer, @RequestParam int productID) {
-		Customer currentCustomer = customerService.findCustomerByID(customer.getCustomerID()).get();
+
+		// Check if customer exists in database
+		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
+		if (optionalCustomer.isEmpty()) {
+			logger.info("Customer not found in database");
+			return "redirect:/customer/login";
+		}
+
+		// Save customer to session if found
+		Customer currentCustomer = optionalCustomer.get();
 		httpSession.setAttribute("customer", currentCustomer);
+		logger.debug("Customer added to session");
 
-		Product chosenProduct = productService.findProductById(productID).get();
+		// Check if product exists in database
+		Optional<Product> optionalProduct = productService.findProductById(productID);
+		if (optionalProduct.isEmpty()) {
+			logger.info("Product not found in database");
+			return "redirect:/product/dashboard";
+		}
 
+		Product chosenProduct = optionalProduct.get();
+
+		// Check if product is already in likes
+		Set<Product> likes = currentCustomer.getLikes();
+		if (!likes.contains(chosenProduct)) {
+			logger.info("Product not found in likes");
+			return "redirect:/product/dashboard";
+		}
+
+		// Remove from likes
 		likeService.removeFromLikes(currentCustomer, chosenProduct);
 		customerService.updateCustomer(currentCustomer);
 		productService.updateProduct(chosenProduct);
