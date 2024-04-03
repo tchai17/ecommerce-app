@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.controller.CustomerController;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartItemRepository;
 
@@ -16,7 +15,7 @@ import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CartItemRep
 @Service
 public class CartItemService {
 
-	private Logger logger = LogManager.getLogger(CustomerController.class);
+	private Logger logger = LogManager.getLogger(CartItemService.class);
 
 	private CartItemRepository cartItemRepo;
 

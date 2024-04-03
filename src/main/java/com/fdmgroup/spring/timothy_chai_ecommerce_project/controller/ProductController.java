@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/product")
 public class ProductController {
 
-	private Logger logger = LogManager.getLogger(CustomerController.class);
+	private Logger logger = LogManager.getLogger(ProductController.class);
 
 	/** The product service used to interact with the database. */
 	@Autowired

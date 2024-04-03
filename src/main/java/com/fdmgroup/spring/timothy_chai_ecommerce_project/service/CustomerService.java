@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.controller.CustomerController;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.repository.CustomerRepository;
 
@@ -20,7 +19,7 @@ public class CustomerService {
 
 	private CustomerRepository customerRepo;
 
-	private Logger logger = LogManager.getLogger(CustomerController.class);
+	private Logger logger = LogManager.getLogger(CustomerService.class);
 
 	/**
 	 * Autowires the CustomerRepository dependency.
