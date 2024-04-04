@@ -108,7 +108,7 @@ public class OrderService {
 				productMap.merge(product, quantity, addValue);
 			}
 		}
-		logger.info("Popular product map is created");
+		logger.debug("Popular product map is created");
 		return productMap;
 	}
 
