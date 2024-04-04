@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Cart;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
+import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Order;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Product;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartItemService;
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CartService;
@@ -328,7 +329,19 @@ public class CartController {
 
 		// if customer is found, proceed to create order
 		Customer currentCustomer = optionalCustomer.get();
-		orderService.createOrder(currentCustomer);
+		Order newOrder = orderService.createOrder(currentCustomer);
+
+		// update product stock for items in order
+		newOrder.getOrderedItems().forEach(item -> {
+			Product productOrdered = item.getProduct();
+			int quantityOrdered = item.getProductQuantity();
+			Optional<Product> optionalProductInDatabase = productService.findProductById(productOrdered.getProductID());
+			if (optionalProductInDatabase.isPresent()) {
+				Product productInDatabase = optionalProductInDatabase.get();
+				productInDatabase.setStock(productInDatabase.getStock() - quantityOrdered);
+				productService.updateProduct(productInDatabase);
+			}
+		});
 
 		// clear cart once order has been created to avoid mismanaged items
 		Cart cart = currentCustomer.getCart();
