@@ -3,8 +3,6 @@
  */
 package com.fdmgroup.spring.timothy_chai_ecommerce_project.model;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -161,8 +159,7 @@ public class CartItem {
 	 * 
 	 */
 	public void calculateProductSubtotal() {
-		BigDecimal subtotal = new BigDecimal(this.product.getPrice() * productQuantity).setScale(2, RoundingMode.DOWN);
-		this.productSubtotal = subtotal.doubleValue();
+		this.productSubtotal = this.product.getPrice() * productQuantity;
 	}
 
 	/**
