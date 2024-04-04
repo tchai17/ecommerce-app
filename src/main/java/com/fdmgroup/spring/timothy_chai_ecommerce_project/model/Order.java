@@ -164,17 +164,33 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
+	/**
+	 * Returns the total price of the order.
+	 * 
+	 * @return the total price of the order
+	 */
 	public double getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 
+	/**
+	 * Sets the total price of the order.
+	 * 
+	 * @param orderTotalPrice the total price of the order to set
+	 */
 	public void setOrderTotalPrice(double orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
+	/**
+	 * Updates the total price of the order by summing the subtotal of each item in
+	 * the order.
+	 */
 	public void updateOrderTotalPrice() {
 		this.orderTotalPrice = 0.0;
-		orderedItems.forEach(item -> orderTotalPrice += item.getProductSubtotal());
+		for (CartItem item : orderedItems) {
+			orderTotalPrice += item.getProductSubtotal();
+		}
 	}
 
 	/**

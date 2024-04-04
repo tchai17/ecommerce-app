@@ -25,24 +25,24 @@ import jakarta.persistence.OneToOne;
 /**
  * Represents a Customer
  * 
+ * 
+ * 
+ * The Customer class is intended to represent customers in this application.
+ * Customers must sign up for an account with their relevant details: username,
+ * password, email address, delivery address, full name, and credit card
+ * information. Upon creating an account and persisting onto the database, the
+ * Customer instance is automatically assigned an ID, and will have a shopping
+ * Cart object which the customer can use to purchase products. In addition, the
+ * Customer will also have a set of products which he has 'liked' and a list of
+ * past Orders.
+ * 
+ * The Customer class has mainly getters and setters for each attribute. The
+ * Customer class also has updateDetails which allows existing customers to
+ * update any of the attributes, except for the cart attribute and the
+ * customerID, which cannot be changed after registration.
+ * 
+ * 
  * @author - timothy.chai
- * 
- *         The Customer class is intended to represent customers in this
- *         application. Customers must sign up for an account with their
- *         relevant details: username, password, email address, delivery
- *         address, full name, and credit card information. Upon creating an
- *         account and persisting onto the database, the Customer instance is
- *         automatically assigned an ID, and will have a shopping Cart object
- *         which the customer can use to purchase products. In addition, the
- *         Customer will also have a set of products which he has 'liked' and a
- *         list of past Orders.
- * 
- *         The Customer class has mainly getters and setters for each attribute.
- *         The Customer class also has updateDetails which allows existing
- *         customers to update any of the attributes, except for the cart
- *         attribute and the customerID, which cannot be changed after
- *         registration.
- * 
  * @see Cart
  * @see Order
  * @see #updateDetails(Customer)
@@ -138,6 +138,11 @@ public class Customer {
 	@JoinTable(name = "LIKES", joinColumns = @JoinColumn(name = "FK_CUSTOMER_ID"), inverseJoinColumns = @JoinColumn(name = "FK_PRODUCT_ID"))
 	private Set<Product> likes;
 
+	/**
+	 * The list of past orders made by this customer
+	 * 
+	 * Each Order consists of the items that are ordered and a date of the order
+	 */
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Order> orders;
 

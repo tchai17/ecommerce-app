@@ -22,12 +22,14 @@ import jakarta.persistence.OneToOne;
 /**
  * Represents a shopping cart for the customer
  * 
+ * 
+ * 
+ * The Cart class holds a set of CartItem objects which refer to Product
+ * classes. The Cart class also holds the relevant methods for adding and
+ * removing CartItem objects to and from the Cart.
+ * 
+ * 
  * @author - timothy.chai
- * 
- *         The Cart class holds a set of CartItem objects which refer to Product
- *         classes. The Cart class also holds the relevant methods for adding
- *         and removing CartItem objects to and from the Cart.
- * 
  * @see Customer
  * @see CartItem
  * @see #addToCart(CartItem)

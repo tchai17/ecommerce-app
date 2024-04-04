@@ -267,17 +267,28 @@ public class CustomerController {
 		return "redirect:/product/dashboard";
 	}
 
+	/**
+	 * This method is used to retrieve the orders of a customer.
+	 * 
+	 * @param customer the customer object of the currently logged-in customer
+	 * @return a string that represents the orders page
+	 */
 	@GetMapping("/orders")
 	public String goToOrders(@SessionAttribute Customer customer) {
+
 		// Check if customer exists in database
 		Optional<Customer> optionalCustomer = customerService.findCustomerByID(customer.getCustomerID());
 		if (optionalCustomer.isEmpty()) {
 			logger.info("Customer not found in database");
 			return "redirect:/customer/login";
 		}
+
+		// Add customer to session
 		Customer currentCustomer = optionalCustomer.get();
 		httpSession.setAttribute("customer", currentCustomer);
 		logger.debug("Customer added to session");
+
+		// Get orders from customer
 		List<Order> orders = currentCustomer.getOrders();
 		orders.forEach(order -> order.updateOrderTotalPrice());
 		httpSession.setAttribute("orders", orders);

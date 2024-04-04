@@ -6,17 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.Customer;
-import com.fdmgroup.spring.timothy_chai_ecommerce_project.service.CustomerService;
 
 /**
  * This interface is used to define the methods that will be used to interact
- * with the Customer table in the database. The methods defined in this
- * interface will be used by the CustomerService class to perform various
- * operations on the Customer table.
+ * with the Customer table in the database.
  * 
  * @author - timothy.chai
  * 
- * @see CustomerService
  * @see Customer
  */
 @Repository

@@ -38,6 +38,12 @@ public class OrderService {
 	@Autowired
 	private CustomerRepository customerRepo;
 
+	@Autowired
+	public OrderService(OrderRepository orderRepo, CustomerRepository customerRepo) {
+		this.orderRepo = orderRepo;
+		this.customerRepo = customerRepo;
+	}
+
 	/**
 	 * Saves the given order to the database.
 	 * 
@@ -57,11 +63,14 @@ public class OrderService {
 	public Order createOrder(Customer customer) {
 		logger.debug("createOrder called for customer " + customer);
 
+		// Check if customer exists in database
 		Optional<Customer> optionalCustomer = customerRepo.findById(customer.getCustomerID());
 		if (optionalCustomer.isEmpty()) {
 			logger.info("customer is not found in database - please verify: " + customer);
 			return new Order();
 		}
+
+		// Get cart from customer
 		Customer currentCustomer = optionalCustomer.get();
 		Cart cart = currentCustomer.getCart();
 		logger.info("customer found in database - getting cart information");
@@ -75,11 +84,22 @@ public class OrderService {
 		return order;
 	}
 
+	/**
+	 * This method finds the most popular products in the system based on the number
+	 * of times they are ordered.
+	 * 
+	 * @return a map of products and their quantity ordered, sorted in descending
+	 *         order by quantity ordered
+	 */
 	public Map<Product, Integer> findPopularProducts() {
 		logger.debug("findPopularProducts called");
+
+		// find all orders
 		List<Order> allOrders = orderRepo.findAll();
 		logger.debug("Finding all orders in OrderRepository");
 		Map<Product, Integer> productMap = new HashMap<>();
+
+		// add all products ordered to a map <product, quantity>
 		BiFunction<Integer, Integer, Integer> addValue = (currentValue, amountToAdd) -> currentValue + amountToAdd;
 		for (Order order : allOrders) {
 			for (CartItem cartItem : order.getOrderedItems()) {

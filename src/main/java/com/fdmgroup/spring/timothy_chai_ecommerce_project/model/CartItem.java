@@ -18,17 +18,18 @@ import jakarta.persistence.ManyToOne;
 /**
  * Represents a line item in the shopping cart
  * 
+ * 
+ * 
+ * The CartItem class encapsulates ordering information, holding reference to
+ * the Product class and other relevant information like the product quantity
+ * and subtotal. It is used primarily when customers wish to add products to
+ * their cart When customers wish to add a product to the cart, a new CartItem
+ * object is created encapsulating the product and the quantity.
+ * 
+ * When a Cart is checked-out, CartItems are linked to the Order that is created
+ * based on the Cart
+ * 
  * @author - timothy.chai
- * 
- *         The CartItem class encapsulates ordering information, holding
- *         reference to the Product class and other relevant information like
- *         the product quantity and subtotal. It is used primarily when
- *         customers wish to add products to their cart When customers wish to
- *         add a product to the cart, a new CartItem object is created
- *         encapsulating the product and the quantity.
- * 
- *         When a Cart is checked-out, CartItems are linked to the Order that is
- *         created based on the Cart
  * 
  * @see Product
  * @see Cart

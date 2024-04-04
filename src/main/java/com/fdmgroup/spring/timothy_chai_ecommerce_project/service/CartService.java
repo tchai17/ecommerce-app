@@ -77,8 +77,11 @@ public class CartService {
 		logger.debug(
 				"addToCart is called for customer: " + customer + " product: " + product + " quantity: " + quantity);
 
+		// Get cart from customer
 		Cart cart = customer.getCart();
 		logger.debug("Cart of target customer retrieved");
+
+		// Create CartItem and add to cart
 		CartItem newItem = new CartItem(product, quantity);
 		cart.addToCart(newItem);
 		logger.debug("New CartItem is added to cart");
@@ -97,8 +100,12 @@ public class CartService {
 	public void removeFromCart(Customer customer, Product product, int quantity) {
 		logger.debug("removeFromCart is called for customer: " + customer + " product: " + product + " quantity: "
 				+ quantity);
+
+		// Get cart from customer
 		Cart cart = customer.getCart();
 		logger.debug("Cart of target customer retrieved");
+
+		// Create CartItem and add to cart
 		CartItem newItem = new CartItem(product, quantity);
 		cart.removeFromCart(newItem);
 		logger.debug("CartItem is removed from cart: product - " + product + " quantity - " + quantity);

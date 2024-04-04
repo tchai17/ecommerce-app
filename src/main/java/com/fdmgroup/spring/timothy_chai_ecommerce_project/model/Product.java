@@ -14,12 +14,14 @@ import jakarta.persistence.Id;
 /**
  * Represents products in the online shop
  * 
- * @author - timothy.chai
  * 
- *         The Product class encapsulates all product information like the name,
- *         available stock, price, and a URL to an image of the product
- *         Customers can view product information using respective getters, and
- *         add products to the cart through the use of the CartItem class
+ * 
+ * The Product class encapsulates all product information like the name,
+ * available stock, price, and a URL to an image of the product Customers can
+ * view product information using respective getters, and add products to the
+ * cart through the use of the CartItem class
+ * 
+ * @author - timothy.chai
  * 
  * @see CartItem
  */

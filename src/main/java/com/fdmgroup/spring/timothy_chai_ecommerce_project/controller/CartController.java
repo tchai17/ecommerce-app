@@ -320,6 +320,8 @@ public class CartController {
 	 *
 	 * @param customer The logged-in customer retrieved from session attribute.
 	 * @return A redirection to the product dashboard page.
+	 * 
+	 * @see OrderService#createOrder(Customer)
 	 */
 	@PostMapping("/checkout")
 	public String submitOrder(@SessionAttribute Customer customer) {

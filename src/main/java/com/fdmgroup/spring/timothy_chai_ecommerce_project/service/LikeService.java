@@ -25,8 +25,10 @@ public class LikeService {
 
 	private static Logger logger = LogManager.getLogger(LikeService.class);
 
+	@Autowired
 	private CustomerRepository customerRepo;
 
+	@Autowired
 	private ProductRepository productRepo;
 
 	@Autowired

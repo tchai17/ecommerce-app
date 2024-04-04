@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fdmgroup.spring.timothy_chai_ecommerce_project.model.CartItem;
@@ -21,6 +22,7 @@ public class CartItemService {
 
 	private Logger logger = LogManager.getLogger(CartItemService.class);
 
+	@Autowired
 	private CartItemRepository cartItemRepo;
 
 	/**
@@ -38,6 +40,8 @@ public class CartItemService {
 	 * @param itemToDelete the CartItem to delete
 	 */
 	public void deleteCartItemFromDatabase(CartItem itemToDelete) {
+
+		// Finds cartItem from database and removes its entry
 		logger.debug("deleteCartItemFromDatabase is called for item: " + itemToDelete);
 		Optional<CartItem> target = cartItemRepo.findById(itemToDelete.getCartItemId());
 		if (target.isPresent()) {

@@ -36,7 +36,6 @@ public class ProductController {
 
 	private Logger logger = LogManager.getLogger(ProductController.class);
 
-	/** The product service used to interact with the database. */
 	@Autowired
 	private ProductService productService;
 
