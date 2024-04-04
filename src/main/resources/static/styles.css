@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
 
 body {
-    /* font-family: Arial, sans-serif; */
     font-family: "Poppins";
     background-image: linear-gradient(to right, #e7d0ec, #b998ff);
 
@@ -111,7 +110,6 @@ button {
 .product-container {
     width: 30vh;
     height: auto;
-    border: 2px black;
     margin: 5px;
 
 }
@@ -192,7 +190,7 @@ button {
     }
 }
 
-.popular {
+#popular {
     text-align: left;
     position: absolute;
     top: 10px;
@@ -200,6 +198,7 @@ button {
 
     background: #ffffd1;
     border-radius: 10px;
+    opacity: 80%;
 
     h3 {
         padding: 0 10px;
@@ -225,4 +224,25 @@ button {
 
 .small-button{
     padding: 4px;
+}
+
+.out-of-stock {
+    opacity: 0.5;
+    
+    filter: grayscale(100%);
+}
+
+.dashboard {
+    margin: 0;
+    width:fit-content;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    .button-4{
+        margin: auto 5px auto 0;
+    }
+}
+
+.star img{
+    /* bottom: 20vh; */
+    right: 15vh;
 }

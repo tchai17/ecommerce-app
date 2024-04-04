@@ -13,9 +13,12 @@
     <h1 class="page-title"><a th:href="@{/}">SNACK SHACK</a></h1>
     <h1 th:text="'Welcome ' + ${session.customer.username}"></h1>
 
-    <div>
+    <div class="homepage dashboard">
         <form th:action="@{/customer/orders}" method="GET">
             <button type="submit" class="button-4">View Past Orders</button>
+        </form>
+        <form th:action="@{/refresh}" method="POST">
+            <button type="submit" class="button-4">Refresh</button>
         </form>
     </div>
 
@@ -29,24 +32,27 @@
                 <button type="submit" class="button-4">Filter</button>
             </form>
             <div class="all-products">
-                <div class="product-container" th:each="product : ${products}">
-                    <h2 th:text="${product.productName}"></h2>
-                    <img th:src="${product.imgURL}" alt="${product.productName}">
-                    <div class="product-details">
-                        <p th:text="${product.price}" class="price-element"></p>
-                        <p th:text="'Available stock: '+${product.stock}"></p>
+                <div th:each="product : ${products}">
+                    <div class="product-container" th:classappend="${product.stock} == 0 ? 'out-of-stock' : ''">
+                        <h2 th:text="${product.productName}"></h2>
+                        <img th:src="${product.imgURL}" alt="${product.productName}">
+                        <div class="product-details">
+                            <p th:text="${product.price}" class="price-element"></p>
+                            <p th:text="'Available stock: '+${product.stock}"></p>
+                        </div>
+
+                        <form th:action="@{/addToCart(productID=${product.productID})}" method="POST">
+                            <input type="number" name="quantity" min="1" value="1">
+                            <button type="submit" class="button-4">Add To Cart</button>
+                        </form>
+                        <form th:action="@{/customer/addToLikes(productID=${product.productID})}" method="POST">
+                            <button type="submit" class="button-4">Add To Likes</button>
+                        </form>
                     </div>
 
-                    <form th:action="@{/addToCart(productID=${product.productID})}" method="POST">
-                        <input type="number" name="quantity" min="1" value="1">
-                        <button type="submit" class="button-4">Add To Cart</button>
-                    </form>
-                    <form th:action="@{/customer/addToLikes(productID=${product.productID})}" method="POST">
-                        <button type="submit" class="button-4">Add To Likes</button>
-                    </form>
                 </div>
             </div>
-            <div class="popular">
+            <div id="popular" class="">
                 <h3>Popular Products</h3>
                 <table class="table table-striped">
                     <thead>
@@ -149,8 +155,12 @@
                 </div>
             </div>
 
-            <div class="cart-icon" id="toggle-cart-icon" onclick="toggleTable()">
+            <div class="cart-icon" id="cart-icon" onclick="toggleTable('cart-container')">
                 <img src="https://static-00.iconduck.com/assets.00/shopping-cart-icon-512x462-yrde1eu0.png" alt="Icon">
+                
+            </div>
+            <div class="cart-icon star" id="star-icon" onclick="toggleTable('popular')">
+                <img src="https://icons.iconarchive.com/icons/github/octicons/256/star-24-icon.png">
             </div>
         </th:block>
         <th:block th:unless="${session.isLoggedIn}">
