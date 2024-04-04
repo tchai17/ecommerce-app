@@ -135,6 +135,10 @@ public class CartController {
 		logger.debug("Cart details retrieved from database: " + cart);
 		session.setAttribute("cart", cart);
 
+		// if quantity is zero or there is no stock, do not allow user to add to cart
+		if (quantity < 1 || product.getStock() < 1) {
+			return "redirect:/product/dashboard";
+		}
 		// Add to cart and update
 		cartService.addToCart(customer, product, quantity);
 		logger.info("Item added: " + product + " quantity: (" + quantity + ")");
