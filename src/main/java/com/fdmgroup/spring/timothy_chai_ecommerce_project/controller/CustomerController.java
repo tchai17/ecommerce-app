@@ -96,6 +96,21 @@ public class CustomerController {
 		String fullName = request.getParameter("fullName");
 		String cardNumber = request.getParameter("cardNumber");
 
+		// Validating card number
+		if (cardNumber.length() != 16) {
+			model.addAttribute("error", true);
+			logger.debug("Redirecting user back to register page");
+			return "registerCustomer";
+		} else {
+			try {
+				Long.parseLong(cardNumber);
+			} catch (NumberFormatException e) {
+				model.addAttribute("error", true);
+				logger.debug("Redirecting user back to register page");
+				return "registerCustomer";
+			}
+		}
+
 		logger.debug("Customer details received: " + username + " " + address + " " + " " + email);
 
 		// Create new Customer instance

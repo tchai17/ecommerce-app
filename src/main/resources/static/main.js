@@ -22,7 +22,7 @@ function initializeTableVisibility(tableId) {
 
   } else {
     table.classList.remove("hidden");
-    
+
   }
 }
 
@@ -41,6 +41,12 @@ priceElements.forEach(element => {
 
 // Front end validation for customer registration
 $(document).ready(function () {
+  // Add a custom method for credit card number validation
+  $.validator.addMethod("creditcard", function(value, element) {
+    return this.optional(element) || $.payment.validateCardNumber(value);
+  }, "Please enter a valid credit card number.");
+
+  // Initialize the form validation
   $("#registrationForm").validate({
     rules: {
       username: {
@@ -57,7 +63,10 @@ $(document).ready(function () {
       },
       address: "required",
       fullName: "required",
-      cardNumber: "required"
+      cardNumber: {
+        required: true,
+        creditcard: true // Use the custom creditcard method for validation
+      }
     },
     messages: {
       username: {
@@ -74,13 +83,16 @@ $(document).ready(function () {
       },
       address: "Please enter your address.",
       fullName: "Please enter your full name.",
-      cardNumber: "Please enter your card number."
+      cardNumber: {
+        required: "Please enter a valid credit card number."
+      }
     },
     errorPlacement: function (error, element) {
       $("#validation-message").html(error);
     }
   });
-})
+});
+
 
 // Validation for product registration
 $(document).ready(function () {

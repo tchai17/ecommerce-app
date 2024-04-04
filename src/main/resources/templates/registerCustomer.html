@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Registration</title>
     <link rel="stylesheet" th:href="@{/styles.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    
 </head>
 
 <body>
@@ -39,6 +42,9 @@
                 <input type="text" class="form-control" id="cardNumber" name="cardNumber" required>
             </div>
             <button type="submit" class="button-4">Register</button>
+            <div class="error-message" th:if="${error}">
+                <p>Card Number is invalid!</p>
+            </div>
         </form>
         <div id="validation-message"></div>
     </div>
