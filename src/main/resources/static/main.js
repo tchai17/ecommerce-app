@@ -41,11 +41,7 @@ priceElements.forEach(element => {
 
 // Front end validation for customer registration
 $(document).ready(function () {
-  // Add a custom method for credit card number validation
-  $.validator.addMethod("creditcard", function(value, element) {
-    return this.optional(element) || $.payment.validateCardNumber(value);
-  }, "Please enter a valid credit card number.");
-
+  
   // Initialize the form validation
   $("#registrationForm").validate({
     rules: {
@@ -64,8 +60,7 @@ $(document).ready(function () {
       address: "required",
       fullName: "required",
       cardNumber: {
-        required: true,
-        creditcard: true // Use the custom creditcard method for validation
+        required: true
       }
     },
     messages: {
