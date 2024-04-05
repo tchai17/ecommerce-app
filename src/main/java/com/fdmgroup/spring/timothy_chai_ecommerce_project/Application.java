@@ -14,14 +14,7 @@ public class Application {
 
 	public static void main(String[] args) {
 
-		try {
-			SpringApplication.run(Application.class, args);
-		} catch (Exception e) {
-//			For debugging purposes, use commented-code
-//			e.printStackTrace();
-//			System.out.println(e.getMessage());
-
-		}
+		SpringApplication.run(Application.class, args);
 
 	}
 
