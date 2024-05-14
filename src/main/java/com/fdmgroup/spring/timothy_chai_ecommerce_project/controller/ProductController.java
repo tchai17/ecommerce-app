@@ -100,6 +100,7 @@ public class ProductController {
 	 */
 	@GetMapping("/dashboard")
 	public String productDisplay(@RequestParam(required = false) String selectedCategory, Model model) {
+		System.out.println("Customer is directed to dashboard");
 		logger.debug("Customer is directed to dashboard");
 		List<Product> products = new ArrayList<>();
 		// Check if selectedCategory is null, or 'all', then display all products

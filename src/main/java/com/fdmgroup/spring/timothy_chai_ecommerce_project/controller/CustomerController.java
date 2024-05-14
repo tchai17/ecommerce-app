@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -56,6 +57,9 @@ public class CustomerController {
 	@Autowired
 	private HttpSession httpSession;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	/**
 	 * Handles the request for registering a new customer account.
 	 * 
@@ -84,7 +88,7 @@ public class CustomerController {
 	 * @param request The HTTP request object containing registration form data.
 	 * @return The "complete" page after registering the customer.
 	 */
-	@PostMapping("/registration")
+	@PostMapping("/register-customer")
 	public String processRegistration(HttpServletRequest request, Model model) {
 		logger.debug("Initiate registration for new customer");
 
@@ -113,14 +117,18 @@ public class CustomerController {
 
 		logger.debug("Customer details received: " + username + " " + address + " " + " " + email);
 
+		// Encrypt password
+		String encryptedPassword = passwordEncoder.encode(password);
+//		System.out.println("debugging");
+
 		// Create new Customer instance
-		Customer newCustomer = new Customer(username, password, email, address, fullName, cardNumber);
+		Customer newCustomer = new Customer(username, encryptedPassword, email, address, fullName, cardNumber);
 
 		// Save to DB
 		customerService.saveNewCustomer(newCustomer);
 		logger.info("New customer account persisted onto database. " + newCustomer);
 
-		return "complete";
+		return "redirect:/";
 	}
 
 	/**
@@ -130,64 +138,68 @@ public class CustomerController {
 	 * @return The view to be displayed after login. If login is successful, user is
 	 *         redirected to the product dashboard.
 	 */
-	@PostMapping("/login-customer")
-	public String processLogin(HttpServletRequest request, Model model) {
-
-		logger.debug("Initiate login request");
-
-		// Get parameters from form
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		logger.debug("Customer username and password received");
-		logger.debug("Start verification");
-
-		// Check if username already exists in database
-		List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
-		if (existingCustomers.isEmpty()) {
-			logger.info("Username not found in database: " + username);
-			model.addAttribute("error", true);
-			logger.debug("Redirecting user back to login page");
-			return "customerLogin";
-		}
-
-		// Check if username matches only one entry
-		if (existingCustomers.size() > 1) {
-			logger.info("Username input is not unique: " + username);
-			model.addAttribute("error", true);
-			logger.debug("Redirecting user back to login page");
-			return "customerLogin";
-		}
-
-		// Check if password is correct
-		if (!existingCustomers.get(0).getPassword().equals(password)) {
-			logger.info("Password input does not match username: " + existingCustomers.get(0).getUsername());
-			logger.debug("Customer redirected back to login page");
-			model.addAttribute("error", true);
-			return "customerLogin";
-		}
-
-		// if password is correct, retrieve customer information from database
-		Customer currentCustomer = existingCustomers.get(0);
-		logger.info("Password input is verified for the username: " + currentCustomer.getUsername());
-
-		// Retrieve current cart
-		Cart cart = currentCustomer.getCart();
-		logger.debug("Retrieving cart information: " + cart);
-
-		// Save customer, cart, and likes to session
-		httpSession.setAttribute("customer", currentCustomer);
-		httpSession.setAttribute("cart", cart);
-		httpSession.setAttribute("likes", currentCustomer.getLikes());
-		List<Order> orders = currentCustomer.getOrders();
-		httpSession.setAttribute("orders", orders);
-		logger.debug("Customer likes and orders are set for this session");
-		httpSession.setAttribute("isLoggedIn", true);
-		logger.debug("Cart is set for this current session");
-		logger.debug("Customer redirected to dashboard");
-
-		return "redirect:/product/dashboard";
-
-	}
+//	@PostMapping("/login")
+//	public String processLogin(HttpServletRequest request, Model model) {
+//
+//		logger.debug("Initiate login request");
+//
+//		// Get parameters from form
+//		String username = request.getParameter("username");
+//		String password = request.getParameter("password");
+//		logger.debug("Customer username and password received");
+//		logger.debug("Start verification");
+//
+//		// Check if username already exists in database
+//		List<Customer> existingCustomers = customerService.findCustomerByUsername(username);
+//		if (existingCustomers.isEmpty()) {
+//			logger.info("Username not found in database: " + username);
+//			model.addAttribute("error", true);
+//			logger.debug("Redirecting user back to login page");
+//			return "customerLogin";
+//		}
+//
+//		// Check if username matches only one entry
+//		if (existingCustomers.size() > 1) {
+//			logger.info("Username input is not unique: " + username);
+//			model.addAttribute("error", true);
+//			logger.debug("Redirecting user back to login page");
+//			return "customerLogin";
+//		}
+//
+//		Customer targetCustomer = existingCustomers.get(0);
+//
+//
+//
+//		// Check if password is correct
+//		if (!existingCustomers.get(0).getPassword().equals(password)) {
+//			logger.info("Password input does not match username: " + existingCustomers.get(0).getUsername());
+//			logger.debug("Customer redirected back to login page");
+//			model.addAttribute("error", true);
+//			return "customerLogin";
+//		}
+//
+//		// if password is correct, retrieve customer information from database
+//		Customer currentCustomer = existingCustomers.get(0);
+//		logger.info("Password input is verified for the username: " + currentCustomer.getUsername());
+//
+//		// Retrieve current cart
+//		Cart cart = currentCustomer.getCart();
+//		logger.debug("Retrieving cart information: " + cart);
+//
+//		// Save customer, cart, and likes to session
+//		httpSession.setAttribute("customer", currentCustomer);
+//		httpSession.setAttribute("cart", cart);
+//		httpSession.setAttribute("likes", currentCustomer.getLikes());
+//		List<Order> orders = currentCustomer.getOrders();
+//		httpSession.setAttribute("orders", orders);
+//		logger.debug("Customer likes and orders are set for this session");
+//		httpSession.setAttribute("isLoggedIn", true);
+//		logger.debug("Cart is set for this current session");
+//		logger.debug("Customer redirected to dashboard");
+//
+//		return "redirect:/product/dashboard";
+//
+//	}
 
 	/**
 	 * Adds a product to the customer's likes.

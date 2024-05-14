@@ -16,7 +16,8 @@
 
     <div class="main">
         <h2>Please provide your details:</h2>
-        <form method="POST" th:action="@{/customer/registration}">
+        <form method="POST" th:action="@{/customer/register-customer}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div class="form-group">
                 <label for="username">Username:</label><br>
                 <input type="text" class="form-control" id="username" name="username" required>
